@@ -17,6 +17,25 @@ config/icon="res://icon.png"
 
 common/drop_mouse_on_gui_input_disabled=true
 
+[input]
+
+mv_right={
+"deadzone": 0.5,
+"events": [  ]
+}
+mv_up={
+"deadzone": 0.5,
+"events": [  ]
+}
+mv_left={
+"deadzone": 0.5,
+"events": [  ]
+}
+mv_down={
+"deadzone": 0.5,
+"events": [  ]
+}
+
 [mono]
 
 project/assembly_name="PirateKingInbetween"

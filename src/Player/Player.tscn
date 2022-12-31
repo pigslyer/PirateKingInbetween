@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Player/PlayerMovement.cs" type="Script" id=3]
+[ext_resource path="res://src/Player/PlayerMelee.cs" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 11.5, 35 )
@@ -11,11 +12,11 @@ extents = Vector2( 11.5, 35 )
 script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
 _statesParentPath = NodePath("States")
-_playerMovementPath = NodePath("States/Movement")
+_debugLabelPath = NodePath("DebugLabel")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Body" type="CollisionShape2D" parent="."]
 position = Vector2( -0.5, -7 )
 shape = SubResource( 1 )
 
@@ -28,4 +29,22 @@ smoothing_enabled = true
 
 [node name="Movement" type="Node" parent="States"]
 script = ExtResource( 3 )
+__meta__ = {
+"_editor_description_": "Handles general movement."
+}
+_jumpHeight = 100.0
 _jumpLength = 0.4
+
+[node name="MeleeAttack" type="Node" parent="States"]
+script = ExtResource( 4 )
+_meleeAnimationVelocityMult = 0.6
+
+[node name="RangedAttack" type="Node" parent="States"]
+
+[node name="NoclipMovement" type="Node" parent="States"]
+
+[node name="DebugLabel" type="Label" parent="."]
+margin_left = -345.0
+margin_top = -191.0
+margin_right = -305.0
+margin_bottom = -177.0

@@ -3,7 +3,7 @@ using Godot;
 
 namespace PirateInBetween.Player
 {
-	public class PlayerMovement : PlayerState
+	public class PlayerMovement : PlayerBehaviour
 	{
 		// The maximum speed along the x axis the player can naturally reach.
 		[Export] private float _maxSpeed = 200f;
@@ -18,10 +18,39 @@ namespace PirateInBetween.Player
 		[Export] private float _jumpHeight = 200f;
 		// The length of time during which the jump can be cancelled by releasing up.
 		[Export] private float _jumpLength = 0.2f;
+		// Defines how much of the percentage of the jump * gravity is applied in order to smooth the later parts of the jump.
+		[Export] private float _jumpDampening = 0.05f;
 
-		public Vector2 RecalculateVelocity(Vector2 velocity, float delta)
+		public override void Run(PlayerCurrentFrameData data)
 		{
-			Vector2 ins = PlayerController.GetInputVector();
+			data.Velocity = RecalculateVelocity(velocity: data.Velocity, delta: data.Delta);
+
+			if (data.Velocity.x != 0f)
+			{
+				data.FacingRight = data.Velocity.x > 0f;
+			}
+			
+			if (data.Velocity.y > 0f && !Player.IsOnFloor())
+			{
+				data.NextAnimation = PlayerAnimation.Fall;
+			}
+			else if (data.Velocity.y < 0f)
+			{
+				data.NextAnimation = PlayerAnimation.Jump;
+			}
+			else if (data.Velocity.x != 0f)
+			{
+				data.NextAnimation = PlayerAnimation.Run;
+			}
+			else
+			{
+				data.NextAnimation = PlayerAnimation.Idle;
+			}
+		}
+
+		private Vector2 RecalculateVelocity(Vector2 velocity, float delta)
+		{
+			Vector2 ins = InputManager.GetMovementVector();
 
 			velocity = RecalculateHorizontalVelocity(velocity, ins, delta);
 
@@ -77,7 +106,8 @@ namespace PirateInBetween.Player
 				if (_isJumping)
 				{
 					_jumpDelta = Mathf.Min(_jumpDelta + delta, _jumpLength);
-					
+					velocity.y += _gravity * delta * (_jumpDelta / _jumpLength) * _jumpDampening;
+
 					if (ins.y >= 0f || _jumpDelta >= _jumpLength)
 					{
 						_isJumping = false;

@@ -33,27 +33,31 @@ points = PoolVector2Array( 64, 64, 0, 64, 0, 0, 64, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( -78, -175 )
-texture = ExtResource( 1 )
-
-[node name="Sprite2" type="Sprite" parent="."]
-position = Vector2( 131, -135 )
-texture = ExtResource( 1 )
-
-[node name="Sprite3" type="Sprite" parent="."]
-position = Vector2( -120, 188 )
-texture = ExtResource( 1 )
-
-[node name="Sprite4" type="Sprite" parent="."]
-position = Vector2( 169, 189 )
-texture = ExtResource( 1 )
-
-[node name="Sprite5" type="Sprite" parent="."]
-position = Vector2( 334, -105 )
-texture = ExtResource( 1 )
-
 [node name="TileMap" type="TileMap" parent="."]
+scale = Vector2( 0.5, 0.5 )
 tile_set = SubResource( 2 )
 format = 1
 tile_data = PoolIntArray( -196609, 0, 0, -262144, 0, 0, -262143, 0, 0, -262142, 0, 0, -262141, 0, 0, -262140, 0, 0, -65530, 0, 0, 131069, 0, 0, 131070, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0, 65540, 0, 0, 65541, 0, 0 )
+
+[node name="Background" type="Node2D" parent="."]
+z_index = -50
+
+[node name="Sprite" type="Sprite" parent="Background"]
+position = Vector2( -78, -175 )
+texture = ExtResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="Background"]
+position = Vector2( 131, -135 )
+texture = ExtResource( 1 )
+
+[node name="Sprite3" type="Sprite" parent="Background"]
+position = Vector2( -120, 188 )
+texture = ExtResource( 1 )
+
+[node name="Sprite4" type="Sprite" parent="Background"]
+position = Vector2( 169, 189 )
+texture = ExtResource( 1 )
+
+[node name="Sprite5" type="Sprite" parent="Background"]
+position = Vector2( 334, -105 )
+texture = ExtResource( 1 )

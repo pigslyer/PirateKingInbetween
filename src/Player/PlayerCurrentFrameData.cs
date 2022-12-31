@@ -26,6 +26,8 @@ namespace PirateInBetween.Player
 		
 		public PlayerAnimation NextAnimation;
 		public bool FacingRight = true;
+
+		public AttackData AttackData = null;
 	}
 
 	public enum PlayerAnimation

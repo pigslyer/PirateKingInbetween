@@ -6,6 +6,7 @@ namespace PirateInBetween.Player
 	public class PlayerMelee : PlayerBehaviour
 	{
 		[Export] private float _meleeAnimationVelocityMult = 0.1f;
+		[Export] private SlashData _data;
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
@@ -13,6 +14,7 @@ namespace PirateInBetween.Player
 			{
 				data.NextAnimation = PlayerAnimation.MeleeAttack;
 				data.VelocityMult = _meleeAnimationVelocityMult;
+				data.AttackData = _data;
 			}
 		}
 	}

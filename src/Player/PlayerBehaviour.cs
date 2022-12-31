@@ -17,5 +17,16 @@ namespace PirateInBetween.Player
 		}
 
 		public abstract void Run(PlayerCurrentFrameData data);
+
+		// these have to be the same order as "States" in the player scene.
+		[Flags] public enum Behaviours
+		{
+			None = 0,
+			Movement = 1,
+			MeleeAttack = 2,
+			RangedAttack = 4,
+			Noclip = 8,
+			Default = ~0 - Noclip,
+		}
 	}
 }

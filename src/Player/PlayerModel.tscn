@@ -1,75 +1,22 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://src/Player/PlayerModel.cs" type="Script" id=2]
-[ext_resource path="res://assets/pixel.png" type="Texture" id=3]
-
-[sub_resource type="Animation" id=1]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
-}
-
-[sub_resource type="Animation" id=2]
-resource_name = "SlashEnd"
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:modulate")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
-}
-
-[sub_resource type="Animation" id=3]
-resource_name = "SlashStart"
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:modulate")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
+[ext_resource path="res://src/Attacks/Melee/Slasher.tscn" type="PackedScene" id=3]
 
 [node name="PlayerModel" type="Node2D"]
 script = ExtResource( 2 )
 _shootFromPath = NodePath("Flippable/ShootFrom")
-_slashAnimationPlayerPath = NodePath("Flippable/Sprite/AnimationPlayer")
+_slasherPath = NodePath("Flippable/Slasher")
 
 [node name="Flippable" type="Node2D" parent="."]
 
 [node name="ShootFrom" type="Position2D" parent="Flippable"]
 position = Vector2( 27, -10 )
 
-[node name="Sprite" type="Sprite" parent="Flippable"]
-modulate = Color( 1, 1, 1, 0 )
-position = Vector2( 21.75, -3.25 )
-scale = Vector2( 4.5, 36.5 )
-texture = ExtResource( 3 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Flippable/Sprite"]
-root_node = NodePath("../..")
-anims/RESET = SubResource( 1 )
-anims/SlashEnd = SubResource( 2 )
-anims/SlashStart = SubResource( 3 )
+[node name="Slasher" parent="Flippable" instance=ExtResource( 3 )]
+position = Vector2( 22, -2 )
+_hitsLayers = 4
 
 [node name="TempSkeleton" type="Node2D" parent="."]
 

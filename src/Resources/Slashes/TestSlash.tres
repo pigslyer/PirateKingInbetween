@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/Attacks/Melee/SlashData.cs" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+SlashType = 1
+StartupTime = 0.2
+MidPause = 0.4
+DownTime = 0.2
+PostPause = 0.3

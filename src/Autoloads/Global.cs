@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-namespace PirateInBetween.Autoloads
+namespace PirateInBetween.Game.Autoloads
 {
-	public class Global : Node
+	public class Global : Autoload<Global>
 	{
 		
 

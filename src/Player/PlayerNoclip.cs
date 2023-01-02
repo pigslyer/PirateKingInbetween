@@ -2,11 +2,11 @@ using Godot;
 using static Godot.GD;
 using System;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game.Player
 {
 	public class PlayerNoclip : PlayerBehaviour
 	{
-		[Export] private float _noclipMovementSpeed;
+		[Export] private float _noclipMovementSpeed = 100f;
 
 		public override void Run(PlayerCurrentFrameData data)
 		{

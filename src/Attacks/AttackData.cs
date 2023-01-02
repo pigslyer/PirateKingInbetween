@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game
 {
 	public class AttackData : Resource
 	{

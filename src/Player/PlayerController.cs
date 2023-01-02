@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game.Player
 {
     public class PlayerController : KinematicBody2D
 	{
@@ -93,7 +93,7 @@ namespace PirateInBetween.Player
 			{
 				if (data.AttackData is SlashData slash)
 				{
-					_playerModel.Slash(slash);
+					_playerModel.PlaySlash(slash);
 				}
 			}
 

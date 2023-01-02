@@ -4,7 +4,7 @@
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Player/PlayerMovement.cs" type="Script" id=3]
 [ext_resource path="res://src/Player/PlayerMelee.cs" type="Script" id=4]
-[ext_resource path="res://src/Resources/Player/TestSlash.tres" type="Resource" id=5]
+[ext_resource path="res://src/Resources/Slashes/TestSlash.tres" type="Resource" id=5]
 [ext_resource path="res://src/Player/PlayerNoclip.cs" type="Script" id=6]
 [ext_resource path="res://src/Player/PlayerRangedAttack.cs" type="Script" id=7]
 
@@ -49,7 +49,6 @@ script = ExtResource( 7 )
 
 [node name="NoclipMovement" type="Node" parent="States"]
 script = ExtResource( 6 )
-_noclipMovementSpeed = 100.0
 
 [node name="DebugLabel" type="Label" parent="."]
 margin_left = -345.0

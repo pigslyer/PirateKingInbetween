@@ -1,6 +1,6 @@
 using Godot;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween
 {
 	public static class InputManager
 	{
@@ -13,6 +13,7 @@ namespace PirateInBetween.Player
 
 		private static readonly string[] ButtonToString = {
 			"attack_melee",
+			"attack_shoot",
 		};
 
 		private static string GetString(this Button button) => ButtonToString[(int) button];
@@ -21,5 +22,6 @@ namespace PirateInBetween.Player
 	public enum Button
 	{
 		MeleeAttack,
+		RangedAttack,
 	}
 }

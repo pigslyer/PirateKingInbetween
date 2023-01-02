@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game.Player
 {
 	public class PlayerMovement : PlayerBehaviour
 	{

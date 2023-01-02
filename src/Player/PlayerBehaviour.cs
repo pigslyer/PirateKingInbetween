@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game.Player
 {
 	public abstract class PlayerBehaviour : Node
 	{

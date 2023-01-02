@@ -2,4 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn> 4014 </NoWarn>
+  </PropertyGroup>
 </Project>

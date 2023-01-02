@@ -1,12 +1,12 @@
 using Godot;
 using System;
 
-namespace PirateInBetween.Player
+namespace PirateInBetween.Game.Player
 {
 	public class PlayerMelee : PlayerBehaviour
 	{
 		[Export] private float _meleeAnimationVelocityMult = 0.1f;
-		[Export] private SlashData _data;
+		[Export] private SlashData _data = null;
 
 		public override void Run(PlayerCurrentFrameData data)
 		{

@@ -2,9 +2,11 @@ using Godot;
 
 namespace PirateInBetween.Game
 {
-	public abstract class BulletBase : KinematicBody2D
+	public abstract class BulletBase : KinematicBody2DOVerride, IProjectile
 	{
 		protected Vector2 Velocity;
+
+		public abstract void AimAt(Vector2 startFrom, Node2D target, ProjectileData data, PhysicsLayers targetting);
 
 		public override void _PhysicsProcess(float delta)
 		{

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://src/Resources/Slashes/TestSlash.tres" type="Resource" id=5]
 [ext_resource path="res://src/Player/PlayerNoclip.cs" type="Script" id=6]
 [ext_resource path="res://src/Player/PlayerRangedAttack.cs" type="Script" id=7]
+[ext_resource path="res://src/Resources/Bullets/HorizontalBulletTest.tres" type="Resource" id=8]
+[ext_resource path="res://src/Levels/MovingParentDetector.cs" type="Script" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 11.5, 30 )
@@ -16,6 +18,7 @@ script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
 _statesParentPath = NodePath("States")
 _debugLabelPath = NodePath("DebugLabel")
+_cameraPath = NodePath("Camera2D")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
@@ -27,7 +30,6 @@ shape = SubResource( 1 )
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.75, 0.75 )
-smoothing_enabled = true
 
 [node name="States" type="Node" parent="."]
 
@@ -46,9 +48,16 @@ _data = ExtResource( 5 )
 
 [node name="RangedAttack" type="Node" parent="States"]
 script = ExtResource( 7 )
+_bulletData = ExtResource( 8 )
 
 [node name="NoclipMovement" type="Node" parent="States"]
 script = ExtResource( 6 )
+
+[node name="MovingParentDetector" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 0, 10 )
+script = ExtResource( 9 )
+_movingWhoPath = NodePath("..")
 
 [node name="DebugLabel" type="Label" parent="."]
 margin_left = -345.0

@@ -30,5 +30,18 @@ namespace PirateInBetween
 		}
 	}
 
+	public abstract class KinematicBody2DOVerride : KinematicBody2D
+	{
+		public new PhysicsLayers CollisionLayer
+		{
+			get => (PhysicsLayers)base.CollisionLayer;
+			set => base.CollisionLayer = (uint)value;
+		}
 
+		public new PhysicsLayers CollisionMask
+		{
+			get => (PhysicsLayers)base.CollisionMask;
+			set => base.CollisionMask = (uint)value;
+		}
+	}
 }

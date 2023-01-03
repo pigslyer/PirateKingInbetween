@@ -6,20 +6,22 @@ namespace PirateInBetween.Game
 {
 	public class HorizontalBullet : BulletBase
 	{
-		
+		[Export] private float _speed = 100f;
+		private ProjectileData _data;
 
-		public void Setup(Vector2 pos, PhysicsLayers targeting, float speed, bool goingRight)
+		public override void AimAt(Vector2 startFrom, Node2D target, ProjectileData data, PhysicsLayers targetting)
 		{
-			ProjectileManager.Instance.Setup(this, pos);
-			this.SetMask(targeting | PhysicsLayers.World);
-			Velocity = new Vector2(speed * (goingRight ? 1 : -1), 0f);
+			_data = data;
+			ProjectileManager.Instance.Setup(this, startFrom);
+			this.SetMask(targetting | PhysicsLayers.World);
+			Velocity = new Vector2(_speed * Mathf.Sign(target.GlobalPosition.x - startFrom.x), 0f);
 		}
 
 		protected override void OnHit(KinematicCollision2D hit)
 		{
 			if (hit.Collider is IHittable target)
 			{
-				target.Hit(new HitData(1));
+				target.Hit(new HitData(_data.Damage));
 			}
 
 			QueueFree();

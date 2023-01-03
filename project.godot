@@ -20,6 +20,11 @@ config/name="PirateKingInbetween"
 run/main_scene="res://src/Levels/TestLevel/TestLevel.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://src/Autoloads/Global.cs"
+ProjectileManager="*res://src/Autoloads/ProjectileManager.cs"
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/MonoCustomResourceRegistry/plugin.cfg" )

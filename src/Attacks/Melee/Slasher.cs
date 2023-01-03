@@ -7,7 +7,7 @@ namespace PirateInBetween.Game
 {
 	public class Slasher : Node2D
 	{
-		[Export(PropertyHint.Layers2dPhysics)] uint _hitsLayers;
+		[Export(PropertyHint.Layers2dPhysics)] uint _hitsLayers = 0;
 		[Export] List<SlashData> _slashes = new List<SlashData>();
 
 #region Paths

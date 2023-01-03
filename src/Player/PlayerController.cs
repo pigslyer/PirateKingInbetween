@@ -15,12 +15,14 @@ namespace PirateInBetween.Game.Player
 
 		[Export] private NodePath _statesParentPath = null;
 		[Export] private NodePath _debugLabelPath = null;
+		[Export] private NodePath _cameraPath = null;
 #endregion
 
 		// Player's model.
         private PlayerModel _playerModel;
 		// A random label for putting shit on.
 		private Label _debugLabel;
+		private Camera2D _camera;
 
 		private ReadOnlyCollection<PlayerBehaviour> _behaviours;
 
@@ -28,6 +30,7 @@ namespace PirateInBetween.Game.Player
 		{
             _playerModel = GetNode<PlayerModel>(_playerModelPath);
 			_debugLabel = GetNode<Label>(_debugLabelPath);
+			_camera = GetNode<Camera2D>(_cameraPath);
 
 			var behaviours = new List<PlayerBehaviour>();
 
@@ -62,24 +65,33 @@ namespace PirateInBetween.Game.Player
 
 		public override void _PhysicsProcess(float delta)
 		{
-			var data = new PlayerCurrentFrameData(delta) {
-				Velocity = _velocity, 
+			var data = new PlayerCurrentFrameData(delta)
+			{
+				Velocity = _velocity,
 				VelocityMult = 1f,
 				FacingRight = _lastRight,
 			};
 
-			// calling behaviours
+			RunBehaviours(data);
+			ApplyFrameData(data);
 
+			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}";
+		}
+
+		private void RunBehaviours(PlayerCurrentFrameData data)
+		{
 			for (int i = 0; i < _behaviours.Count; i++)
 			{
-				if (IsBehaviourActive((PlayerBehaviour.Behaviours) (1 << i)))
+				if (IsBehaviourActive((PlayerBehaviour.Behaviours)(1 << i)))
 				{
 					_behaviours[i].Run(data);
 				}
 			}
 
-			// applying behaviours
-			
+		}
+
+		private void ApplyFrameData(PlayerCurrentFrameData data)
+		{
 			if (data.VelocityMult > 0f)
 			{
 				_velocity = MoveAndSlide(data.Velocity * data.VelocityMult, Vector2.Up) / data.VelocityMult;
@@ -95,9 +107,11 @@ namespace PirateInBetween.Game.Player
 				{
 					_playerModel.PlaySlash(slash);
 				}
+				else if (data.AttackData is ProjectileData bullet)
+				{
+					_playerModel.Shoot(bullet);
+				}
 			}
-
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}";
 		}
 
 		public override void _Input(InputEvent @event)

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 using static Godot.GD;
 using System;
@@ -15,23 +16,22 @@ namespace PirateInBetween.Game.Player
 
 		[Export] private NodePath _statesParentPath = null;
 		[Export] private NodePath _debugLabelPath = null;
-		[Export] private NodePath _cameraPath = null;
 #endregion
 
 		// Player's model.
         private PlayerModel _playerModel;
 		// A random label for putting shit on.
 		private Label _debugLabel;
-		private Camera2D _camera;
 
 		private ReadOnlyCollection<PlayerBehaviour> _behaviours;
 
 		public override void _Ready()
 		{
+			base._Ready();
+
             _playerModel = GetNode<PlayerModel>(_playerModelPath);
 			_debugLabel = GetNode<Label>(_debugLabelPath);
-			_camera = GetNode<Camera2D>(_cameraPath);
-
+			
 			var behaviours = new List<PlayerBehaviour>();
 
 			foreach (var child in GetNode(_statesParentPath).GetChildren())
@@ -75,6 +75,8 @@ namespace PirateInBetween.Game.Player
 			RunBehaviours(data);
 			ApplyFrameData(data);
 
+			DebugOutOfBounds();
+
 			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}";
 		}
 
@@ -111,6 +113,14 @@ namespace PirateInBetween.Game.Player
 				{
 					_playerModel.Shoot(bullet);
 				}
+			}
+		}
+
+		private void DebugOutOfBounds()
+		{
+			if (GlobalPosition.y > 300f)
+			{
+				GetTree().ReloadCurrentScene();
 			}
 		}
 

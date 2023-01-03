@@ -9,7 +9,7 @@ namespace PirateInBetween.Game
 
 		#region Paths
 
-		[Export] private NodePath _movingWhoPath;
+		[Export] private NodePath _movingWhoPath = null;
 
 		#endregion
 
@@ -35,10 +35,8 @@ namespace PirateInBetween.Game
 
 					EmitSignal(nameof(OnChangedParent));
 				}
-				else
-				{
-					_checked.Add(node);
-				}
+				
+				_checked.Add(node);
 			}
 		}
 	} 

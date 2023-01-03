@@ -7,6 +7,8 @@
 extents = Vector2( 12.5, 4.5 )
 
 [node name="HorizontalBulletTest" type="KinematicBody2D"]
+collision_layer = 0
+collision_mask = 5
 script = ExtResource( 2 )
 _speed = 500.0
 

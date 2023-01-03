@@ -12,6 +12,7 @@ namespace PirateInBetween.Game.Player
 			if (InputManager.IsActionJustPressed(Button.RangedAttack))
 			{
 				data.AttackData = _bulletData; 
+				data.NextAnimation = PlayerAnimation.RangedAttack;
 			}
 		}
 	}

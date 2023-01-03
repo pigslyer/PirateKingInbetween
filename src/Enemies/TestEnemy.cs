@@ -8,7 +8,7 @@ namespace PirateInBetween.Game.Enemies
 
 		public void Hit(HitData data)
 		{
-			if (_health > 0)
+			if (_health > 1)
 			{
 				GD.Print("ow!");
 				_health--;

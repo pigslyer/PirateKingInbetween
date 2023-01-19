@@ -9,6 +9,7 @@ namespace PirateInBetween.Game.Player
 		/// The time since the last frame.
 		/// </summary>
 		public readonly float Delta;
+		public readonly Vector2 Input = InputManager.GetMovementVector();
 
 		public PlayerCurrentFrameData(float delta)
 		{

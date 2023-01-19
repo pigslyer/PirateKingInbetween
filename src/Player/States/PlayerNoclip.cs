@@ -12,7 +12,7 @@ namespace PirateInBetween.Game.Player
 		{
 			data.VelocityMult = 0f;
 
-			Player.Position += InputManager.GetMovementVector() * _noclipMovementSpeed * data.Delta;
+			GetPlayer().Position += data.Input * _noclipMovementSpeed * data.Delta;
 		}
 	}
 }

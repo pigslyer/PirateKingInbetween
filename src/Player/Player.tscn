@@ -1,14 +1,18 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/Player/PlayerMovement.cs" type="Script" id=3]
-[ext_resource path="res://src/Player/PlayerMelee.cs" type="Script" id=4]
+[ext_resource path="res://src/Player/States/PlayerAnimationSelector.cs" type="Script" id=3]
+[ext_resource path="res://src/Player/States/PlayerMelee.cs" type="Script" id=4]
 [ext_resource path="res://src/Resources/Slashes/TestSlash.tres" type="Resource" id=5]
-[ext_resource path="res://src/Player/PlayerNoclip.cs" type="Script" id=6]
-[ext_resource path="res://src/Player/PlayerRangedAttack.cs" type="Script" id=7]
+[ext_resource path="res://src/Player/States/PlayerNoclip.cs" type="Script" id=6]
+[ext_resource path="res://src/Player/States/PlayerRangedAttack.cs" type="Script" id=7]
 [ext_resource path="res://src/Resources/Bullets/HorizontalBulletTest.tres" type="Resource" id=8]
 [ext_resource path="res://src/Levels/MovingParentDetector.cs" type="Script" id=9]
+[ext_resource path="res://src/Player/States/PlayerHorizontalMovement.cs" type="Script" id=10]
+[ext_resource path="res://src/Player/States/PlayerCarrying.cs" type="Script" id=11]
+[ext_resource path="res://src/Player/States/PlayerJumping.cs" type="Script" id=12]
+[ext_resource path="res://src/Player/States/PlayerFalling.cs" type="Script" id=13]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 11.5, 30 )
@@ -18,7 +22,7 @@ collision_layer = 2
 script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
 _statesParentPath = NodePath("States")
-_debugLabelPath = NodePath("DebugLabel")
+_debugLabelPath = NodePath("CanvasLayer/DebugLabel")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
@@ -29,13 +33,22 @@ shape = SubResource( 1 )
 
 [node name="States" type="Node" parent="."]
 
-[node name="Movement" type="Node" parent="States"]
-script = ExtResource( 3 )
+[node name="HorizontalMovement" type="Node" parent="States"]
+script = ExtResource( 10 )
 __meta__ = {
-"_editor_description_": "Handles general movement."
+"_editor_description_": "Handles horizontal movement."
 }
+
+[node name="Falling" type="Node" parent="States"]
+script = ExtResource( 13 )
+
+[node name="Jumping" type="Node" parent="States"]
+script = ExtResource( 12 )
 _jumpHeight = 100.0
 _jumpLength = 0.4
+
+[node name="Carrying" type="Node" parent="States"]
+script = ExtResource( 11 )
 
 [node name="MeleeAttack" type="Node" parent="States"]
 script = ExtResource( 4 )
@@ -49,14 +62,31 @@ _bulletData = ExtResource( 8 )
 [node name="NoclipMovement" type="Node" parent="States"]
 script = ExtResource( 6 )
 
+[node name="AnimationSelector" type="Node" parent="States"]
+script = ExtResource( 3 )
+
 [node name="MovingParentDetector" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 0, 10 )
 script = ExtResource( 9 )
 _movingWhoPath = NodePath("..")
 
-[node name="DebugLabel" type="Label" parent="."]
-margin_left = -345.0
-margin_top = -191.0
-margin_right = -305.0
-margin_bottom = -177.0
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="DebugLabel" type="Label" parent="CanvasLayer"]
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -212.0
+margin_bottom = 14.0
+text = "A, D - left and right
+W - jump
+F - slash
+Q - shoot
+Darker tiles cannot be jumped/shot through.
+You can damage the \"barrel\" in the hold of both ships."
+autowrap = true

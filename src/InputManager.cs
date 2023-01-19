@@ -5,12 +5,20 @@ namespace PirateInBetween
 	public static class InputManager
 	{
 		
-		public static Vector2 GetMovementVector() => Input.GetVector(
-			Button.MoveLeft.GetString(), 
-			Button.MoveRight.GetString(), 
-			Button.MoveUp.GetString(), 
-			Button.MoveDown.GetString()
-		);
+		public static Vector2 GetMovementVector()
+		{
+			if (OS.HasFeature("HTML5"))
+				return new Vector2(
+					Input.GetActionStrength(Button.MoveRight.GetString()) - Input.GetActionStrength(Button.MoveLeft.GetString()),
+					Input.GetActionStrength(Button.MoveDown.GetString()) - Input.GetActionStrength(Button.MoveUp.GetString())	
+				);
+				
+			return Input.GetVector(
+				Button.MoveLeft.GetString(), Button.MoveRight.GetString(), 
+				Button.MoveUp.GetString(), Button.MoveDown.GetString()
+			);
+		
+		}
 
 		public static bool IsActionPresseed(Button button) => Input.IsActionPressed(button.GetString());
 		public static bool IsActionJustPressed(Button button) => Input.IsActionJustPressed(button.GetString());

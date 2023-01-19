@@ -53,7 +53,7 @@ namespace PirateInBetween.Game.Player
 
 #region Active behaviours
 		// starting behaviours are all but noclip. these are the behaviours that have their code run, they don't necesarrily have to do anything (such as melee)
-		public PlayerBehaviour.Behaviours ActiveBehaviours { get; private set; } = PlayerBehaviour.Behaviours.Default;
+		public PlayerBehaviour.Behaviours ActiveBehaviours = PlayerBehaviour.Behaviours.Default;
 		public void SetActiveBehaviours(PlayerBehaviour.Behaviours behaviours) => ActiveBehaviours = behaviours;
 
 		public bool IsBehaviourActive(PlayerBehaviour.Behaviours behaviour) => (ActiveBehaviours & behaviour) != 0;
@@ -116,6 +116,8 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
+
+
 		private void DebugOutOfBounds()
 		{
 			if (GlobalPosition.y > 300f)
@@ -124,16 +126,19 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
+		private PlayerBehaviour.Behaviours _previous = PlayerBehaviour.Behaviours.Default;
+
 		public override void _Input(InputEvent @event)
 		{
 			if (OS.IsDebugBuild() && @event.IsActionPressed("temp_noclip"))
 			{
 				if (IsBehaviourActive(PlayerBehaviour.Behaviours.Noclip))
 				{
-					ActiveBehaviours = PlayerBehaviour.Behaviours.Default;
+					ActiveBehaviours = _previous;
 				}
 				else
 				{
+					_previous = ActiveBehaviours;
 					ActiveBehaviours = PlayerBehaviour.Behaviours.Noclip;
 				}
 			}

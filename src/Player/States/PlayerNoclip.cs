@@ -11,6 +11,7 @@ namespace PirateInBetween.Game.Player
 		public override void Run(PlayerCurrentFrameData data)
 		{
 			data.VelocityMult = 0f;
+			data.NextAnimation = PlayerAnimation.Idle;
 
 			GetPlayer().Position += data.Input * _noclipMovementSpeed * data.Delta;
 		}

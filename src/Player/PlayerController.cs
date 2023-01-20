@@ -14,12 +14,13 @@ namespace PirateInBetween.Game.Player
 #region Paths
         [Export] private NodePath _playerModelPath = null;
 
-		[Export] private NodePath _statesParentPath = null;
+		[Export] private NodePath _playerBehaviourManagerPath = null;
 		[Export] private NodePath _debugLabelPath = null;
 #endregion
 
 		// Player's model.
-        private PlayerModel _playerModel;
+        private PlayerModel _model;
+		private PlayerBehaviourManager _behaviourManager;
 		// A random label for putting shit on.
 		private Label _debugLabel;
 
@@ -29,37 +30,12 @@ namespace PirateInBetween.Game.Player
 		{
 			base._Ready();
 
-            _playerModel = GetNode<PlayerModel>(_playerModelPath);
+            _model = GetNode<PlayerModel>(_playerModelPath);
+			_behaviourManager = GetNode<PlayerBehaviourManager>(_playerBehaviourManagerPath);
 			_debugLabel = GetNode<Label>(_debugLabelPath);
-			
-			var behaviours = new List<PlayerBehaviour>();
 
-			foreach (var child in GetNode(_statesParentPath).GetChildren())
-			{
-				if (child is PlayerBehaviour behaviour)
-				{
-					behaviour.Initialize(this);
-					behaviours.Add(behaviour);
-				}
-				else
-				{
-					PushWarning("Why the hell does States have a child that isn't a state?");
-				}
-			}
-
-			_behaviours = new ReadOnlyCollection<PlayerBehaviour>(behaviours);
+			_behaviourManager.Initialize(this);
 		}
-
-
-#region Active behaviours
-		// starting behaviours are all but noclip. these are the behaviours that have their code run, they don't necesarrily have to do anything (such as melee)
-		public PlayerBehaviour.Behaviours ActiveBehaviours = PlayerBehaviour.Behaviours.Default;
-		public void SetActiveBehaviours(PlayerBehaviour.Behaviours behaviours) => ActiveBehaviours = behaviours;
-
-		public bool IsBehaviourActive(PlayerBehaviour.Behaviours behaviour) => (ActiveBehaviours & behaviour) != 0;
-
-
-#endregion
 
 		private bool _lastRight = true;
 
@@ -80,17 +56,7 @@ namespace PirateInBetween.Game.Player
 			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}";
 		}
 
-		private void RunBehaviours(PlayerCurrentFrameData data)
-		{
-			for (int i = 0; i < _behaviours.Count; i++)
-			{
-				if (IsBehaviourActive((PlayerBehaviour.Behaviours)(1 << i)))
-				{
-					_behaviours[i].Run(data);
-				}
-			}
-
-		}
+		private void RunBehaviours(PlayerCurrentFrameData data) => _behaviourManager.RunBehaviours(data);
 
 		private void ApplyFrameData(PlayerCurrentFrameData data)
 		{
@@ -99,24 +65,28 @@ namespace PirateInBetween.Game.Player
 				_velocity = MoveAndSlide(data.Velocity * data.VelocityMult, Vector2.Up) / data.VelocityMult;
 			}
 
-			_playerModel.SetAnimation(data.NextAnimation, data.FacingRight);
+			if (data.NextAnimation == null)
+			{
+				PushError("Player animation was never set this frame.");
+				data.NextAnimation = PlayerAnimation.Idle;
+			}
 
+			_model.SetAnimation((PlayerAnimation) data.NextAnimation, data.FacingRight);
+			
 			_lastRight = data.FacingRight;
 
 			if (data.AttackData != null)
 			{
 				if (data.AttackData is SlashData slash)
 				{
-					_playerModel.PlaySlash(slash);
+					_model.PlaySlash(slash);
 				}
 				else if (data.AttackData is ProjectileData bullet)
 				{
-					_playerModel.Shoot(bullet);
+					_model.Shoot(bullet);
 				}
 			}
 		}
-
-
 
 		private void DebugOutOfBounds()
 		{
@@ -125,25 +95,5 @@ namespace PirateInBetween.Game.Player
 				GetTree().ReloadCurrentScene();
 			}
 		}
-
-		private PlayerBehaviour.Behaviours _previous = PlayerBehaviour.Behaviours.Default;
-
-		public override void _Input(InputEvent @event)
-		{
-			if (OS.IsDebugBuild() && @event.IsActionPressed("temp_noclip"))
-			{
-				if (IsBehaviourActive(PlayerBehaviour.Behaviours.Noclip))
-				{
-					ActiveBehaviours = _previous;
-				}
-				else
-				{
-					_previous = ActiveBehaviours;
-					ActiveBehaviours = PlayerBehaviour.Behaviours.Noclip;
-				}
-			}
-		}
-
 	}
-
 }

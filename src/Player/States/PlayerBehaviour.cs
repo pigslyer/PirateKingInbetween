@@ -7,10 +7,11 @@ namespace PirateInBetween.Game.Player
 	{
 
 		private PlayerController _player;
+		private PlayerBehaviourManager _state;
 
-		public void Initialize(PlayerController player)
+		public void Initialize(PlayerController player, PlayerBehaviourManager state)
 		{
-			_player = player;
+			_player = player; _state = state;
 		}
 
 		protected T GetSiblingBehaviour<T>(BehavioursPos behaviour) where T : PlayerBehaviour
@@ -21,15 +22,52 @@ namespace PirateInBetween.Game.Player
 		protected bool IsOnFloor() => _player.IsOnFloor();
 		protected PlayerController GetPlayer() => _player;
 
-		protected void SetBehavioursEnabled(Behaviours behaviour, bool state)
+
+		protected bool CanChangeActive { get => _state.CanChangeActive(this); }
+
+		/// <summary>
+		/// If <see cref="CanChangeActive"/> is true, allows the calling behaviour to set whether
+		/// other behaviours can control active behaviours.
+		/// </summary>
+		/// <param name="state">True if this behaviour should take control, false otherwise.</param>
+		protected void SetBehaviourChangesDisabled(bool state)
 		{
+			if (!CanChangeActive)
+			{
+				GD.PushWarning($"State {Name} can't change behaviour stopper state because behaviour stopper is on and it isn't in control.");
+				return;
+			}
+
 			if (state)
 			{
-				_player.ActiveBehaviours |= behaviour;				
+				_state.SetStoppingBehaviourActive(this);
 			}
 			else
 			{
-				_player.ActiveBehaviours &= ~behaviour;
+				_state.SetStoppingBehaviourActive(null);
+			}
+		}
+
+		/// <summary>
+		/// If <see cref="CanChangeActive"/> is true, allows the calling behaviour to change which states are active
+		/// and which aren't.
+		/// </summary>
+		/// <param name="targetBehaviours">The behaviours to be changed.</param>
+		/// <param name="state">Whether they should be turned on or off.</param>
+		protected void SetBehavioursEnabled(Behaviours targetBehaviours, bool state)
+		{
+			if (!CanChangeActive)
+			{
+				GD.PushWarning("Attempted to change active behaviours when this state isn't allowed to.");
+			}
+			
+			if (state)
+			{
+				_state.ActiveBehaviours |= targetBehaviours;
+			}
+			else
+			{
+				_state.ActiveBehaviours &= ~targetBehaviours;
 			}
 		}
 
@@ -46,7 +84,13 @@ namespace PirateInBetween.Game.Player
 			RangedAttack = 1 << BehavioursPos.RangedAttack,
 			Noclip = 1 << BehavioursPos.Noclip,
 			AnimationSelector = 1 << BehavioursPos.AnimationSelector,
-			Default = ~0 - Noclip,
+
+			/// <summary>
+			/// These are all behaviours which the player has enabled at the start.
+			/// Enabled behaviours need not do anything even if they're enabled, they can just check for inputs.
+			/// </summary>
+			/// <returns></returns>
+			Default = ~0 & ~( Noclip ),
 		}
 
 		// these have to be the same order as "States" in the player scene.

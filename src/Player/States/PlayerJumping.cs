@@ -32,7 +32,8 @@ namespace PirateInBetween.Game.Player
         
 
         public override void Run(PlayerCurrentFrameData data)
-        {	
+        {
+
             /*
 			float JumpLength() => Mathf.Sqrt(2 * _jumpHeight / _gravity);
 
@@ -46,12 +47,13 @@ namespace PirateInBetween.Game.Player
 			float JumpVelocityNoGravity() => -_jumpHeight / _jumpLength;
 
             
-			// if we're on the floor and holding down jump
-			if (!_isJumping && IsOnFloor() && data.Input.y < 0f)
+			// if we're on the floor, not doing anything else and holding down jump
+			if (CanChangeActive && !_isJumping && IsOnFloor() && data.Input.y < 0f)
 			{
 				data.Velocity.y = JumpVelocityNoGravity();
                 
                 _isJumping = true;
+                SetBehaviourChangesDisabled(true);
                 SetBehavioursEnabled(Behaviours.Falling, false);
 
 				_jumpDelta = 0f;
@@ -64,6 +66,7 @@ namespace PirateInBetween.Game.Player
                 if (data.Input.y >= 0f || _jumpDelta >= _jumpLength)
                 {
                     _isJumping = false;
+                    SetBehaviourChangesDisabled(false);
                     SetBehavioursEnabled(Behaviours.Falling, true);
                 }
             }

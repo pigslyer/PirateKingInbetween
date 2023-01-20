@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://src/Player/States/PlayerCarrying.cs" type="Script" id=11]
 [ext_resource path="res://src/Player/States/PlayerJumping.cs" type="Script" id=12]
 [ext_resource path="res://src/Player/States/PlayerFalling.cs" type="Script" id=13]
+[ext_resource path="res://src/Player/States/PlayerBehaviourManager.cs" type="Script" id=14]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 11.5, 30 )
@@ -21,7 +22,7 @@ extents = Vector2( 11.5, 30 )
 collision_layer = 2
 script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
-_statesParentPath = NodePath("States")
+_playerBehaviourManagerPath = NodePath("BehaviourManager")
 _debugLabelPath = NodePath("CanvasLayer/DebugLabel")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
@@ -31,38 +32,39 @@ position = Vector2( 0, -28 )
 position = Vector2( 0, -30 )
 shape = SubResource( 1 )
 
-[node name="States" type="Node" parent="."]
+[node name="BehaviourManager" type="Node" parent="."]
+script = ExtResource( 14 )
 
-[node name="HorizontalMovement" type="Node" parent="States"]
+[node name="HorizontalMovement" type="Node" parent="BehaviourManager"]
 script = ExtResource( 10 )
 __meta__ = {
 "_editor_description_": "Handles horizontal movement."
 }
 
-[node name="Falling" type="Node" parent="States"]
+[node name="Falling" type="Node" parent="BehaviourManager"]
 script = ExtResource( 13 )
 
-[node name="Jumping" type="Node" parent="States"]
+[node name="Jumping" type="Node" parent="BehaviourManager"]
 script = ExtResource( 12 )
 _jumpHeight = 100.0
 _jumpLength = 0.4
 
-[node name="Carrying" type="Node" parent="States"]
+[node name="Carrying" type="Node" parent="BehaviourManager"]
 script = ExtResource( 11 )
 
-[node name="MeleeAttack" type="Node" parent="States"]
+[node name="MeleeAttack" type="Node" parent="BehaviourManager"]
 script = ExtResource( 4 )
 _meleeAnimationVelocityMult = 0.6
 _data = ExtResource( 5 )
 
-[node name="RangedAttack" type="Node" parent="States"]
+[node name="RangedAttack" type="Node" parent="BehaviourManager"]
 script = ExtResource( 7 )
 _bulletData = ExtResource( 8 )
 
-[node name="NoclipMovement" type="Node" parent="States"]
+[node name="NoclipMovement" type="Node" parent="BehaviourManager"]
 script = ExtResource( 6 )
 
-[node name="AnimationSelector" type="Node" parent="States"]
+[node name="AnimationSelector" type="Node" parent="BehaviourManager"]
 script = ExtResource( 3 )
 
 [node name="MovingParentDetector" type="RayCast2D" parent="."]
@@ -78,7 +80,7 @@ layer = 128
 margin_right = 40.0
 margin_bottom = 14.0
 
-[node name="Label" type="Label" parent="CanvasLayer"]
+[node name="Instructions" type="Label" parent="CanvasLayer"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -212.0

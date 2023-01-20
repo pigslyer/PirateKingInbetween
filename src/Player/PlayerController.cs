@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game.Player
 {
-    public class PlayerController : KinematicBody2D
+    public class PlayerController : KinematicBody2DOverride
 	{
 		private Vector2 _velocity = Vector2.Zero;
 

@@ -2,7 +2,7 @@ using Godot;
 
 namespace PirateInBetween.Game
 {
-	public abstract class BulletBase : KinematicBody2DOVerride, IProjectile
+	public abstract class BulletBase : KinematicBody2DOverride, IProjectile
 	{
 		protected Vector2 Velocity;
 

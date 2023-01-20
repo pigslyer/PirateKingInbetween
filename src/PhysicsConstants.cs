@@ -30,7 +30,7 @@ namespace PirateInBetween
 		}
 	}
 
-	public abstract class KinematicBody2DOVerride : KinematicBody2D
+	public abstract class KinematicBody2DOverride : KinematicBody2D
 	{
 		public new PhysicsLayers CollisionLayer
 		{

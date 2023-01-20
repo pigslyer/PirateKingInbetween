@@ -19,12 +19,14 @@ namespace PirateInBetween
 	/// </summary>
 	public abstract class Area2DOverride : Area2D
 	{
-		public new PhysicsLayers CollisionLayer { 
+		public new PhysicsLayers CollisionLayer 
+		{ 
 			get => (PhysicsLayers) base.CollisionLayer; 
 			set => base.CollisionLayer = (uint) value; 
 		}
 		
-		public new PhysicsLayers CollisionMask{
+		public new PhysicsLayers CollisionMask
+		{
 			get => (PhysicsLayers) base.CollisionMask;
 			set => base.CollisionMask = (uint) value;
 		}

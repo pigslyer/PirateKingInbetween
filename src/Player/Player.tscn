@@ -22,10 +22,19 @@ extents = Vector2( 11.5, 30 )
 collision_layer = 2
 script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
+_playerBehaviourManagerPath = NodePath("BehaviourManager")
 _debugLabelPath = NodePath("CanvasLayer/DebugLabel")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
+
+[node name="BoxDetector" type="RayCast2D" parent="PlayerModel"]
+position = Vector2( 11, 4 )
+cast_to = Vector2( 30, 0 )
+collision_mask = 0
+__meta__ = {
+"_editor_description_": "it being a child of PlayerModel ensures that its position keeps in sync with the player's"
+}
 
 [node name="Body" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -30 )
@@ -50,6 +59,7 @@ _jumpLength = 0.4
 
 [node name="Carrying" type="Node" parent="BehaviourManager"]
 script = ExtResource( 11 )
+_carryingDetectorPath = NodePath("../../PlayerModel/BoxDetector")
 
 [node name="MeleeAttack" type="Node" parent="BehaviourManager"]
 script = ExtResource( 4 )
@@ -71,11 +81,6 @@ enabled = true
 cast_to = Vector2( 0, 10 )
 script = ExtResource( 9 )
 _movingWhoPath = NodePath("..")
-
-[node name="BoxDetector" type="RayCast2D" parent="."]
-position = Vector2( 12, -24 )
-cast_to = Vector2( 30, 0 )
-collision_mask = 0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 128

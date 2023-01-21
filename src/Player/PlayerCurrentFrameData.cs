@@ -62,5 +62,6 @@ namespace PirateInBetween.Game.Player
 		Run,
 		MeleeAttack,
 		RangedAttack,
+		Pushing,
 	}
 }

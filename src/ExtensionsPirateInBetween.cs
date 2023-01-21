@@ -41,15 +41,24 @@ public static partial class Extensions{
 	}
 
 	/// <summary>
-	/// Casts ray to global position <see cref="to"/>, using mask <see cref="mask"/>. If either is null, the current is kept.
+	/// Casts ray to global position <see cref="toGlobal"/>, using mask <see cref="mask"/>. If either is null, the current is kept.
 	/// The function returns true if the ray now collides with anything.
 	/// </summary>
-	public static bool CastRay(this RayCast2D ray, Vector2? to = null, PhysicsLayers? mask = null)
+	/// <param name="ray"></param>
+	/// <param name="toGlobal"></param>
+	/// <param name="mask"></param>
+	/// <returns></returns>
+	public static bool CastRay(this RayCast2D ray, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null)
 	{
-		if (to != null)
+		if (toGlobal != null)
 		{
-			ray.CastTo = ray.ToLocal((Vector2) to);
+			ray.CastTo = ray.ToLocal((Vector2) toGlobal);
 		}
+		else if (toLocal != null)
+		{
+			ray.CastTo = (Vector2) toLocal;
+		}
+
 		if (mask != null)
 		{
 			ray.CollisionMask = (uint)mask;
@@ -65,9 +74,9 @@ public static partial class Extensions{
 	/// The function returns true if the ray now collides with anything.
 	/// <see cref="collidingWith"/> represents the first object the newly updated ray intersects.
 	/// </summary>
-	public static bool TryCollideRay<T>(this RayCast2D ray, out T collidingWith, Vector2? to = null, PhysicsLayers? mask = null) where T : CollisionObject2D
+	public static bool TryCollideRay<T>(this RayCast2D ray, out T collidingWith, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null) where T : CollisionObject2D
 	{
-		bool ret = CastRay(ray, to, mask);
+		bool ret = CastRay(ray, toGlobal, toLocal, mask);
 
 		collidingWith = ret ? (T) ray.GetCollider() : null;
 

@@ -19,7 +19,20 @@ namespace PirateInBetween.Game.Player
 			return GetParent().GetChild<T>((int)behaviour);
 		}
 
-		protected bool IsOnFloor() => _player.IsOnFloor();
+		protected Vector2 Position => _player.Position;
+		protected Vector2 GlobalPosition => _player.GlobalPosition;
+		
+		
+		// sometimes, every couple of frames, there seems to be 1 frame where the player is not on floor. this is a simple fix that ensures that probably won't happen
+		// maybe implement a timer or something, could even add coyote time that way
+		private bool _wasOnFloor = false;
+		protected bool IsOnFloor()
+		{
+			bool ret = _wasOnFloor || _player.IsOnFloor();
+			_wasOnFloor = _player.IsOnFloor();
+			return ret;
+		}
+
 		protected PlayerController GetPlayer() => _player;
 
 
@@ -90,7 +103,7 @@ namespace PirateInBetween.Game.Player
 			/// Enabled behaviours need not do anything even if they're enabled, they can just check for inputs.
 			/// </summary>
 			/// <returns></returns>
-			Default = ~0 & ~( Noclip ),
+			Default = ~( Noclip ),
 		}
 
 		// these have to be the same order as "States" in the player scene.

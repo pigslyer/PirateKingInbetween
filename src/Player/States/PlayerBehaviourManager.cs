@@ -13,6 +13,11 @@ namespace PirateInBetween.Game.Player
     public class PlayerBehaviourManager : Node
     {		
 
+        /// <summary>
+        /// Dictates how long it takes for <see cref="PlayerBehaviour"/> to realise that the player isn't on the floor.
+        /// </summary>
+        [Export] private float _playerCoyoteTimeLength = 0.3f;
+
         private PlayerController _player;
 
         private List<PlayerBehaviour> _behaviours = new List<PlayerBehaviour>();
@@ -60,6 +65,20 @@ namespace PirateInBetween.Game.Player
 			}
         }
 
+        private float _timeSinceOnFloor = 0f;
+        public override void _PhysicsProcess(float delta)
+        {
+            if (_player.IsOnFloor())
+            {
+                _timeSinceOnFloor = 0f;
+            }
+            else
+            {
+                _timeSinceOnFloor += delta;
+            }
+        }
+
+        public bool IsPlayerOnFloor() => _timeSinceOnFloor < _playerCoyoteTimeLength;
         
         private PlayerBehaviour.Behaviours _previous = PlayerBehaviour.Behaviours.Default;
 

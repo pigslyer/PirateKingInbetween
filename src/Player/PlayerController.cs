@@ -53,7 +53,7 @@ namespace PirateInBetween.Game.Player
 
 			DebugOutOfBounds();
 
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}";
+			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}";
 		}
 
 		private void RunBehaviours(PlayerCurrentFrameData data) => _behaviourManager.RunBehaviours(data);

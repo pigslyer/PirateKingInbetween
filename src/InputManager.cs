@@ -31,6 +31,7 @@ namespace PirateInBetween
 			"mv_down",
 			"attack_melee",
 			"attack_shoot",
+			"player_carry",
 		};
 
 		private static string GetString(this Button button) => ButtonToString[(int) button];
@@ -44,5 +45,6 @@ namespace PirateInBetween
 		MoveDown,
 		MeleeAttack,
 		RangedAttack,
+		Carry
 	}
 }

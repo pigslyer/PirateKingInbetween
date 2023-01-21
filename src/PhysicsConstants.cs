@@ -12,6 +12,7 @@ namespace PirateInBetween
 		World = 1,
 		Player = 2,
 		WorldHittable = 4,
+		CarriableBox = 8,
 	}
 
 	/// <summary>
@@ -46,4 +47,20 @@ namespace PirateInBetween
 			set => base.CollisionMask = (uint)value;
 		}
 	}
+
+	public abstract class StaticBody2DOverride : StaticBody2D
+	{
+		public new PhysicsLayers CollisionLayer
+		{
+			get => (PhysicsLayers)base.CollisionLayer;
+			set => base.CollisionLayer = (uint)value;
+		}
+
+		public new PhysicsLayers CollisionMask
+		{
+			get => (PhysicsLayers)base.CollisionMask;
+			set => base.CollisionMask = (uint)value;
+		}
+	}
+
 }

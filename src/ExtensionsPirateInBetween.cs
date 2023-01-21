@@ -39,6 +39,40 @@ public static partial class Extensions{
 	{
 		await node.ToSignal(node.GetTree(), "physics_frame");
 	}
-		
+
+	/// <summary>
+	/// Casts ray to global position <see cref="to"/>, using mask <see cref="mask"/>. If either is null, the current is kept.
+	/// The function returns true if the ray now collides with anything.
+	/// </summary>
+	public static bool CastRay(this RayCast2D ray, Vector2? to = null, PhysicsLayers? mask = null)
+	{
+		if (to != null)
+		{
+			ray.CastTo = ray.ToLocal((Vector2) to);
+		}
+		if (mask != null)
+		{
+			ray.CollisionMask = (uint)mask;
+		}
+
+		ray.ForceRaycastUpdate();
+
+		return ray.IsColliding();
+	}
+
+	/// <summary>
+	/// Casts ray to global position <see cref="to"/>, using mask <see cref="mask"/>. If either is null, the current is kept.
+	/// The function returns true if the ray now collides with anything.
+	/// <see cref="collidingWith"/> represents the first object the newly updated ray intersects.
+	/// </summary>
+	public static bool TryCollideRay<T>(this RayCast2D ray, out T collidingWith, Vector2? to = null, PhysicsLayers? mask = null) where T : CollisionObject2D
+	{
+		bool ret = CastRay(ray, to, mask);
+
+		collidingWith = ret ? (T) ray.GetCollider() : null;
+
+		return ret;
+	}
+
 	#endregion
 }

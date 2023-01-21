@@ -37,14 +37,5 @@
 			"\t}",
 			"}"
 		]
-	},
-	"summary of element":{
-		"scope":"csharp",
-		"prefix":"summary",
-		"body":[
-			"/// <summary>",
-			"/// ${0:Tvoja mami gay.}",
-			"/// </summary>",
-		]
 	}
 }

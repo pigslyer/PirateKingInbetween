@@ -7,12 +7,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Gary.Dialogue
+namespace PirateInBetween.Game.Dialogue
 {
-    public class DialogueInstance
-    {
-        public uint Counter {get; private set;} = 0;
+	public class Dialogue
+	{
+		private readonly DialoguePlayer _player;
+		
+		public static Dialogue Load()
+		{
+			return null;
+		}
 
-        public uint GetId() => Counter++;
-    }
+
+	}
 }

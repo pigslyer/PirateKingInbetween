@@ -7,11 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Gary.Dialogue
+namespace PirateInBetween.Game.Dialogue
 {
-    public abstract class DialogueNode
-    {
-        public int ID {get; protected set;}
-        
-    }
+	public class DialoguePlayer : Control
+	{
+		
+	}
 }

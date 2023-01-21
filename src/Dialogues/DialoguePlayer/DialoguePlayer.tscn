@@ -1,0 +1,136 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://src/Resources/UI/FONT.tres" type="DynamicFont" id=2]
+[ext_resource path="res://src/Dialogues/DialoguePlayer/DialoguePlayer.cs" type="Script" id=3]
+[ext_resource path="res://src/Dialogues/DialoguePlayer/DialogueLine.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Theme" id=2]
+default_font = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.231373, 0.231373, 0.247059, 1 )
+border_width_left = 16
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+border_blend = true
+expand_margin_left = 16.0
+
+[node name="DialoguePlayer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 2 )
+script = ExtResource( 3 )
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.6
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PortraitPanel" type="Panel" parent="Panel/VBoxContainer"]
+margin_right = 409.0
+margin_bottom = 298.0
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer/PortraitPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_top = 16
+custom_constants/margin_bottom = 16
+
+[node name="Portrait" type="TextureRect" parent="Panel/VBoxContainer/PortraitPanel/MarginContainer"]
+margin_top = 16.0
+margin_right = 409.0
+margin_bottom = 282.0
+texture = ExtResource( 1 )
+stretch_mode = 6
+
+[node name="LineContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
+margin_top = 302.0
+margin_right = 409.0
+margin_bottom = 600.0
+grow_vertical = 0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+scroll_vertical = 100
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer/LineContainer"]
+margin_top = -100.0
+margin_right = 397.0
+margin_bottom = 334.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 16
+custom_constants/margin_left = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/VBoxContainer/LineContainer/MarginContainer"]
+margin_left = 16.0
+margin_right = 381.0
+margin_bottom = 434.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+alignment = 2
+
+[node name="Control" type="Control" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer"]
+margin_right = 365.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 200 )
+size_flags_vertical = 3
+
+[node name="PanelContainer" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer" instance=ExtResource( 4 )]
+margin_top = 216.0
+margin_right = 365.0
+margin_bottom = 278.0
+
+[node name="PlayerSection" type="Panel" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer"]
+margin_top = 294.0
+margin_right = 365.0
+margin_bottom = 434.0
+rect_min_size = Vector2( 0, 140 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection"]
+anchor_left = 0.02
+anchor_top = 0.02
+anchor_right = 0.98
+anchor_bottom = 0.98
+size_flags_vertical = 3
+
+[node name="SpeakerName" type="Label" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer"]
+margin_right = 350.0
+margin_bottom = 17.0
+text = "Protagonist"
+
+[node name="Choices" type="VBoxContainer" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer"]
+margin_top = 21.0
+margin_right = 350.0
+margin_bottom = 125.0
+
+[node name="Choice1" type="Button" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer/Choices"]
+margin_right = 350.0
+margin_bottom = 23.0
+text = "Hello!"
+
+[node name="Choice2" type="Button" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer/Choices"]
+margin_top = 27.0
+margin_right = 350.0
+margin_bottom = 50.0
+text = "What?????"
+
+[node name="Choice3" type="Button" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer/Choices"]
+margin_top = 54.0
+margin_right = 350.0
+margin_bottom = 77.0
+text = "O-M-G SAME!"
+
+[node name="Choice4" type="Button" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection/VBoxContainer/Choices"]
+margin_top = 81.0
+margin_right = 350.0
+margin_bottom = 104.0
+text = "Choice 4"

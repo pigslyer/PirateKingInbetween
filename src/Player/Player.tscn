@@ -84,6 +84,7 @@ _movingWhoPath = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 128
+visible = false
 
 [node name="DebugLabel" type="Label" parent="CanvasLayer"]
 margin_right = 40.0

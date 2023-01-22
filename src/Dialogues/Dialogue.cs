@@ -14,12 +14,31 @@ namespace PirateInBetween.Game.Dialogue
 
 		/// <summary>
 		/// Returns the next <see cref="DialogueResponse"/>.
-		/// Choice is <see langword="null"/> if the previous line wasn't a choice, otherwise it falls in the interval 
-		/// [0-choiceCount).
+		/// Choice is <see langword="null"/> if the previous line wasn't a choice, otherwise it falls in the interval
+		///  [0-choiceCount).
 		/// </summary>
 		/// <param name="choice"></param>
 		/// <returns></returns>
 		protected abstract DialogueResponse GetNextResponse(int? choice = null);
+
+		/// <summary>
+		/// The last <see cref="DialogueResponse"/> given by either <see cref="Next"/> or <see cref="Choose"/>.
+		/// </summary>
+		/// <value></value>
+		public DialogueResponse LastResponse {get; private set; } = null;
+
+		/// <summary>
+		/// Returns <see langword="true"/> if this <see cref="Dialogue"/> has lines left.
+		/// </summary>
+		/// <returns></returns>
+		public bool HasNext() => LastResponse == null || LastResponse.Type != DialogueResponse.Types.End;
+
+		/// <summary>
+		/// Returns <see langword="true"/> if this <see cref="Dialogue"/> last gave a <see cref="DialogueResponse.Types.Choice"/> response
+		/// and <see cref="HasNext"/> is <see langword="true"/>, thereby expecting a call to <see cref="Choose"/> instead of <see cref="Next"/>.
+		/// </summary>
+		/// <returns></returns>
+		public bool RequiresChoice() => HasNext() && LastResponse != null && LastResponse.Type == DialogueResponse.Types.Choice;
 
 
 		/// <summary>
@@ -34,7 +53,8 @@ namespace PirateInBetween.Game.Dialogue
 				throw new InvalidOperationException();
 			}
 
-			return LastResponse = GetNextResponse();
+			LastResponse = GetNextResponse();
+			return LastResponse;
 		}
 
 		/// <summary>
@@ -58,26 +78,5 @@ namespace PirateInBetween.Game.Dialogue
 
 			return LastResponse = GetNextResponse(response);
 		}
-
-		/// <summary>
-		/// The last <see cref="DialogueResponse"/> given by either <see cref="Next"/> or <see cref="Choose"/>.
-		/// </summary>
-		/// <value></value>
-		public DialogueResponse LastResponse { get; private set; } = null;
-
-		/// <summary>
-		/// Returns <see langword="true"/> if this <see cref="Dialogue"/> has lines left.
-		/// </summary>
-		/// <returns></returns>
-		public bool HasNext() => LastResponse.Type != DialogueResponse.Types.End;
-
-		/// <summary>
-		/// Returns <see langword="true"/> if this <see cref="Dialogue"/> last gave a <see cref="DialogueResponse.Types.Choice"/> response
-		/// and <see cref="HasNext"/> is <see langword="true"/>, thereby expecting a call to <see cref="Choose"/> instead of <see cref="Next"/>.
-		/// </summary>
-		/// <returns></returns>
-		public bool RequiresChoice() => HasNext() && LastResponse != null && LastResponse.Type == DialogueResponse.Types.Choice;
-
-
 	}
 }

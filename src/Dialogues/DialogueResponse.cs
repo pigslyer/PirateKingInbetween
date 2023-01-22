@@ -11,28 +11,36 @@ namespace PirateInBetween.Game.Dialogue
 {
 	public class DialogueResponse
 	{
+		public Types Type { get; private set; }
+
+		public DialogueCharacter Speaker { get; private set; }
+
+		public string Line {get; private set;}
+		public bool IsPlayer { get; private set; }
+		public string[] Choices { get; private set; } = null;
+		public int ChoiceCount => Choices?.Length ?? -1;
+
 		public DialogueResponse()
 		{
 			Type = Types.End;
 		}
 
-		public DialogueResponse(string line)
+		public DialogueResponse(DialogueCharacter speaker, string line, bool isPlayer)
 		{
 			Type = Types.Line;
-			Line = line;
+			Speaker = speaker; Line = line; IsPlayer = isPlayer;
 		}
 
-		public DialogueResponse(string[] choices)
+		public DialogueResponse(DialogueCharacter speaker, string[] choices)
 		{
 			Type =Types.Choice;
-			Choices = choices;
+			Speaker = speaker; Choices = choices;
 		}
-		
 
-		public readonly Types Type;
-		public readonly string Line;
-		public readonly string[] Choices;
-		public int ChoiceCount => Choices.Length;
+		public override string ToString()
+		{
+			return $"Type: {Type}, Speaker: {Speaker}, Line: {Line}, IsPlayer: {IsPlayer}, ChoiceCount: {ChoiceCount}";
+		}
 
 		public enum Types
 		{

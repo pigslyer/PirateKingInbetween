@@ -16,7 +16,7 @@
 	// 	"description": "Log output to console"
 	// }
 
-	"new godot c# file":{
+	"import all the basics":{
 		"scope":"csharp",
 		"prefix":"using Godot",
 		"body": [
@@ -28,14 +28,36 @@
 			"using System.Collections;",
 			"using System.Collections.Generic;",
 			"using System.Collections.ObjectModel;",
-			"",
+		]
+	},
+
+	"namespace decleration":{
+		"scope":"csharp",
+		"prefix":"namespace PirateInBetween",
+		"body":[
 			"namespace PirateInBetween${1:.Game}",
 			"{",
-			"\tpublic class ${2:$TM_FILENAME_BASE} : ${3:Node}",
-			"\t{",
-			"\t\t$0",
-			"\t}",
+			"\t$0",
 			"}"
+		]
+	},
+
+	"creating class":{
+		"scope":"csharp",
+		"prefix":"public class",
+		"body":[
+			"public class ${1:$TM_FILENAME_BASE} : ${2:Node}",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+
+	"see cref":{
+		"scope":"csharp",
+		"prefix":"<see cref=\"",
+		"body":[
+			"<see cref=\"$1\"/>$0"
 		]
 	}
 }

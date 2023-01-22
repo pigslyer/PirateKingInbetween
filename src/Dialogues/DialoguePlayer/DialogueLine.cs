@@ -11,6 +11,8 @@ namespace PirateInBetween.Game.Dialogue
 {
 	public class DialogueLine : PanelContainer
 	{
+		private const string GROUP = "DIALOGUE_LINE_GROUP";
+
 		#region Paths
 		[Export] private NodePath _speakerLabelPath;
 		[Export] private NodePath _lineLabelPath;
@@ -25,6 +27,11 @@ namespace PirateInBetween.Game.Dialogue
 			textLabel.Text = text;
 
 			speakerLabel.Align = textLabel.Align = rightSide ? Label.AlignEnum.Right : Label.AlignEnum.Left;
+		}
+
+		public static void FreeAll()
+		{
+			Autoloads.Global.Instance.GetTree().CallGroup(GROUP, "queue_free");
 		}
 	}
 }

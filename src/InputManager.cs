@@ -9,20 +9,20 @@ namespace PirateInBetween
 		{
 			if (OS.HasFeature("HTML5"))
 				return new Vector2(
-					Input.GetActionStrength(Button.MoveRight.GetString()) - Input.GetActionStrength(Button.MoveLeft.GetString()),
-					Input.GetActionStrength(Button.MoveDown.GetString()) - Input.GetActionStrength(Button.MoveUp.GetString())	
+					Input.GetActionStrength(InputButton.MoveRight.GetString()) - Input.GetActionStrength(InputButton.MoveLeft.GetString()),
+					Input.GetActionStrength(InputButton.MoveDown.GetString()) - Input.GetActionStrength(InputButton.MoveUp.GetString())	
 				);
 				
 			return Input.GetVector(
-				Button.MoveLeft.GetString(), Button.MoveRight.GetString(), 
-				Button.MoveUp.GetString(), Button.MoveDown.GetString()
+				InputButton.MoveLeft.GetString(), InputButton.MoveRight.GetString(), 
+				InputButton.MoveUp.GetString(), InputButton.MoveDown.GetString()
 			);
 		
 		}
 
-		public static bool IsActionPresseed(Button button) => Input.IsActionPressed(button.GetString());
-		public static bool IsActionJustPressed(Button button) => Input.IsActionJustPressed(button.GetString());
-		public static bool IsActionJustReleased(Button button) => Input.IsActionJustReleased(button.GetString());
+		public static bool IsActionPresseed(InputButton button) => Input.IsActionPressed(button.GetString());
+		public static bool IsActionJustPressed(InputButton button) => Input.IsActionJustPressed(button.GetString());
+		public static bool IsActionJustReleased(InputButton button) => Input.IsActionJustReleased(button.GetString());
 
 		private static readonly string[] ButtonToString = {
 			"mv_right",
@@ -34,10 +34,10 @@ namespace PirateInBetween
 			"player_carry",
 		};
 
-		private static string GetString(this Button button) => ButtonToString[(int) button];
+		private static string GetString(this InputButton button) => ButtonToString[(int) button];
 	}
 
-	public enum Button
+	public enum InputButton
 	{
 		MoveRight,
 		MoveUp,

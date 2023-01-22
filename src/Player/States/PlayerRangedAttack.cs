@@ -9,7 +9,7 @@ namespace PirateInBetween.Game.Player
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
-			if (InputManager.IsActionJustPressed(Button.RangedAttack))
+			if (InputManager.IsActionJustPressed(InputButton.RangedAttack))
 			{
 				data.AttackData = _bulletData; 
 				data.NextAnimation = PlayerAnimation.RangedAttack;

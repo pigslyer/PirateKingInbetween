@@ -10,7 +10,7 @@ namespace PirateInBetween.Game.Player
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
-			if (InputManager.IsActionPresseed(Button.MeleeAttack))
+			if (InputManager.IsActionPresseed(InputButton.MeleeAttack))
 			{
 				data.NextAnimation = PlayerAnimation.MeleeAttack;
 				data.VelocityMult = _meleeAnimationVelocityMult;

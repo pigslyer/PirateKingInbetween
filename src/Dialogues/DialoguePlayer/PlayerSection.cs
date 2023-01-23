@@ -32,41 +32,45 @@ namespace PirateInBetween.Game.Dialogue
 
 		}
 
-		public async Task AwaitContinue()
+		public async Task AwaitContinue(string text = "(Continue)")
 		{
-			await ToSignal(AddButton("(Continue)"), "pressed");
+			await ToSignal(AddButton(1, text), "pressed");
 			RemoveButtons();
 		}
 
-		public async Task<int> SelectChoice(string[] choices)
+		public async Task<uint> SelectChoice(string[] choices, string speaker)
 		{
-			async Task<int> WaitForButton(Button button, int value)
+			async Task<uint> WaitForButton(Button button, uint value)
 			{
 				await ToSignal(button, "pressed");
 				return value;
 			}
 
-			Task<int>[] tasks = new Task<int>[choices.Length];
+			Label speakerLabel = GetNode<Label>(_speakerNamePath);
+			speakerLabel.Text = speaker;
 
-			for (int i = 0; i < choices.Length; i++)
+			Task<uint>[] tasks = new Task<uint>[choices.Length];
+
+			for (uint i = 0; i < choices.Length; i++)
 			{
-				tasks[i] = WaitForButton(AddButton(choices[i]), i);
+				tasks[i] = WaitForButton(AddButton(i + 1, choices[i]), i);
 			}
 
-			int ret = (await Task.WhenAny<int>(tasks)).Result;
+			uint ret = (await Task.WhenAny<uint>(tasks)).Result;
 
 			RemoveButtons();
+			speakerLabel.Text = " ";
 
 			return ret;
 		}
 
-		private Button AddButton(string text)
+		private Button AddButton(uint number, string text)
 		{
-			Button button = _choiceButton.Instance<Button>();
-			button.Text = text;
+			ChoiceButton button = _choiceButton.Instance<ChoiceButton>();
+			button.Initialize(number, text);
 			button.AddToGroup(BUTTON_GROUP);
 			_container.AddChild(button);
-			return button;
+			return button.GetButton();
 		}
 
 		private void RemoveButtons()

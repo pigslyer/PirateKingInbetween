@@ -26,6 +26,7 @@ _textDisplayScene = ExtResource( 4 )
 __portraitTexturePath = NodePath("Panel/VBoxContainer/PortraitPanel/MarginContainer/Portrait")
 __playerSectionPath = NodePath("Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer/PlayerSection")
 __lineDisplayPath = NodePath("Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer")
+__scrollContainerPath = NodePath("Panel/VBoxContainer/LineContainer")
 
 [node name="Panel" type="Panel" parent="."]
 anchor_left = 0.6
@@ -62,6 +63,7 @@ margin_bottom = 600.0
 grow_vertical = 0
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
+scroll_vertical = 58
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer/LineContainer"]
 margin_right = 409.0
@@ -89,3 +91,5 @@ rect_min_size = Vector2( 0, 200 )
 size_flags_vertical = 3
 
 [node name="PlayerSection" parent="Panel/VBoxContainer/LineContainer/MarginContainer/VBoxContainer" instance=ExtResource( 5 )]
+margin_top = 216.0
+margin_bottom = 356.0

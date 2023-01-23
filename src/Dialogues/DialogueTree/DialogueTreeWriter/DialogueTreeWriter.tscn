@@ -1,8 +1,12 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://src/Dialogues/DialoguePlayer/DialoguePlayer.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/DialogueTreeWriter.cs" type="Script" id=2]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/FileChooser.cs" type="Script" id=3]
+[ext_resource path="res://src/GenericUseful/QuitHandler.cs" type="Script" id=4]
+[ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/Manager.cs" type="Script" id=5]
+[ext_resource path="res://icon.png" type="Texture" id=6]
+[ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/CharacterManager.cs" type="Script" id=7]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 8.0
@@ -11,6 +15,39 @@ content_margin_top = 8.0
 content_margin_bottom = 8.0
 bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
 
+[sub_resource type="InputEventKey" id=6]
+control = true
+command = true
+scancode = 80
+
+[sub_resource type="ShortCut" id=7]
+shortcut = SubResource( 6 )
+
+[sub_resource type="InputEventKey" id=2]
+control = true
+command = true
+scancode = 83
+
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
+
+[sub_resource type="InputEventKey" id=4]
+shift = true
+control = true
+command = true
+scancode = 83
+
+[sub_resource type="ShortCut" id=5]
+shortcut = SubResource( 4 )
+
+[sub_resource type="InputEventKey" id=8]
+control = true
+command = true
+scancode = 79
+
+[sub_resource type="ShortCut" id=9]
+shortcut = SubResource( 8 )
+
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,11 +55,8 @@ anchor_bottom = 1.0
 [node name="DialogueTreeWriter" type="TabContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-
-[node name="CanvasLayer" type="CanvasLayer" parent="DialogueTreeWriter"]
-
-[node name="DialoguePlayer" parent="DialogueTreeWriter/CanvasLayer" instance=ExtResource( 1 )]
-visible = true
+script = ExtResource( 5 )
+__quitHandlerPath = NodePath("../QuitConfirm")
 
 [node name="Writer" type="MarginContainer" parent="DialogueTreeWriter"]
 anchor_right = 1.0
@@ -36,10 +70,12 @@ custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
 script = ExtResource( 2 )
-__dialoguePlayerPath = NodePath("../CanvasLayer/DialoguePlayer")
+__dialoguePlayerPath = NodePath("../../CanvasLayer/DialoguePlayer")
 __dialogueEditorPath = NodePath("VBoxContainer/Main/TextEdit")
 __currentFileLabelPath = NodePath("VBoxContainer/CurrentFile/FileName")
 __fileChooserPath = NodePath("../../FileChooser")
+__unsavedChangesStarPath = NodePath("VBoxContainer/CurrentFile/StarDisplay")
+__managerPath = NodePath("..")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DialogueTreeWriter/Writer"]
 margin_left = 16.0
@@ -50,17 +86,25 @@ margin_bottom = 548.0
 [node name="CurrentFile" type="HBoxContainer" parent="DialogueTreeWriter/Writer/VBoxContainer"]
 margin_right = 984.0
 margin_bottom = 14.0
+custom_constants/separation = -1
 
 [node name="Label" type="Label" parent="DialogueTreeWriter/Writer/VBoxContainer/CurrentFile"]
-margin_right = 79.0
+margin_right = 83.0
 margin_bottom = 14.0
-text = "Current file: "
+text = "Current file:  "
 
 [node name="FileName" type="Label" parent="DialogueTreeWriter/Writer/VBoxContainer/CurrentFile"]
-margin_left = 83.0
-margin_right = 172.0
+margin_left = 82.0
+margin_right = 175.0
 margin_bottom = 14.0
-text = "something.txt"
+text = "<unsaved file>"
+
+[node name="StarDisplay" type="Label" parent="DialogueTreeWriter/Writer/VBoxContainer/CurrentFile"]
+visible = false
+margin_left = 174.0
+margin_right = 182.0
+margin_bottom = 14.0
+text = "*"
 
 [node name="Main" type="HBoxContainer" parent="DialogueTreeWriter/Writer/VBoxContainer"]
 margin_top = 18.0
@@ -115,6 +159,7 @@ custom_constants/separation = 16
 [node name="Play" type="Button" parent="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer"]
 margin_right = 152.0
 margin_bottom = 20.0
+shortcut = SubResource( 7 )
 text = "Play current"
 
 [node name="NewFile" type="Button" parent="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer"]
@@ -127,18 +172,21 @@ text = "New file"
 margin_top = 72.0
 margin_right = 152.0
 margin_bottom = 92.0
+shortcut = SubResource( 3 )
 text = "Save"
 
 [node name="SaveAs" type="Button" parent="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer"]
 margin_top = 108.0
 margin_right = 152.0
 margin_bottom = 128.0
+shortcut = SubResource( 5 )
 text = "Save as"
 
 [node name="Load" type="Button" parent="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer"]
 margin_top = 144.0
 margin_right = 152.0
 margin_bottom = 164.0
+shortcut = SubResource( 9 )
 text = "Load"
 
 [node name="Character Manager" type="MarginContainer" parent="DialogueTreeWriter"]
@@ -149,6 +197,242 @@ margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+script = ExtResource( 7 )
+__fileChooserPath = NodePath("../../FileChooser")
+__managerPath = NodePath("..")
+__characterListPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer2/CharacterList")
+__characterDisplayNamePath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CharacterName/LineEdit")
+__characterFileNamePath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/FileName/LineEdit")
+__characterTextureLineEditPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer/HBoxContainer/LineEdit")
+__characterTextureDisplayPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/TexturePreview")
+__currentlyEditingFileNameLabelPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CurrentlyEditing/EditingFile")
+__editedStarPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CurrentlyEditing/Star")
+__saveButtonPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Save")
+__discardButtonPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Discard")
+__newButtonPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/New")
+__deleteButtonPath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Delete")
+__selectTexturePath = NodePath("VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer/HBoxContainer/SelectTexture")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueTreeWriter/Character Manager"]
+margin_right = 1016.0
+margin_bottom = 564.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer"]
+margin_right = 1016.0
+margin_bottom = 564.0
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer"]
+margin_right = 722.0
+margin_bottom = 564.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.5
+custom_constants/margin_right = 32
+custom_constants/margin_top = 32
+custom_constants/margin_left = 32
+custom_constants/margin_bottom = 32
+
+[node name="PanelContainer" type="PanelContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 690.0
+margin_bottom = 532.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 651.0
+margin_bottom = 493.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+margin_right = 644.0
+margin_bottom = 462.0
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer"]
+margin_right = 644.0
+margin_bottom = 462.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="CharacterDetails" type="VBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 628.0
+margin_bottom = 446.0
+
+[node name="CurrentlyEditing" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails"]
+margin_right = 612.0
+margin_bottom = 14.0
+custom_constants/separation = -1
+
+[node name="Label" type="Label" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CurrentlyEditing"]
+margin_right = 118.0
+margin_bottom = 14.0
+text = "Currently editing:  "
+
+[node name="EditingFile" type="Label" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CurrentlyEditing"]
+margin_left = 117.0
+margin_right = 216.0
+margin_bottom = 14.0
+text = "Something.char"
+
+[node name="Star" type="Label" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CurrentlyEditing"]
+visible = false
+margin_left = 215.0
+margin_right = 223.0
+margin_bottom = 14.0
+text = "*"
+
+[node name="Portrait" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails"]
+margin_top = 18.0
+margin_right = 612.0
+margin_bottom = 82.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait"]
+margin_right = 612.0
+margin_bottom = 64.0
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer"]
+margin_right = 544.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+custom_constants/margin_top = 16
+custom_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer"]
+margin_top = 16.0
+margin_right = 544.0
+margin_bottom = 48.0
+
+[node name="SelectTexture" type="Button" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer/HBoxContainer"]
+margin_right = 51.0
+margin_bottom = 32.0
+text = "Select"
+
+[node name="LineEdit" type="LineEdit" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer/HBoxContainer"]
+margin_left = 55.0
+margin_right = 544.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+text = "a name"
+editable = false
+
+[node name="TexturePreview" type="TextureRect" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer"]
+margin_left = 548.0
+margin_right = 612.0
+margin_bottom = 64.0
+texture = ExtResource( 6 )
+
+[node name="FileName" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails"]
+margin_top = 86.0
+margin_right = 612.0
+margin_bottom = 110.0
+
+[node name="Label" type="Label" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/FileName"]
+margin_top = 5.0
+margin_right = 71.0
+margin_bottom = 19.0
+text = "File name: "
+
+[node name="LineEdit" type="LineEdit" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/FileName"]
+margin_left = 75.0
+margin_right = 341.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "GD"
+placeholder_text = "gary0"
+
+[node name="Control" type="Control" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/FileName"]
+margin_left = 345.0
+margin_right = 612.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="CharacterName" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails"]
+margin_top = 114.0
+margin_right = 612.0
+margin_bottom = 138.0
+
+[node name="Label" type="Label" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CharacterName"]
+margin_top = 5.0
+margin_right = 95.0
+margin_bottom = 19.0
+text = "Display name: "
+
+[node name="LineEdit" type="LineEdit" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CharacterName"]
+margin_left = 99.0
+margin_right = 353.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "GD"
+placeholder_text = "The Legendary Gary0"
+
+[node name="Control" type="Control" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/CharacterName"]
+margin_left = 357.0
+margin_right = 612.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Controls" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+margin_top = 466.0
+margin_right = 644.0
+margin_bottom = 486.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls"]
+margin_right = 644.0
+margin_bottom = 20.0
+custom_constants/separation = 32
+alignment = 1
+
+[node name="Save" type="Button" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer"]
+margin_left = 120.0
+margin_right = 217.0
+margin_bottom = 20.0
+text = "Save changes"
+
+[node name="Discard" type="Button" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer"]
+margin_left = 249.0
+margin_right = 365.0
+margin_bottom = 20.0
+text = "Discard changes"
+
+[node name="New" type="Button" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer"]
+margin_left = 397.0
+margin_right = 437.0
+margin_bottom = 20.0
+text = "New"
+
+[node name="Delete" type="Button" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer"]
+margin_left = 469.0
+margin_right = 524.0
+margin_bottom = 20.0
+text = "Delete"
+
+[node name="MarginContainer2" type="MarginContainer" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer"]
+margin_left = 726.0
+margin_right = 1016.0
+margin_bottom = 564.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 32
+custom_constants/margin_top = 64
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 64
+
+[node name="CharacterList" type="ItemList" parent="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer2"]
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 258.0
+margin_bottom = 500.0
+custom_constants/vseparation = 4
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DialoguePlayer" parent="CanvasLayer" instance=ExtResource( 1 )]
 
 [node name="FileChooser" type="FileDialog" parent="."]
 anchor_right = 1.0
@@ -163,9 +447,29 @@ mode_overrides_title = false
 mode = 2
 access = 2
 script = ExtResource( 3 )
+WorkingDirectorySaveLocation = "user://WriterWorkingLocation.txt"
 
+[node name="QuitConfirm" type="ConfirmationDialog" parent="."]
+anchor_left = 0.4
+anchor_top = 0.4
+anchor_right = 0.6
+anchor_bottom = 0.6
+window_title = "Please confirm"
+dialog_text = "Are you sure you want to quit? You may have unsaved files."
+dialog_autowrap = true
+script = ExtResource( 4 )
+_autoDisableQuit = false
+
+[connection signal="tab_changed" from="DialogueTreeWriter" to="DialogueTreeWriter/Character Manager" method="SwitchedTo"]
+[connection signal="text_changed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/TextEdit" to="DialogueTreeWriter/Writer" method="OnTextChanged"]
 [connection signal="pressed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer/Play" to="DialogueTreeWriter/Writer" method="Play"]
 [connection signal="pressed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer/NewFile" to="DialogueTreeWriter/Writer" method="CreateNewFile"]
 [connection signal="pressed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer/Save" to="DialogueTreeWriter/Writer" method="Save"]
 [connection signal="pressed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer/SaveAs" to="DialogueTreeWriter/Writer" method="SaveAs"]
 [connection signal="pressed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/MarginContainer/VBoxContainer/Load" to="DialogueTreeWriter/Writer" method="Load"]
+[connection signal="pressed" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/CharacterDetails/Portrait/HBoxContainer/MarginContainer/HBoxContainer/SelectTexture" to="DialogueTreeWriter/Character Manager" method="OnSelectTexturePath"]
+[connection signal="pressed" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Save" to="DialogueTreeWriter/Character Manager" method="OnSave"]
+[connection signal="pressed" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Discard" to="DialogueTreeWriter/Character Manager" method="OnDiscard"]
+[connection signal="pressed" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/New" to="DialogueTreeWriter/Character Manager" method="OnNew"]
+[connection signal="pressed" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer/PanelContainer/VBoxContainer/Controls/HBoxContainer/Delete" to="DialogueTreeWriter/Character Manager" method="OnDelete"]
+[connection signal="item_activated" from="DialogueTreeWriter/Character Manager/VBoxContainer/HBoxContainer/MarginContainer2/CharacterList" to="DialogueTreeWriter/Character Manager" method="OnSelectedItem"]

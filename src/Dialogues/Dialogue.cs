@@ -11,6 +11,12 @@ namespace PirateInBetween.Game.Dialogue
 {
 	public abstract class Dialogue
 	{
+		public IDialogueResourceLoader Loader {get; private set; }
+
+		public Dialogue(IDialogueResourceLoader loader)
+		{
+			Loader = loader;
+		}
 
 		/// <summary>
 		/// Returns the next <see cref="DialogueResponse"/>.
@@ -19,7 +25,7 @@ namespace PirateInBetween.Game.Dialogue
 		/// </summary>
 		/// <param name="choice"></param>
 		/// <returns></returns>
-		protected abstract DialogueResponse GetNextResponse(int? choice = null);
+		protected abstract DialogueResponse GetNextResponse(uint? choice = null);
 
 		/// <summary>
 		/// The last <see cref="DialogueResponse"/> given by either <see cref="Next"/> or <see cref="Choose"/>.
@@ -64,7 +70,7 @@ namespace PirateInBetween.Game.Dialogue
 		/// </summary>
 		/// <param name="response"></param>
 		/// <returns></returns>
-		public DialogueResponse Choose(int response)
+		public DialogueResponse Choose(uint response)
 		{
 			if (!HasNext() || !RequiresChoice())
 			{

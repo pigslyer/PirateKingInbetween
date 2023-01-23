@@ -11,16 +11,14 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 {
 	public class FileChooser : FileDialog
 	{
-		private const string DATA_STORAGE = "user://WriterWorkingLocation.txt";
+		[Export] private string WorkingDirectorySaveLocation = "user://workingdirectory.txt";
 		public string WorkingDirectory { get; private set;}
 
 		public override void _Ready()
 		{
 			base._Ready();
 
-			GetCloseButton().Hide();
-
-			if (FileHelper.TryLoadFromLocation(DATA_STORAGE, out string workingDirectory))
+			if (FileHelper.TryLoadFromLocation(WorkingDirectorySaveLocation, out string workingDirectory))
 			{
 				WorkingDirectory = workingDirectory;
 			}
@@ -32,18 +30,32 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 
 		public async void RequestWorkingDirectory()
 		{
+			GetCloseButton().Hide();
+
 			Mode = ModeEnum.OpenDir;
 			WindowTitle = "Choose your working directory";
 			ClearFilters();
 			Popup_();
+
+			WorkingDirectory = (string)(await ToSignal(this, "dir_selected"))[0];
+			FileHelper.SaveToLocation(WorkingDirectorySaveLocation, WorkingDirectory);
 			
-			var result = await ToSignal(this, "dir_selected");
-			WorkingDirectory = (string) result[0];
-			FileHelper.SaveToLocation(DATA_STORAGE, WorkingDirectory);
+			GetCloseButton().Show();
 		}
 
 		public async Task<string> RequestFileLocation(bool save, string from = null, params string[] extenisons)
 		{
+			async Task<string> UntilFileSelected()
+			{
+				return (string)(await ToSignal(this, "file_selected"))[0];
+			}
+
+			async Task<string> UntilThisClosed()
+			{
+				await ToSignal(this, "hide");
+				return null;
+			}
+
 			Mode = save ? ModeEnum.SaveFile : ModeEnum.OpenFile;
 			WindowTitle = $"Select which file you want to {(save ? "save" : "load")}.";
 
@@ -52,7 +64,17 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 
 			Popup_();
 
-			return (string)(await ToSignal(this, "file_selected"))[0];
+			return (await Task.WhenAny(UntilFileSelected(), UntilThisClosed())).Result;
+		}
+
+		public override void _Input(InputEvent ev)
+		{
+			base._Input(ev);
+
+			if (ev.IsActionPressed("ui_cancel") && GetCloseButton().Visible)
+			{
+				Hide();
+			}
 		}
 	}
 }

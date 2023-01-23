@@ -16,12 +16,16 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 		[Export] private NodePath __dialogueEditorPath = null;
 		[Export] private NodePath __currentFileLabelPath = null;
 		[Export] private NodePath __fileChooserPath = null;
+		[Export] private NodePath __unsavedChangesStarPath = null;
+		[Export] private NodePath __managerPath = null;
 
 		#endregion
 
 		private FileChooser _fileChooser;
 		private TextEdit _dialogueEditor;
 		private Label _currentFilePathLabel;
+		private CanvasItem _unsavedChangesStar;
+		private Manager _manager;
 		private string WorkingDirectory => _fileChooser.WorkingDirectory;
 		
 		private string __currentFile = null;
@@ -39,16 +43,24 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 			_fileChooser = GetNode<FileChooser>(__fileChooserPath);
 			_dialogueEditor = GetNode<TextEdit>(__dialogueEditorPath);
 			_currentFilePathLabel = GetNode<Label>(__currentFileLabelPath);
+			_unsavedChangesStar = GetNode<CanvasItem>(__unsavedChangesStarPath);
+			_manager = GetNode<Manager>(__managerPath);
 		}
 
 		public void Play()
 		{
-			GetNode<DialoguePlayer>(__dialoguePlayerPath).Play(DialogueTree.StringToTree(CurrentText.Split("\n")));
+			GetNode<DialoguePlayer>(__dialoguePlayerPath).Play(DialogueTree.StringToTree(CurrentText.Split("\n"), WorkingDirectory));
 		}
 
 		public async void CreateNewFile()
 		{
-			_currentFile = await _fileChooser.RequestFileLocation(save : true, WorkingDirectory, "*.dial");
+			var result = await _fileChooser.RequestFileLocation(save : true, WorkingDirectory, "*.dial");
+
+			if (result != null)
+			{
+				_currentFile = result;
+				CurrentText = "";
+			}
 		}
 
 		public void Save()
@@ -60,19 +72,37 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 			else
 			{
 				FileHelper.SaveToLocation(AppendDial(_currentFile), CurrentText);
+				ShowStar(false);
 			}
 		}
 
 		public async void SaveAs()
 		{
-			_currentFile = await _fileChooser.RequestFileLocation(save: true, _currentFile ?? WorkingDirectory, "*.dial");
-			Save();
+			var result = await _fileChooser.RequestFileLocation(save: true, _currentFile ?? WorkingDirectory, "*.dial");
+			if (result != null)
+			{
+				_currentFile = result;
+				Save();
+			}
 		}
 
 		public async void Load()
 		{
-			_currentFile = await _fileChooser.RequestFileLocation(save: false, WorkingDirectory, "*.dial");
-			CurrentText = FileHelper.LoadFromLocation(AppendDial(_currentFile));
+			var result = await _fileChooser.RequestFileLocation(save: false, WorkingDirectory, "*.dial");
+			if (result != null)
+			{
+				_currentFile = result;
+				CurrentText = FileHelper.LoadFromLocation(AppendDial(_currentFile));
+				ShowStar(false);
+			}
+		}
+
+		public void OnTextChanged()
+		{
+			if (_currentFile != null)
+			{
+				ShowStar(true);
+			}
 		}
 
 		private string CurrentText
@@ -88,6 +118,12 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 				return $"{str}.dial";
 			}
 			return str;
+		}
+
+		private void ShowStar(bool state)
+		{
+			_unsavedChangesStar.Visible = state;
+			_manager.SetQuitAllowed(Manager.QuitRequester.Writer, !state);
 		}
 	}
 }

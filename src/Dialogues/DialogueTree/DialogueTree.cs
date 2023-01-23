@@ -19,12 +19,12 @@ namespace PirateInBetween.Game.Dialogue.Tree
 		public DialogueCharacter PlayerSpeaker => GetCharacter(PLAYER_NAME);
 		private Dictionary<string, DialogueCharacter> Characters = new Dictionary<string, DialogueCharacter>();
 
-		public int? LastChoice = null;
+		public uint? LastChoice = null;
 
 		public IResponds Current;
 
 
-		public DialogueTree()
+		public DialogueTree(DialogueTreeResourceLoader loader) : base(loader)
 		{
 			Current = new Start(this);
 		}
@@ -39,7 +39,7 @@ namespace PirateInBetween.Game.Dialogue.Tree
 			return Characters[name];
 		}
 
-		protected override DialogueResponse GetNextResponse(int? choice = null)
+		protected override DialogueResponse GetNextResponse(uint? choice = null)
 		{
 			LastChoice = choice;
 			Current = Current.GetNext();
@@ -48,9 +48,9 @@ namespace PirateInBetween.Game.Dialogue.Tree
 
 		#region Tree generation
 
-		public static DialogueTree StringToTree(string[] text)
+		public static DialogueTree StringToTree(string[] text, string workingDirectory)
 		{
-			DialogueTree ret = new DialogueTree();
+			DialogueTree ret = new DialogueTree(new DialogueTreeResourceLoader(workingDirectory));
 			// chain works like a stack trace, at its peek is our topmost choice level
 			Stack<ChoiceSelection> chain = new Stack<ChoiceSelection>();
 			
@@ -132,7 +132,7 @@ namespace PirateInBetween.Game.Dialogue.Tree
 			// adding character
 			else if (split[0] == "character")
 			{
-				DialogueCharacter @char = DialogueCharacter.Load();//DialogueCharacter.Load(split[1]);
+				DialogueCharacter @char = Loader.LoadCharacter(split[1]);
 				node = new AddCharacter(this, split.Length == 4 ? $"{split[3]}:" : PLAYER_NAME, @char);
 			}
 			// beginning of choice selection

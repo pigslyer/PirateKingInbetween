@@ -11,33 +11,38 @@ namespace PirateInBetween.Game.Dialogue
 {
 	public class DialoguePlayer : Popup
 	{
+		[Export] private float _resetPositionTime = 0.2f;
 		[Export] private PackedScene _textDisplayScene;
 
 		#region Paths
 		[Export] private NodePath __portraitTexturePath = null;
 		[Export] private NodePath __playerSectionPath = null;
 		[Export] private NodePath __lineDisplayPath = null;
+		[Export] private NodePath __scrollContainerPath = null;
 
 		#endregion
 
 		private Container _lineDisplay;
+		private ScrollContainer _scrollContainer;
+		private PlayerSection _player;
 
 		public override void _Ready()
 		{
 			base._Ready();
 
 			_lineDisplay = GetNode<Container>(__lineDisplayPath);
+			_scrollContainer = GetNode<ScrollContainer>(__scrollContainerPath);
+			_player = GetNode<PlayerSection>(__playerSectionPath);
 		}
 
 		public async Task Play(Dialogue dialogue)
 		{
 			Popup_();
 
-			PlayerSection player = GetNode<PlayerSection>(__playerSectionPath);
-
-			int choice = 0;
+			uint choice = 0;
 			DialogueResponse next;
 
+			TextureRect portraitTexture = GetNode<TextureRect>(__portraitTexturePath);
 
 			while (dialogue.HasNext())
 			{
@@ -49,12 +54,15 @@ namespace PirateInBetween.Game.Dialogue
 				else
 				{
 					next = dialogue.Next();
-
 				}
+
+				portraitTexture.Texture = next.Speaker?.CharacterPortrait;
 				
 				switch (next.Type)
 				{
 					case DialogueResponse.Types.End:
+						await _player.AwaitContinue("(End)");
+
 						DialogueLine.FreeAll();
 						Hide();
 
@@ -62,12 +70,12 @@ namespace PirateInBetween.Game.Dialogue
 
 					case DialogueResponse.Types.Line:
 						await AddLine(next.Line, next.Speaker.Name, !next.IsPlayer);
-						await player.AwaitContinue();
+						await _player.AwaitContinue();
 
 						break;
 
 					case DialogueResponse.Types.Choice:
-						choice = await player.SelectChoice(next.Choices);
+						choice = await _player.SelectChoice(next.Choices, next.Speaker.Name);
 
 						await AddLine(next.Choices[choice], next.Speaker.Name, false);
 						break;
@@ -81,6 +89,12 @@ namespace PirateInBetween.Game.Dialogue
 			DialogueLine line = _textDisplayScene.Instance<DialogueLine>();	
 			line.Initialize(speaker, text, onRight);
 			_lineDisplay.AddChildBelowNode(_lineDisplay.GetChild(_lineDisplay.GetChildCount()-2), line);
+
+			await this.AwaitIdle();
+
+			var tween = CreateTween();
+			tween.TweenProperty(_scrollContainer, "scroll_vertical", Mathf.RoundToInt(_lineDisplay.RectSize.y - _scrollContainer.RectSize.y), _resetPositionTime);
+			await this.WaitFor(_resetPositionTime);
 
 			await this.WaitFor(0.2f);
 		}

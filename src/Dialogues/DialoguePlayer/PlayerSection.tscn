@@ -23,7 +23,7 @@ size_flags_vertical = 3
 [node name="SpeakerName" type="Label" parent="VBoxContainer"]
 margin_right = 350.0
 margin_bottom = 14.0
-text = "Protagonist"
+text = " "
 
 [node name="Choices" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 18.0

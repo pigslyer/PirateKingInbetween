@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game.Dialogue
 {
-	public class DialoguePlayer : Popup
+	public class DialoguePlayer : Control
 	{
 		[Export] private float _resetPositionTime = 0.2f;
 		[Export] private PackedScene _textDisplayScene;
@@ -29,6 +29,8 @@ namespace PirateInBetween.Game.Dialogue
 		public override void _Ready()
 		{
 			base._Ready();
+			
+			Hide();
 
 			_lineDisplay = GetNode<Container>(__lineDisplayPath);
 			_scrollContainer = GetNode<ScrollContainer>(__scrollContainerPath);
@@ -37,7 +39,7 @@ namespace PirateInBetween.Game.Dialogue
 
 		public async Task Play(Dialogue dialogue)
 		{
-			Popup_();
+			Show();
 
 			uint choice = 0;
 			DialogueResponse next;

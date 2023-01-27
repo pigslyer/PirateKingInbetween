@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://src/Player/PlayerModel.cs" type="Script" id=2]
 [ext_resource path="res://src/Attacks/Melee/Slasher.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/Player/PlayerAnimation.tres" type="SpriteFrames" id=4]
 
 [node name="PlayerModel" type="Node2D"]
 script = ExtResource( 2 )
@@ -58,13 +59,22 @@ scale = Vector2( 0.1, 0.4 )
 texture = ExtResource( 1 )
 
 [node name="RightArm" type="Sprite" parent="TempSkeleton"]
+visible = false
 position = Vector2( 14, -11 )
 rotation = -1.51098
 scale = Vector2( 0.1, 0.4 )
 texture = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="TempSkeleton"]
+visible = false
 show_behind_parent = true
 position = Vector2( -0.500001, -2 )
 scale = Vector2( 0.359375, 0.9375 )
 texture = ExtResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="TempSkeleton"]
+position = Vector2( 0, -4 )
+frames = ExtResource( 4 )
+animation = "Idle"
+frame = 5
+playing = true

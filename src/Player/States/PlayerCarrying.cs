@@ -17,6 +17,7 @@ namespace PirateInBetween.Game.Player
         [Export] private float _carriedBoxReachDistance = 400f;
         [Export] private float _carriedBoxLiftTime = 0.2f;
         [Export] private float _carriedBoxDropTime = 0.2f;
+        [Export] private float _carryingLerpFactor = 0.85f;
 
         #region Paths
         [Export] private NodePath _carryingDetectorPath = null;
@@ -36,6 +37,9 @@ namespace PirateInBetween.Game.Player
         private Position2D _aboveHeadPosition;
         private Position2D _boxDropPosition;
 
+        private const Behaviours _onPickUpBehaviours = Behaviours.Default & ~(Behaviours.MeleeAttack | Behaviours.RangedAttack);
+        private const Behaviours _onDropBehaviours = Behaviours.Default;
+
         public override void _Ready()
         {
             base._Ready();
@@ -50,45 +54,53 @@ namespace PirateInBetween.Game.Player
         {
             CarriableBox box;
 
-            if (TrySeePushableBox(data, out box))
+            if (IsOnFloor() && TrySeePushableBox(data, out box))
             {
                 data.VelocityMult = _pushingVelMult;
                 box.ApplyVelocity(new Vector2(data.Velocity.x * data.VelocityMult, 0));
                 
                 data.NextAnimation = PlayerAnimation.Pushing;
             }
-            else if (InputManager.IsActionJustPressed(InputButton.Carry) && TrySeeCarriableBox(data, out box))
+            else if (IsOnFloor() && CanChangeActive && !_isCarryingBox && InputManager.IsActionJustPressed(InputButton.Carry) && TrySeeCarriableBox(data, out box))
             {
                 box.SetCarried(true);
-
-                box.Reparent(newParent : this);
-
                 _carriedBox = box;
 
-                var tween = CreateTween().SetTrans(Tween.TransitionType.Cubic);
-                tween.TweenProperty(_carriedBox, "global_position", _aboveHeadPosition.GlobalPosition, _carriedBoxLiftTime);
+                CarryBoxAnimation(
+                        box : box, 
+                        getToPosition : () => _aboveHeadPosition.GlobalPosition, 
+                        time : _carriedBoxLiftTime, 
+                        onFinishedEnabled : _onPickUpBehaviours,
+                        onEnd : () => _carriedBox.Reparent2D(newParent: this)
+                );
+                data.Velocity = Vector2.Zero;
             }
-            else if (InputManager.IsActionJustPressed(InputButton.Carry) && _isCarryingBox)
+            else if (IsOnFloor() && CanChangeActive && _isCarryingBox && InputManager.IsActionJustPressed(InputButton.Carry))
             {
-                var tween = CreateTween().SetTrans(Tween.TransitionType.Cubic);
-                tween.TweenProperty(_carriedBox, "global_position", _boxDropPosition.GlobalPosition, 0.4f);
-                tween.TweenCallback(_carriedBox, nameof(CarriableBox.SetCarried), new Godot.Collections.Array(false));
-                tween.TweenCallback(_carriedBox, nameof(CarriableBox.SetMovingParent), new Godot.Collections.Array(GetPlayer().GetMovingParentDetector().CurrentMovingParent));
+				_carriedBox.SetMovingParent(GetPlayer().GetMovingParentDetector().CurrentMovingParent);
+                CarriableBox temp = _carriedBox;
+
+                CarryBoxAnimation(
+                        box : _carriedBox,
+                        getToPosition : () => _boxDropPosition.GlobalPosition, 
+                        time : _carriedBoxDropTime, 
+                        onFinishedEnabled : _onDropBehaviours,
+                        onEnd : () => temp.SetCarried(false)
+                );
+
+                data.Velocity = Vector2.Zero;
                 _carriedBox = null;
             }
             else if (_isCarryingBox)
             {
-                _carriedBox.GlobalPosition += (_aboveHeadPosition.GlobalPosition - _carriedBox.GlobalPosition) * 0.85f;
-                //_carriedBox.GlobalPosition = _carriedBox.GlobalPosition.MoveToward(_aboveHeadPosition.GlobalPosition, _carriedBoxVelocity * data.Delta);
+                _carriedBox.GlobalPosition = _carriedBox.GlobalPosition.LinearInterpolate(_aboveHeadPosition.GlobalPosition, _carryingLerpFactor);
             }
         }
 
-        // this method may have an issue with evaluating if the player is on the floor, jumping once seems to fix it temporarily.
         private bool TrySeePushableBox(PlayerCurrentFrameData data, out CarriableBox box)
         {
             box = null;
 			return (data.Velocity.x != 0f &&
-                    IsOnFloor() && 
                     _ray.TryCollideRay<CarriableBox>(out box, toLocal : new Vector2(_horizontalMaxSpeed * data.Delta, 0), mask : PhysicsLayers.CarriableBox) &&
                     box.CollisionLayer == PUSHABLE_LAYERS) && box.CanBePushed(); 
         }
@@ -96,10 +108,36 @@ namespace PirateInBetween.Game.Player
         private bool TrySeeCarriableBox(PlayerCurrentFrameData data, out CarriableBox box)
         {
             box = null;
-            return (IsOnFloor() && 
-                    _ray.TryCollideRay<CarriableBox>(out box, toLocal : new Vector2(_carriedBoxReachDistance, 0), mask : PhysicsLayers.CarriableBox) &&
+            return (_ray.TryCollideRay<CarriableBox>(out box, toLocal : new Vector2(_carriedBoxReachDistance, 0), mask : PhysicsLayers.CarriableBox) &&
                     box.CanBeLifted()
                     );
+        }
+
+        private async Task CarryBoxAnimation(CarriableBox box, Func<Vector2> getToPosition, float time, Behaviours onFinishedEnabled, Action onEnd = null)
+        {
+            SetBehaviourChangesDisabled(true);
+            // disable everything but <see cref="AnimationSelector"/> so the player can't do any funny business.
+            SetBehavioursEnabled(Behaviours.Default & ~Behaviours.AnimationSelector, false);
+
+            Vector2 pos;
+            float length, delta;
+
+            while (time > 0f)
+            {
+                pos = getToPosition();
+                length = box.GlobalPosition.DistanceTo(pos);
+                delta = GetProcessDeltaTime();
+
+                box.GlobalPosition = box.GlobalPosition.MoveToward(pos, length / time * delta);
+                time -= delta;
+
+                await this.AwaitIdle();
+            }
+
+            onEnd?.Invoke();
+
+            SetBehaviourChangesDisabled(false);
+            SetBehavioursEnabled(onFinishedEnabled, true);
         }
     }
 }

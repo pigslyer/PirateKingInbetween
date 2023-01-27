@@ -10,14 +10,7 @@ namespace PirateInBetween.Game
 		/// <summary>
 		/// Changes what to be child of this MovingParent, removing previous parent and maintaining global position.
 		/// </summary>
-		public void Move(Node2D what)
-		{
-			Vector2 prevPos = what.GlobalPosition;
-			
-			what.Reparent(this);
-
-			what.GlobalPosition = prevPos;
-		}
+		public void Move(Node2D what) => what.Reparent2D(this);
 
 
 		/// <summary>

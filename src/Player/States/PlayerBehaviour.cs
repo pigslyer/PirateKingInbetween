@@ -96,6 +96,9 @@ namespace PirateInBetween.Game.Player
 			/// </summary>
 			/// <returns></returns>
 			Default = ~Behaviours.Noclip,
+			
+			BasicMovementNoJump = Behaviours.HorizontalMovement | Behaviours.Falling,
+			BasicMovement = Behaviours.HorizontalMovement | Behaviours.Falling | Behaviours.Jumping,
 		}
 
 		// these have to be the same order as "States" in the player scene.

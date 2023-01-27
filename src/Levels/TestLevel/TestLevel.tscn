@@ -372,3 +372,4 @@ _cameraFollowingPath = NodePath("../Moveable0/Player")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="DialoguePlayer" parent="CanvasLayer" instance=ExtResource( 8 )]
+visible = false

@@ -50,4 +50,11 @@ public static partial class Extensions
 		child.GetParent().RemoveChild(child);
 		newParent.AddChild(child);
 	}
+
+	public static void Reparent2D(this Node2D child, Node newParent)
+	{
+		Vector2 temp = child.GlobalPosition;
+		Reparent(child, newParent);
+		child.GlobalPosition = temp;
+	}
 }

@@ -12,7 +12,7 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 	public class Manager : Control
 	{
 		#region Paths
-		[Export] private NodePath __quitHandlerPath;
+		[Export] private NodePath __quitHandlerPath = null;
 
 		#endregion
 

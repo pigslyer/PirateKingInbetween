@@ -14,8 +14,8 @@ namespace PirateInBetween.Game.Dialogue
 		private const string GROUP = "DIALOGUE_LINE_GROUP";
 
 		#region Paths
-		[Export] private NodePath _speakerLabelPath;
-		[Export] private NodePath _lineLabelPath;
+		[Export] private NodePath _speakerLabelPath = null;
+		[Export] private NodePath _lineLabelPath = null;
 		#endregion
 
 		public void Initialize(string speaker, string text, bool rightSide)

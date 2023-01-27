@@ -12,7 +12,7 @@ namespace PirateInBetween.Game.Dialogue
 	public class DialoguePlayer : Control
 	{
 		[Export] private float _resetPositionTime = 0.2f;
-		[Export] private PackedScene _textDisplayScene;
+		[Export] private PackedScene _textDisplayScene = null;
 
 		#region Paths
 		[Export] private NodePath __portraitTexturePath = null;

@@ -27,6 +27,10 @@ namespace PirateInBetween.Game.Player
             _fallingBehaviour = GetSiblingBehaviour<PlayerFalling>(BehavioursPos.Falling);
         }
 
+        /// <summary>
+        /// Because of coyote time, jumping, releasing jump in midair and then jumping again causes you to jump a second time. This is here to stop that.
+        /// </summary>
+        private bool _hasJumped = false;
 		private bool _isJumping = false;
 		private float _jumpDelta;
         
@@ -48,11 +52,11 @@ namespace PirateInBetween.Game.Player
 
             
 			// if we're on the floor, not doing anything else and holding down jump
-			if (CanChangeActive && !_isJumping && IsOnFloor() && data.Input.y < 0f)
+			if (CanChangeActive && !_isJumping && !_hasJumped && IsOnFloor() && data.Input.y < 0f)
 			{
 				data.Velocity.y = JumpVelocityNoGravity();
                 
-                _isJumping = true;
+                _hasJumped = _isJumping = true;
                 SetBehaviourChangesDisabled(true);
                 SetBehavioursEnabled(Behaviours.Falling, false);
 
@@ -73,6 +77,12 @@ namespace PirateInBetween.Game.Player
             else if (data.Velocity.y < 0f)
             {
                 data.Velocity.y += _gravity * data.Delta;
+            }
+
+
+            if (_hasJumped && !IsOnFloor())
+            {
+                _hasJumped = false;
             }
         }
     }

@@ -14,8 +14,7 @@ namespace PirateInBetween.Game
 		{
 			Vector2 prevPos = what.GlobalPosition;
 			
-			what.GetParent().RemoveChild(what);
-			AddChild(what);
+			what.Reparent(this);
 
 			what.GlobalPosition = prevPos;
 		}

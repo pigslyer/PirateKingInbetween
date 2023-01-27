@@ -44,4 +44,10 @@ public static partial class Extensions
 			}
 		}
 	}
+
+	public static void Reparent(this Node child, Node newParent)
+	{
+		child.GetParent().RemoveChild(child);
+		newParent.AddChild(child);
+	}
 }

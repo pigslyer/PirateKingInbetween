@@ -16,6 +16,7 @@ namespace PirateInBetween.Game.Player
 
 		[Export] private NodePath _playerBehaviourManagerPath = null;
 		[Export] private NodePath _debugLabelPath = null;
+		[Export] private NodePath _movingParentDetectorPath = null;
 #endregion
 
 		// Player's model.
@@ -23,8 +24,7 @@ namespace PirateInBetween.Game.Player
 		private PlayerBehaviourManager _behaviourManager;
 		// A random label for putting shit on.
 		private Label _debugLabel;
-
-		private ReadOnlyCollection<PlayerBehaviour> _behaviours;
+		private MovingParentDetector _detector;
 
 		public override void _Ready()
 		{
@@ -33,6 +33,7 @@ namespace PirateInBetween.Game.Player
             _model = GetNode<PlayerModel>(_playerModelPath);
 			_behaviourManager = GetNode<PlayerBehaviourManager>(_playerBehaviourManagerPath);
 			_debugLabel = GetNode<Label>(_debugLabelPath);
+			_detector = GetNode<MovingParentDetector>(_movingParentDetectorPath);
 
 			_behaviourManager.Initialize(this);
 		}
@@ -95,5 +96,8 @@ namespace PirateInBetween.Game.Player
 				GetTree().ReloadCurrentScene();
 			}
 		}
+
+		public MovingParentDetector GetMovingParentDetector() => _detector;
+		
 	}
 }

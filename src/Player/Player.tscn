@@ -24,6 +24,7 @@ script = ExtResource( 1 )
 _playerModelPath = NodePath("PlayerModel")
 _playerBehaviourManagerPath = NodePath("BehaviourManager")
 _debugLabelPath = NodePath("CanvasLayer/DebugLabel")
+_movingParentDetectorPath = NodePath("MovingParentDetector")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
@@ -35,6 +36,12 @@ collision_mask = 0
 __meta__ = {
 "_editor_description_": "it being a child of PlayerModel ensures that its position keeps in sync with the player's"
 }
+
+[node name="BoxDropPosition" type="Position2D" parent="PlayerModel"]
+position = Vector2( 27, -11 )
+
+[node name="BoxLiftedPosition" type="Position2D" parent="PlayerModel"]
+position = Vector2( 0, -48 )
 
 [node name="Body" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -30 )
@@ -60,6 +67,8 @@ _jumpLength = 0.4
 [node name="Carrying" type="Node" parent="BehaviourManager"]
 script = ExtResource( 11 )
 _carryingDetectorPath = NodePath("../../PlayerModel/BoxDetector")
+_aboveHeadPositionPath = NodePath("../../PlayerModel/BoxLiftedPosition")
+_boxDropPositionPath = NodePath("../../PlayerModel/BoxDropPosition")
 
 [node name="MeleeAttack" type="Node" parent="BehaviourManager"]
 script = ExtResource( 4 )

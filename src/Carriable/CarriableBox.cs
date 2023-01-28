@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public class CarriableBox : KinematicBody2DOverride
+	public class CarriableBox : KinematicBody2D
 	{
 		[Export] protected float Gravity = 100f;
 

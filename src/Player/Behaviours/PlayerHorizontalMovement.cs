@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
 	public class PlayerHorizontalMovement : PlayerBehaviour
 	{

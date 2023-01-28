@@ -2,7 +2,7 @@ using Godot;
 using static Godot.GD;
 using System;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
 	public class PlayerNoclip : PlayerBehaviour
 	{
@@ -11,7 +11,7 @@ namespace PirateInBetween.Game.Player
 		public override void Run(PlayerCurrentFrameData data)
 		{
 			data.VelocityMult = 0f;
-			data.NextAnimation = PlayerAnimation.Idle;
+			data.CurrentAction = PlayerAnimation.Idle;
 
 			GetPlayer().Position += data.Input * _noclipMovementSpeed * data.Delta;
 		}

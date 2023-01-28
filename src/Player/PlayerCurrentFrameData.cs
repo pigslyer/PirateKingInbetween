@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+using PirateInBetween.Game.Player.Actions;
+
 namespace PirateInBetween.Game.Player
 {
 	public class PlayerCurrentFrameData
@@ -31,13 +33,13 @@ namespace PirateInBetween.Game.Player
 		/// </summary>
 		public float VelocityMult = 1f;
 		
-		private PlayerAnimation? _nextAnimation = null;
+		private PlayerAction _nextAnimation = null;
 		
 		/// <summary>
 		/// What animation the player should use this frame. Can only be changed once, all future changes are ignored.
 		/// </summary>
 		/// <value></value>
-		public PlayerAnimation? NextAnimation
+		public PlayerAction CurrentAction
 		{
 			get => _nextAnimation;
 			set
@@ -49,9 +51,11 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
+
+		public bool IsBusy => _nextAnimation != null;
+
 		public bool FacingRight = true;
 
-		public AttackData AttackData = null;
 	}
 
 	public enum PlayerAnimation

@@ -5,18 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Player.Behaviours;
+
 namespace PirateInBetween.Game.Player
 {
-    public class PlayerController : KinematicBody2DOverride
+    public class PlayerController : KinematicBody2D
 	{
 		private Vector2 _velocity = Vector2.Zero;
 
 #region Paths
-        [Export] private NodePath _playerModelPath = null;
+        [Export] private NodePath __playerModelPath = null;
 
-		[Export] private NodePath _playerBehaviourManagerPath = null;
-		[Export] private NodePath _debugLabelPath = null;
-		[Export] private NodePath _movingParentDetectorPath = null;
+		[Export] private NodePath __playerBehaviourManagerPath = null;
+		[Export] private NodePath __debugLabelPath = null;
+		[Export] private NodePath __movingParentDetectorPath = null;
 #endregion
 
 		// Player's model.
@@ -30,10 +32,10 @@ namespace PirateInBetween.Game.Player
 		{
 			base._Ready();
 
-            _model = GetNode<PlayerModel>(_playerModelPath);
-			_behaviourManager = GetNode<PlayerBehaviourManager>(_playerBehaviourManagerPath);
-			_debugLabel = GetNode<Label>(_debugLabelPath);
-			_detector = GetNode<MovingParentDetector>(_movingParentDetectorPath);
+            _model = GetNode<PlayerModel>(__playerModelPath);
+			_behaviourManager = GetNode<PlayerBehaviourManager>(__playerBehaviourManagerPath);
+			_debugLabel = GetNode<Label>(__debugLabelPath);
+			_detector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
 
 			_behaviourManager.Initialize(this);
 		}
@@ -54,7 +56,7 @@ namespace PirateInBetween.Game.Player
 
 			DebugOutOfBounds();
 
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.NextAnimation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}";
+			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.CurrentAction.Animation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}";
 		}
 
 		private void RunBehaviours(PlayerCurrentFrameData data) => _behaviourManager.RunBehaviours(data);
@@ -66,27 +68,17 @@ namespace PirateInBetween.Game.Player
 				_velocity = MoveAndSlide(data.Velocity * data.VelocityMult, Vector2.Up) / data.VelocityMult;
 			}
 
-			if (data.NextAnimation == null)
+			if (data.CurrentAction == null)
 			{
-				PushError("Player animation was never set this frame.");
-				data.NextAnimation = PlayerAnimation.Idle;
+				PushError("Player action was never set this frame.");
+				data.CurrentAction = PlayerAnimation.Idle;
 			}
 
-			_model.SetAnimation((PlayerAnimation) data.NextAnimation, data.FacingRight);
+			_model.SetAnimation(data.CurrentAction.Animation, data.FacingRight);
 			
 			_lastRight = data.FacingRight;
-
-			if (data.AttackData != null)
-			{
-				if (data.AttackData is SlashData slash)
-				{
-					_model.PlaySlash(slash);
-				}
-				else if (data.AttackData is ProjectileData bullet)
-				{
-					_model.Shoot(bullet);
-				}
-			}
+			
+			_model.SetAnimation(data.CurrentAction, data.FacingRight);
 		}
 
 		private void DebugOutOfBounds()

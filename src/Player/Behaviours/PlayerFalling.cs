@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
     public class PlayerFalling : PlayerBehaviour
     {

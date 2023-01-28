@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
     public class PlayerCarrying : PlayerBehaviour
     {
@@ -59,7 +59,7 @@ namespace PirateInBetween.Game.Player
                 data.VelocityMult = _pushingVelMult;
                 box.ApplyVelocity(new Vector2(data.Velocity.x * data.VelocityMult, 0));
                 
-                data.NextAnimation = PlayerAnimation.Pushing;
+                data.CurrentAction = PlayerAnimation.Pushing;
             }
             else if (IsOnFloor() && CanChangeActive && !_isCarryingBox && InputManager.IsActionJustPressed(InputButton.Carry) && TrySeeCarriableBox(data, out box))
             {

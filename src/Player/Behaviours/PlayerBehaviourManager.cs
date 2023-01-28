@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
     public class PlayerBehaviourManager : Node
     {		
@@ -24,6 +24,7 @@ namespace PirateInBetween.Game.Player
         public PlayerBehaviour.Behaviours ActiveBehaviours = PlayerBehaviour.Behaviours.Default;
 		private PlayerBehaviour _activeStoppingBehaviour = null;
         
+        public bool IsInControl(PlayerBehaviour who) => _activeStoppingBehaviour == who;
         public bool CanChangeActive(PlayerBehaviour who) => _activeStoppingBehaviour == null || _activeStoppingBehaviour == who;
         public void SetStoppingBehaviourActive(PlayerBehaviour stopper)
         {

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace PirateInBetween.Game.Player
+namespace PirateInBetween.Game.Player.Behaviours
 {
 	public abstract class PlayerBehaviour : Node
 	{
@@ -29,6 +29,7 @@ namespace PirateInBetween.Game.Player
 
 
 		protected bool CanChangeActive { get => _state.CanChangeActive(this); }
+		protected bool IsInControl { get => _state.IsInControl(this); }
 
 		/// <summary>
 		/// If <see cref="CanChangeActive"/> is true, allows the calling behaviour to set whether
@@ -84,6 +85,7 @@ namespace PirateInBetween.Game.Player
 			HorizontalMovement = 1 << BehavioursPos.HorizontalMovement,
 			Falling = 1 << BehavioursPos.Falling,
 			Jumping = 1 << BehavioursPos.Jumping,
+			Interaction = 1 << BehavioursPos.Interaction,
 			Carrying = 1 << BehavioursPos.Carrying,
 			MeleeAttack = 1 << BehavioursPos.MeleeAttack,
 			RangedAttack = 1 << BehavioursPos.RangedAttack,
@@ -108,6 +110,7 @@ namespace PirateInBetween.Game.Player
 			HorizontalMovement,
 			Falling,
 			Jumping,
+			Interaction,
 			Carrying,
 			MeleeAttack,
 			RangedAttack,

@@ -2,21 +2,22 @@ using Godot;
 
 namespace PirateInBetween.Game.Enemies
 {
-	public class TestEnemy : StaticBody2D, IHittable
+	public class TestEnemy : Node2D
 	{
 		[Export] private int _health = 3;
 
-		public void Hit(HitData data)
+		public void OnDamage(DamageData data)
 		{
-			if (_health > 1)
+			_health -= data.Damage;
+
+			if (_health <= 0)
 			{
-				GD.Print("ow!");
-				_health--;
+				GD.Print("died");
+				QueueFree();
 			}
 			else
 			{
-				GD.Print("Aaaaa!");
-				QueueFree();
+				GD.Print($"hit, remaining health: {_health}");
 			}
 		}
 	}

@@ -1,20 +1,44 @@
-using System;
 using Godot;
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
+
 
 namespace PirateInBetween
 {
 	public static class InputManager
 	{
-		
+		/// <summary>
+		/// Maps int values of <see cref="InputButton"/> to their <see cref="InputButtonString"/> string value.
+		/// </summary>
+		private static readonly string[] _enumToString;
+
+		static InputManager()
+		{
+			List<string> temp = new List<string>();
+
+			foreach (var e in Enum.GetValues(typeof(InputButton)))
+			{
+				temp.Add(typeof(InputButton).GetField(Enum.GetName(typeof(InputButton), e)).GetCustomAttribute<InputButtonString>().Button);
+			}
+
+			_enumToString = temp.ToArray();
+		} 		
+
+
 		public static Vector2 GetMovementVector()
 		{
+			// HTML5 export seems to have trouble with GetVector
 			if (OS.HasFeature("HTML5"))
 				return new Vector2(
 					Input.GetActionStrength(InputButton.MoveRight.GetString()) - Input.GetActionStrength(InputButton.MoveLeft.GetString()),
 					Input.GetActionStrength(InputButton.MoveDown.GetString()) - Input.GetActionStrength(InputButton.MoveUp.GetString())	
-				);
+				).Normalized();
 				
 			return Input.GetVector(
 				InputButton.MoveLeft.GetString(), InputButton.MoveRight.GetString(), 
@@ -27,19 +51,8 @@ namespace PirateInBetween
 		public static bool IsActionJustPressed(InputButton button) => Input.IsActionJustPressed(button.GetString());
 		public static bool IsActionJustReleased(InputButton button) => Input.IsActionJustReleased(button.GetString());
 
-		/*
-		private static readonly string[] ButtonToString = {
-			"mv_right", // MoveRight
-			"mv_up", // MoveUp
-			"mv_left", // MoveLeft
-			"mv_down", // MoveDown
-			"attack_melee", // MeleeAttack
-			"attack_shoot", // RangedAttack
-			"player_carry",
-		};
-		*/
-
-		private static string GetString(this InputButton button) => button.GetType().GetField(button.ToString()).GetCustomAttribute<InputButtonString>().Button;
+		//private static string GetString(this InputButton button) => button.GetType().GetField(button.ToString()).GetCustomAttribute<InputButtonString>().Button;
+		private static string GetString(this InputButton button) => _enumToString[(int) button];
 
 		[AttributeUsage(AttributeTargets.Field)]
 		public class InputButtonString : Attribute
@@ -62,5 +75,6 @@ namespace PirateInBetween
 		[InputManager.InputButtonString("attack_melee")] 		MeleeAttack,
 		[InputManager.InputButtonString("attack_shoot")]		RangedAttack,
 		[InputManager.InputButtonString("player_carry")] 		Carry,
+		[InputManager.InputButtonString("interact")]			Interact,
 	}
 }

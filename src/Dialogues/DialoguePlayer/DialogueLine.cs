@@ -29,9 +29,6 @@ namespace PirateInBetween.Game.Dialogue
 			speakerLabel.Align = textLabel.Align = rightSide ? Label.AlignEnum.Right : Label.AlignEnum.Left;
 		}
 
-		public static void FreeAll()
-		{
-			Autoloads.Global.Instance.GetTree().CallGroup(GROUP, "queue_free");
-		}
+		public static void FreeAll(SceneTree tree) => tree.CallGroup(GROUP, "queue_free");
 	}
 }

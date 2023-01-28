@@ -65,7 +65,7 @@ namespace PirateInBetween.Game.Dialogue
 					case DialogueResponse.Types.End:
 						await _player.AwaitContinue("(End)");
 
-						DialogueLine.FreeAll();
+						DialogueLine.FreeAll(GetTree());
 						Hide();
 
 						break;

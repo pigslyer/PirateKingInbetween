@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Reflection;
 
 /// <summary>
 /// Universally useful extensions, no need for them to occupy any namespace. Partial to allow game specific additions.
@@ -56,5 +57,36 @@ public static partial class Extensions
 		Vector2 temp = child.GlobalPosition;
 		Reparent(child, newParent);
 		child.GlobalPosition = temp;
+	}
+
+	/// <summary>
+	/// For use with incrementing enums which use <see cref="EnumString"/>.
+	/// </summary>
+	/// <typeparam name="T">An auto-incrementing enum, each entry of which has the attribute <see cref="EnumString"/>.</typeparam>
+	/// <returns>An array of values <see cref="EnumString.String"/> mapped to their index in <see cref="T"/>.</returns>
+	public static string[] GetEnumStrings<T>() where T : Enum
+	{
+		Type t = typeof(T);
+		List<string> temp = new List<string>();
+
+		foreach (var e in Enum.GetValues(t))
+		{
+			temp.Add(t.GetField(Enum.GetName(t, e)).GetCustomAttribute<EnumString>().String);
+		}
+
+		return temp.ToArray();
+	}
+
+
+}
+
+[AttributeUsage(AttributeTargets.Field)]
+public class EnumString : Attribute
+{
+	public readonly string String;
+
+	public EnumString(string @string)
+	{
+		String = @string;
 	}
 }

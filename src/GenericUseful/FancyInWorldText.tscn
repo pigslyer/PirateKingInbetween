@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/GenericUseful/FancyInWorldText.cs" type="Script" id=1]
 
@@ -86,6 +86,23 @@ tracks/1/keys = {
 "values": [ Vector2( 0, -7 ), Vector2( 0, -44 ) ]
 }
 
+[sub_resource type="Animation" id=6]
+resource_name = "Passive"
+length = 4.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Animating:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -7 ), Vector2( 0, -19 ) ]
+}
+
 [sub_resource type="Animation" id=4]
 length = 0.001
 tracks/0/type = "value"
@@ -112,6 +129,30 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Animating:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Animating:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -7 ) ]
+}
 
 [node name="FancyInWorldText" type="Node2D"]
 script = ExtResource( 1 )
@@ -119,8 +160,7 @@ __animationPlayerPath = NodePath("AnimationPlayer")
 __labelPath = NodePath("Animating/Label")
 
 [node name="Animating" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-position = Vector2( 0, 43 )
+position = Vector2( 0, -7 )
 
 [node name="Label" type="Label" parent="Animating"]
 margin_left = -32.5
@@ -136,4 +176,7 @@ valign = 1
 anims/Appear = SubResource( 1 )
 anims/AppearShorter = SubResource( 5 )
 anims/Disappear = SubResource( 3 )
+anims/Passive = SubResource( 6 )
 anims/RESET = SubResource( 4 )
+next/AppearShorter = "Passive"
+blend_times = [ "Passive", "Disappear", 0.1 ]

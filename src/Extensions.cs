@@ -59,7 +59,9 @@ public static partial class Extensions
 		child.GlobalPosition = temp;
 	}
 
-	public static Godot.Area2D[] GetAreas(this Godot.Area2D area) => area.GetOverlappingAreas().Cast<Godot.Area2D>().ToArray();
+	public static T[] ToArray<T>(this Godot.Collections.Array array) => array.Cast<T>().ToArray();
+
+	public static Godot.Area2D[] GetAreas(this Godot.Area2D area) => area.GetOverlappingAreas().ToArray<Godot.Area2D>();
 
 	public static T Min<T>(this IEnumerable<T> enumerable, Func<T, int> standard) where T : Node2D
 	{

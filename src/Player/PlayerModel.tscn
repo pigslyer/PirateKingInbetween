@@ -17,9 +17,10 @@ __shootFromPath = NodePath("Flippable/ShootFrom")
 __damageDealerSlashPath = NodePath("Flippable/DamageDealerSlash")
 __damageDealerTempPreviewPath = NodePath("Flippable/TempSlash")
 __interactionDisplayPath = NodePath("InteractionTextDisplay")
+__playerSpritePath = NodePath("Flippable/AnimatedSprite")
 
 [node name="InteractionTextDisplay" type="Position2D" parent="."]
-position = Vector2( 0, -34 )
+position = Vector2( 0, -40 )
 z_index = 1000
 z_as_relative = false
 
@@ -29,8 +30,6 @@ z_as_relative = false
 position = Vector2( 0, -4 )
 frames = ExtResource( 4 )
 animation = "Idle"
-frame = 4
-playing = true
 
 [node name="ShootFrom" type="Position2D" parent="Flippable"]
 visible = false

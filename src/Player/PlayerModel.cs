@@ -21,6 +21,7 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __damageDealerSlashPath = null;
 		[Export] private NodePath __damageDealerTempPreviewPath = null;
 		[Export] private NodePath __interactionDisplayPath = null;
+		[Export] private NodePath __playerSpritePath = null;
 		[Export] private NodePath __playerPath = null;
 
 		#endregion
@@ -30,6 +31,7 @@ namespace PirateInBetween.Game.Player
 		private DamageDealer _damageDealerSlash;
 		private ITextDisplay _currentLookAt;
 		private Position2D _interactionDisplayPosition;
+		private AnimatedSprite _playerSprite;
 		private PlayerController _player;
 
 		public override void _Ready()
@@ -38,7 +40,10 @@ namespace PirateInBetween.Game.Player
 			_shootFrom = GetNode<Position2D>(__shootFromPath);
 			_damageDealerSlash = GetNode<DamageDealer>(__damageDealerSlashPath);
 			_interactionDisplayPosition = GetNode<Position2D>(__interactionDisplayPath);
+			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
 			_player = GetNode<PlayerController>(__playerPath);
+
+			_playerSprite.Play("Idle");
 		}
 
 		public void SetAnimation(PlayerAction action, bool facingRight)

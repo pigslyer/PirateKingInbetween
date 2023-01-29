@@ -34,19 +34,19 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
-			var array = _interactionDetectionArea.GetOverlappingAreas();
+			var array = _interactionDetectionArea.GetAreas();
 
-			if (!data.IsBusy && CanChangeActive && array.Count > 0)
+			if (!data.IsBusy && CanChangeActive && array.Length > 0)
 			{
-				Interactive inter = (Interactive) array[0];
+				Interactive closest = (Interactive) array.Min((area) => (int)area.GlobalPosition.DistanceSquaredTo(GetPlayer().GlobalPosition));
 
 				var anim = _animSelector.GetDefaultAnimation(data);
 				data.FacingRight = anim.FacingRight;
-				data.CurrentAction = new ActionLookingAt(anim.Animation, inter.GetLookAtText());
+				data.CurrentAction = new ActionLookingAt(anim.Animation, closest.GetLookAtText());
 
 				if (InputManager.IsActionJustPressed(InputButton.Interact))
 				{
-					InteractWith(inter);
+					InteractWith(closest);
 				}
 			}
 

@@ -13,3 +13,4 @@ mono_crash.*.json
 
 # my shit
 export/
+.mono/assemblies/Debug/api_hash_cache.cfg

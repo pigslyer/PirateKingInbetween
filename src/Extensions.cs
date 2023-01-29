@@ -59,6 +59,32 @@ public static partial class Extensions
 		child.GlobalPosition = temp;
 	}
 
+	public static Godot.Area2D[] GetAreas(this Godot.Area2D area) => area.GetOverlappingAreas().Cast<Godot.Area2D>().ToArray();
+
+	public static T Min<T>(this IEnumerable<T> enumerable, Func<T, int> standard) where T : Node2D
+	{
+		IEnumerator<T> e = enumerable.GetEnumerator();
+		e.Reset();
+		
+		if (!e.MoveNext()) return null;
+		T ret = e.Current;
+		int val = standard(ret);
+		int temp;
+
+		while (e.MoveNext())
+		{
+			temp = standard(e.Current);
+
+			if (temp < val)
+			{
+				val = temp;
+				ret = e.Current;
+			}
+		}
+
+		return ret;
+	}
+
 	/// <summary>
 	/// For use with incrementing enums which use <see cref="EnumString"/>.
 	/// </summary>

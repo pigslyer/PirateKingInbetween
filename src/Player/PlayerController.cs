@@ -56,7 +56,7 @@ namespace PirateInBetween.Game.Player
 
 			DebugOutOfBounds();
 
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.CurrentAction.Animation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}";
+			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.CurrentAction.Animation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
 		}
 
 		private void RunBehaviours(PlayerCurrentFrameData data) => _behaviourManager.RunBehaviours(data);
@@ -73,8 +73,6 @@ namespace PirateInBetween.Game.Player
 				PushError("Player action was never set this frame.");
 				data.CurrentAction = PlayerAnimation.Idle;
 			}
-
-			_model.SetAnimation(data.CurrentAction.Animation, data.FacingRight);
 			
 			_lastRight = data.FacingRight;
 			

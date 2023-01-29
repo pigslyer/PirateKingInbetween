@@ -12,8 +12,8 @@ namespace PirateInBetween.Game.Dialogue
 	public class ChoiceButton : Container
 	{
 		#region Paths
-		[Export] private NodePath __numberLabelPath;
-		[Export] private NodePath __buttonPath;
+		[Export] private NodePath __numberLabelPath = null;
+		[Export] private NodePath __buttonPath = null;
 
 		#endregion
 

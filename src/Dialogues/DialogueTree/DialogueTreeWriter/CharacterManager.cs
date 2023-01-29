@@ -14,20 +14,20 @@ namespace PirateInBetween.Game.Dialogue.Tree.Writer
 
 		#region Paths
 
-		[Export] private NodePath __fileChooserPath;
-		[Export] private NodePath __managerPath;
-		[Export] private NodePath __characterListPath;
-		[Export] private NodePath __characterDisplayNamePath;
-		[Export] private NodePath __characterFileNamePath;
-		[Export] private NodePath __characterTextureLineEditPath;
-		[Export] private NodePath __characterTextureDisplayPath;
-		[Export] private NodePath __currentlyEditingFileNameLabelPath;
-		[Export] private NodePath __editedStarPath;
-		[Export] private NodePath __saveButtonPath;
-		[Export] private NodePath __discardButtonPath;
-		[Export] private NodePath __newButtonPath;
-		[Export] private NodePath __deleteButtonPath;
-		[Export] private NodePath __selectTexturePath;
+		[Export] private NodePath __managerPath = null;
+		[Export] private NodePath __fileChooserPath = null;
+		[Export] private NodePath __characterListPath = null;
+		[Export] private NodePath __characterDisplayNamePath = null;
+		[Export] private NodePath __characterFileNamePath = null;
+		[Export] private NodePath __characterTextureLineEditPath = null;
+		[Export] private NodePath __characterTextureDisplayPath = null;
+		[Export] private NodePath __currentlyEditingFileNameLabelPath = null;
+		[Export] private NodePath __editedStarPath = null;
+		[Export] private NodePath __saveButtonPath = null;
+		[Export] private NodePath __discardButtonPath = null;
+		[Export] private NodePath __newButtonPath = null;
+		[Export] private NodePath __deleteButtonPath = null;
+		[Export] private NodePath __selectTexturePath = null;
 
 		#endregion
 

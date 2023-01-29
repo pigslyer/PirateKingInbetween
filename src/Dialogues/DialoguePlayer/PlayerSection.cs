@@ -14,11 +14,11 @@ namespace PirateInBetween.Game.Dialogue
 		private const string BUTTON_GROUP = "PLAYER_SECTION_BUTTONS";
 
 
-		[Export] private PackedScene _choiceButton;
+		[Export] private PackedScene _choiceButton = null;
 
 		#region Paths
-		[Export] private NodePath _choicesVBoxPath;
-		[Export] private NodePath _speakerNamePath;
+		[Export] private NodePath _choicesVBoxPath = null;
+		[Export] private NodePath _speakerNamePath = null;
 
 		#endregion
 

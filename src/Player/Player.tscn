@@ -1,34 +1,47 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/Player/States/PlayerAnimationSelector.cs" type="Script" id=3]
-[ext_resource path="res://src/Player/States/PlayerMelee.cs" type="Script" id=4]
-[ext_resource path="res://src/Resources/Slashes/TestSlash.tres" type="Resource" id=5]
-[ext_resource path="res://src/Player/States/PlayerNoclip.cs" type="Script" id=6]
-[ext_resource path="res://src/Player/States/PlayerRangedAttack.cs" type="Script" id=7]
-[ext_resource path="res://src/Resources/Bullets/HorizontalBulletTest.tres" type="Resource" id=8]
+[ext_resource path="res://src/Player/Behaviours/PlayerInteraction.cs" type="Script" id=3]
+[ext_resource path="res://src/Player/Behaviours/PlayerJumping.cs" type="Script" id=4]
+[ext_resource path="res://src/Player/Behaviours/PlayerRangedAttack.cs" type="Script" id=5]
+[ext_resource path="res://src/Player/Behaviours/PlayerMelee.cs" type="Script" id=6]
+[ext_resource path="res://src/Player/Behaviours/PlayerNoclip.cs" type="Script" id=7]
+[ext_resource path="res://src/Player/Behaviours/PlayerAnimationSelector.cs" type="Script" id=8]
 [ext_resource path="res://src/Levels/MovingParentDetector.cs" type="Script" id=9]
-[ext_resource path="res://src/Player/States/PlayerHorizontalMovement.cs" type="Script" id=10]
-[ext_resource path="res://src/Player/States/PlayerCarrying.cs" type="Script" id=11]
-[ext_resource path="res://src/Player/States/PlayerJumping.cs" type="Script" id=12]
-[ext_resource path="res://src/Player/States/PlayerFalling.cs" type="Script" id=13]
-[ext_resource path="res://src/Player/States/PlayerBehaviourManager.cs" type="Script" id=14]
+[ext_resource path="res://src/Player/Behaviours/PlayerCarrying.cs" type="Script" id=10]
+[ext_resource path="res://src/Player/Behaviours/PlayerFalling.cs" type="Script" id=11]
+[ext_resource path="res://src/Player/Behaviours/PlayerHorizontalMovement.cs" type="Script" id=12]
+[ext_resource path="res://src/Attacks/DamageTaker.cs" type="Script" id=13]
+[ext_resource path="res://src/Player/Behaviours/PlayerBehaviourManager.cs" type="Script" id=14]
+[ext_resource path="res://src/Attacks/Bullets/StraightBullet.tscn" type="PackedScene" id=15]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 7, 21.5 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 15, 15.5 )
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 11.5, 30 )
+extents = Vector2( 11.5, 28 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
 script = ExtResource( 1 )
-_playerModelPath = NodePath("PlayerModel")
-_playerBehaviourManagerPath = NodePath("BehaviourManager")
-_debugLabelPath = NodePath("CanvasLayer/DebugLabel")
+__playerModelPath = NodePath("PlayerModel")
+__playerBehaviourManagerPath = NodePath("BehaviourManager")
+__debugLabelPath = NodePath("CanvasLayer/DebugLabel")
+__movingParentDetectorPath = NodePath("MovingParentDetector")
 
 [node name="PlayerModel" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
+__playerPath = NodePath("..")
 
-[node name="BoxDetector" type="RayCast2D" parent="PlayerModel"]
+[node name="AnimatedSprite" parent="PlayerModel/Flippable" index="0"]
+frame = 1
+
+[node name="BoxDetector" type="RayCast2D" parent="PlayerModel/Flippable" index="4"]
+visible = false
 position = Vector2( 11, 4 )
 cast_to = Vector2( 30, 0 )
 collision_mask = 0
@@ -36,47 +49,82 @@ __meta__ = {
 "_editor_description_": "it being a child of PlayerModel ensures that its position keeps in sync with the player's"
 }
 
+[node name="BoxDropPosition" type="Position2D" parent="PlayerModel/Flippable" index="5"]
+visible = false
+position = Vector2( 27, -11 )
+
+[node name="DamageTaker" type="Area2D" parent="PlayerModel/Flippable" index="6"]
+visible = false
+collision_layer = 0
+collision_mask = 0
+script = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerModel/Flippable/DamageTaker"]
+position = Vector2( 0, -2.5 )
+shape = SubResource( 3 )
+
+[node name="InteractionArea" type="Area2D" parent="PlayerModel/Flippable" index="7"]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerModel/Flippable/InteractionArea"]
+position = Vector2( 12, 12.5 )
+shape = SubResource( 2 )
+
+[node name="BoxLiftedPosition" type="Position2D" parent="PlayerModel/Flippable" index="8"]
+visible = false
+position = Vector2( 0, -48 )
+
 [node name="Body" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -30 )
+visible = false
+position = Vector2( 0, -28 )
 shape = SubResource( 1 )
 
 [node name="BehaviourManager" type="Node" parent="."]
 script = ExtResource( 14 )
 
 [node name="HorizontalMovement" type="Node" parent="BehaviourManager"]
-script = ExtResource( 10 )
+script = ExtResource( 12 )
 __meta__ = {
 "_editor_description_": "Handles horizontal movement."
 }
 
 [node name="Falling" type="Node" parent="BehaviourManager"]
-script = ExtResource( 13 )
+script = ExtResource( 11 )
 
 [node name="Jumping" type="Node" parent="BehaviourManager"]
-script = ExtResource( 12 )
+script = ExtResource( 4 )
 _jumpHeight = 100.0
 _jumpLength = 0.4
 
 [node name="Carrying" type="Node" parent="BehaviourManager"]
-script = ExtResource( 11 )
-_carryingDetectorPath = NodePath("../../PlayerModel/BoxDetector")
+script = ExtResource( 10 )
+_carriedBoxReachDistance = 30.0
+_carryingDetectorPath = NodePath("../../PlayerModel/Flippable/BoxDetector")
+_aboveHeadPositionPath = NodePath("../../PlayerModel/Flippable/BoxLiftedPosition")
+_boxDropPositionPath = NodePath("../../PlayerModel/Flippable/BoxDropPosition")
+
+[node name="Interaction" type="Node" parent="BehaviourManager"]
+script = ExtResource( 3 )
+__interactionDetectionAreaPath = NodePath("../../PlayerModel/Flippable/InteractionArea")
 
 [node name="MeleeAttack" type="Node" parent="BehaviourManager"]
-script = ExtResource( 4 )
+script = ExtResource( 6 )
 _meleeAnimationVelocityMult = 0.6
-_data = ExtResource( 5 )
 
 [node name="RangedAttack" type="Node" parent="BehaviourManager"]
-script = ExtResource( 7 )
-_bulletData = ExtResource( 8 )
+script = ExtResource( 5 )
+_bulletScene = ExtResource( 15 )
+_bulletSpeed = 400.0
 
 [node name="NoclipMovement" type="Node" parent="BehaviourManager"]
-script = ExtResource( 6 )
+script = ExtResource( 7 )
 
 [node name="AnimationSelector" type="Node" parent="BehaviourManager"]
-script = ExtResource( 3 )
+script = ExtResource( 8 )
 
 [node name="MovingParentDetector" type="RayCast2D" parent="."]
+visible = false
 enabled = true
 cast_to = Vector2( 0, 10 )
 script = ExtResource( 9 )
@@ -84,13 +132,13 @@ _movingWhoPath = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 128
-visible = false
 
 [node name="DebugLabel" type="Label" parent="CanvasLayer"]
 margin_right = 40.0
 margin_bottom = 14.0
 
 [node name="Instructions" type="Label" parent="CanvasLayer"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -212.0
@@ -102,3 +150,5 @@ Q - shoot
 Darker tiles cannot be jumped/shot through.
 You can damage the \"barrel\" in the hold of both ships."
 autowrap = true
+
+[editable path="PlayerModel"]

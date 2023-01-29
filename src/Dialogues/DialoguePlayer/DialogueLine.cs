@@ -14,8 +14,8 @@ namespace PirateInBetween.Game.Dialogue
 		private const string GROUP = "DIALOGUE_LINE_GROUP";
 
 		#region Paths
-		[Export] private NodePath _speakerLabelPath;
-		[Export] private NodePath _lineLabelPath;
+		[Export] private NodePath _speakerLabelPath = null;
+		[Export] private NodePath _lineLabelPath = null;
 		#endregion
 
 		public void Initialize(string speaker, string text, bool rightSide)
@@ -29,9 +29,6 @@ namespace PirateInBetween.Game.Dialogue
 			speakerLabel.Align = textLabel.Align = rightSide ? Label.AlignEnum.Right : Label.AlignEnum.Left;
 		}
 
-		public static void FreeAll()
-		{
-			Autoloads.Global.Instance.GetTree().CallGroup(GROUP, "queue_free");
-		}
+		public static void FreeAll(SceneTree tree) => tree.CallGroup(GROUP, "queue_free");
 	}
 }

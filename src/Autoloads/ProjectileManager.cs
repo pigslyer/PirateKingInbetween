@@ -5,20 +5,19 @@ namespace PirateInBetween.Game.Autoloads
 {
 	public class ProjectileManager : Autoload<ProjectileManager>
 	{
-		/// <summary>
-		///	Adds given bullet to the scene tree at position. This method should always be called by the bullet itself, not the thing instancing it.
-		/// </summary>
-		public T Setup<T>(T bullet, Vector2 position) where T : BulletBase
+		
+		public static T SetupProjectile<T>(T projectile, Vector2 position, MovingParent newParent) where T : Node2D, IProjectile
 		{
-			AddChild(bullet);
-			bullet.Position = position;
+			newParent.AddChild(projectile);	
+			projectile.GlobalPosition = position;
 
-			return bullet;
+			return projectile;
 		}
+		
 
-		public void ClearBullets()
+		public static void ClearProjectiles()
 		{
-			foreach (var child in GetChildren())
+			foreach (var child in Instance.GetChildren())
 			{
 				(child as Node).QueueFree();
 			}

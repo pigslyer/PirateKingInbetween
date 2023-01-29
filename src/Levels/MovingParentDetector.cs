@@ -14,30 +14,45 @@ namespace PirateInBetween.Game
 		#endregion
 
 		private Node2D _movingWho;
-		private MovingParent _currentMovingParent;
+		public MovingParent CurrentMovingParent { get; private set; } = null;
 		private HashSet<Node> _checked = new HashSet<Node>();
 
 		public override void _Ready()
 		{
 			_movingWho = GetNode<Node2D>(_movingWhoPath);
-			_currentMovingParent = MovingParent.GetMovingParentOf(_movingWho);
+			CurrentMovingParent = MovingParent.GetMovingParentOf(_movingWho);
 		}
 
 		public override void _PhysicsProcess(float _)
 		{
 			if (IsColliding() && GetCollider() is Node node && !_checked.Contains(node) && MovingParent.TryGetMovingParentOf(node, out var mp))
 			{
-				if (mp != null && mp != _currentMovingParent)
+				if (mp != null && mp != CurrentMovingParent)
 				{
-					mp.Move(_movingWho);
-					_currentMovingParent = mp;
-					_checked.Clear();
-
-					EmitSignal(nameof(OnChangedParent));
+					SetMovingParent(mp);
 				}
 				
 				_checked.Add(node);
 			}
+		}
+
+		public void SetDetecting(bool state)
+		{
+			SetPhysicsProcess(state);
+			
+			if (!state)
+			{
+				CurrentMovingParent = null;
+			}
+		}
+
+		public void SetMovingParent(MovingParent newParent)
+		{
+			newParent.Move(_movingWho);
+			CurrentMovingParent = newParent;
+			_checked.Clear();
+
+			EmitSignal(nameof(OnChangedParent));
 		}
 	} 
 }

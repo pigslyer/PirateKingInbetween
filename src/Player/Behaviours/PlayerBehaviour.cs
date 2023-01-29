@@ -82,6 +82,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 		[Flags] public enum Behaviours
 		{
 			None = 0,
+			All = (1 << (BehavioursPos.Last + 1)) - 1,
 			HorizontalMovement = 1 << BehavioursPos.HorizontalMovement,
 			Falling = 1 << BehavioursPos.Falling,
 			Jumping = 1 << BehavioursPos.Jumping,
@@ -96,8 +97,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			/// These are all behaviours which the player has enabled at the start.
 			/// Enabled behaviours need not do anything even if they're enabled, they can just check for inputs.
 			/// </summary>
-			/// <returns></returns>
-			Default = ~Behaviours.Noclip,
+			Default = Behaviours.All & ~(Behaviours.Noclip),
 			
 			BasicMovementNoJump = Behaviours.HorizontalMovement | Behaviours.Falling,
 			BasicMovement = Behaviours.HorizontalMovement | Behaviours.Falling | Behaviours.Jumping,
@@ -116,6 +116,9 @@ namespace PirateInBetween.Game.Player.Behaviours
 			RangedAttack,
 			Noclip,
 			AnimationSelector,
+
+
+			Last = AnimationSelector,
 		}
 	}
 }

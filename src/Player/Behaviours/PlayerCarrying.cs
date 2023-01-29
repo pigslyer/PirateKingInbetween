@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Player.Actions;
+
 namespace PirateInBetween.Game.Player.Behaviours
 {
     public class PlayerCarrying : PlayerBehaviour
@@ -32,6 +34,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
         private const PhysicsLayers PUSHABLE_LAYERS = PhysicsLayers.World | PhysicsLayers.CarriableBox;
         private PlayerHorizontalMovement _horizontalMovement;
+        private PlayerAnimationSelector _animationSelector;
         private float _horizontalMaxSpeed => _horizontalMovement.MaxSpeed;
 
         private Position2D _aboveHeadPosition;
@@ -46,6 +49,7 @@ namespace PirateInBetween.Game.Player.Behaviours
             
             _ray = GetNode<RayCast2D>(_carryingDetectorPath);
             _horizontalMovement = GetSiblingBehaviour<PlayerHorizontalMovement>(BehavioursPos.HorizontalMovement);
+            _animationSelector = GetSiblingBehaviour<PlayerAnimationSelector>(BehavioursPos.AnimationSelector);
             _aboveHeadPosition = GetNode<Position2D>(_aboveHeadPositionPath);
             _boxDropPosition = GetNode<Position2D>(_boxDropPositionPath);
         }
@@ -61,31 +65,39 @@ namespace PirateInBetween.Game.Player.Behaviours
                 
                 data.CurrentAction = PlayerAnimation.Pushing;
             }
-            else if (IsOnFloor() && CanChangeActive && !_isCarryingBox && InputManager.IsActionJustPressed(InputButton.Carry) && TrySeeCarriableBox(data, out box))
+            else if (IsOnFloor() && CanChangeActive && !_isCarryingBox && TrySeeCarriableBox(data, out box))
             {
-                box.SetCarried(true);
-                _carriedBox = box;
+                var anim = _animationSelector.GetDefaultAnimation(data);
 
-                CarryBoxAnimation(
-                        box : box, 
-                        getToPosition : () => _aboveHeadPosition.GlobalPosition, 
-                        time : _carriedBoxLiftTime, 
-                        onFinishedEnabled : _onPickUpBehaviours,
-                        onEnd : () => _carriedBox.Reparent2D(newParent: this)
-                );
-                data.Velocity = Vector2.Zero;
+                data.CurrentAction = new ActionLookingAt(anim.Animation, "Pick up box");
+                data.FacingRight = anim.FacingRight;
+
+                if (InputManager.IsActionJustPressed(InputButton.Carry))
+                {
+					box.SetCarried(true);
+					_carriedBox = box;
+
+					CarryBoxAnimation(
+							box: box,
+							getToPosition: () => _aboveHeadPosition.GlobalPosition,
+							time: _carriedBoxLiftTime,
+							onFinishedEnabled: _onPickUpBehaviours,
+							onEnd: () => _carriedBox.Reparent2D(newParent: this)
+					);
+					data.Velocity = Vector2.Zero;
+				}
             }
             else if (IsOnFloor() && CanChangeActive && _isCarryingBox && InputManager.IsActionJustPressed(InputButton.Carry))
             {
-				_carriedBox.SetMovingParent(GetPlayer().GetMovingParentDetector().CurrentMovingParent);
+                _carriedBox.SetMovingParent(GetPlayer().GetMovingParentDetector().CurrentMovingParent);
                 CarriableBox temp = _carriedBox;
 
                 CarryBoxAnimation(
-                        box : _carriedBox,
-                        getToPosition : () => _boxDropPosition.GlobalPosition, 
-                        time : _carriedBoxDropTime, 
-                        onFinishedEnabled : _onDropBehaviours,
-                        onEnd : () => temp.SetCarried(false)
+                        box: _carriedBox,
+                        getToPosition: () => _boxDropPosition.GlobalPosition,
+                        time: _carriedBoxDropTime,
+                        onFinishedEnabled: _onDropBehaviours,
+                        onEnd: () => temp.SetCarried(false)
                 );
 
                 data.Velocity = Vector2.Zero;
@@ -93,6 +105,11 @@ namespace PirateInBetween.Game.Player.Behaviours
             }
             else if (_isCarryingBox)
             {
+				var anim = _animationSelector.GetDefaultAnimation(data);
+				data.CurrentAction = new ActionLookingAt(anim.Animation, "Drop box");
+				data.FacingRight = anim.FacingRight;
+                
+
                 _carriedBox.GlobalPosition = _carriedBox.GlobalPosition.LinearInterpolate(_aboveHeadPosition.GlobalPosition, _carryingLerpFactor);
             }
         }

@@ -69,12 +69,12 @@ namespace PirateInBetween.Game
 
 		public void ApplyVelocity(Vector2 vel)
 		{
-			MoveAndSlide(vel);
+			MoveAndSlide(vel, Vector2.Up);
 		}
 
 		public virtual bool CanBePushed() => _canBePushed;
 
-		public virtual bool CanBeLifted() => _canBeLifted;
+		public virtual bool CanBeLifted() => _canBeLifted && IsOnFloor() && !_isCarried;
 
 		public virtual bool CanJumpWhileLifting() => _canJumpWhileLifting;
 
@@ -82,7 +82,7 @@ namespace PirateInBetween.Game
 		{
 			base._PhysicsProcess(delta);
 
-			_velocity = MoveAndSlide(new Vector2(0, _velocity + Gravity * delta)).y;
+			_velocity = MoveAndSlide(new Vector2(0, _velocity + Gravity * delta), Vector2.Up).y;
 		}
 
 		public void SetMovingParent(MovingParent parent) => _movingParentDetector.SetMovingParent(parent);

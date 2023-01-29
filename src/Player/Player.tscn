@@ -97,16 +97,16 @@ script = ExtResource( 4 )
 _jumpHeight = 100.0
 _jumpLength = 0.4
 
-[node name="Interaction" type="Node" parent="BehaviourManager"]
-script = ExtResource( 3 )
-__interactionDetectionAreaPath = NodePath("../../PlayerModel/Flippable/InteractionArea")
-
 [node name="Carrying" type="Node" parent="BehaviourManager"]
 script = ExtResource( 10 )
 _carriedBoxReachDistance = 30.0
 _carryingDetectorPath = NodePath("../../PlayerModel/Flippable/BoxDetector")
 _aboveHeadPositionPath = NodePath("../../PlayerModel/Flippable/BoxLiftedPosition")
 _boxDropPositionPath = NodePath("../../PlayerModel/Flippable/BoxDropPosition")
+
+[node name="Interaction" type="Node" parent="BehaviourManager"]
+script = ExtResource( 3 )
+__interactionDetectionAreaPath = NodePath("../../PlayerModel/Flippable/InteractionArea")
 
 [node name="MeleeAttack" type="Node" parent="BehaviourManager"]
 script = ExtResource( 6 )
@@ -138,6 +138,7 @@ margin_right = 40.0
 margin_bottom = 14.0
 
 [node name="Instructions" type="Label" parent="CanvasLayer"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -212.0

@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public abstract class Interactive : Godot.Area2D
+	public abstract class Interactive : Area2D
 	{
 		public abstract Task Interact();
 		public abstract string GetLookAtText();

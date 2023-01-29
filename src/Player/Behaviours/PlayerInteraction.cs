@@ -22,6 +22,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 		private Godot.Area2D _interactionDetectionArea;
 		private PlayerAnimationSelector _animSelector;
 
+		private const Behaviours DISABLED_DURING_INTERACTION = Behaviours.Default & ~(Behaviours.Interaction);
+
 		public override void _Ready()
 		{
 			base._Ready();
@@ -34,21 +36,36 @@ namespace PirateInBetween.Game.Player.Behaviours
 		{
 			var array = _interactionDetectionArea.GetOverlappingAreas();
 
-			if (!data.IsBusy && array.Count > 0)
+			if (!data.IsBusy && CanChangeActive && array.Count > 0)
 			{
 				Interactive inter = (Interactive) array[0];
 
+				var anim = _animSelector.GetDefaultAnimation(data);
+				data.FacingRight = anim.FacingRight;
+				data.CurrentAction = new ActionLookingAt(anim.Animation, inter.GetLookAtText());
+
 				if (InputManager.IsActionJustPressed(InputButton.Interact))
 				{
-					inter.Interact();
-				}
-				else
-				{
-					var anim = _animSelector.GetDefaultAnimation(data);
-					data.FacingRight = anim.FacingRight;
-					data.CurrentAction = new ActionLookingAt(anim.Animation, inter.GetLookAtText());
+					InteractWith(inter);
 				}
 			}
+
+			if (IsInControl)
+			{
+				data.CurrentAction = PlayerAnimation.Idle;
+			}
+
+		}
+
+		private async Task InteractWith(Interactive what)
+		{
+			SetBehaviourChangesDisabled(true);
+			SetBehavioursEnabled(DISABLED_DURING_INTERACTION, false);
+
+			await what.Interact();
+
+			SetBehavioursEnabled(DISABLED_DURING_INTERACTION, true);
+			SetBehaviourChangesDisabled(false);
 		}
 	}
 }

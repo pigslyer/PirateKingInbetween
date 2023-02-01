@@ -34,6 +34,11 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
+			if (IsInControl)
+			{
+				data.CurrentAction = PlayerAnimation.Idle;
+			}
+
 			var array = _interactionDetectionArea.GetAreas();
 
 			if (!data.IsBusy && CanChangeActive && array.Length > 0)
@@ -49,12 +54,6 @@ namespace PirateInBetween.Game.Player.Behaviours
 					InteractWith(closest);
 				}
 			}
-
-			if (IsInControl)
-			{
-				data.CurrentAction = PlayerAnimation.Idle;
-			}
-
 		}
 
 		private async Task InteractWith(Interactive what)

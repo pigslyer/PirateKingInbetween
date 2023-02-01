@@ -17,6 +17,7 @@ border_blend = true
 expand_margin_left = 16.0
 
 [node name="DialoguePlayer" type="Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = SubResource( 2 )
@@ -65,9 +66,8 @@ scroll_horizontal_enabled = false
 scroll_vertical = 58
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer/LineContainer"]
-margin_top = -58.0
-margin_right = 397.0
-margin_bottom = 298.0
+margin_right = 409.0
+margin_bottom = 356.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 16
@@ -75,7 +75,7 @@ custom_constants/margin_left = 16
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/VBoxContainer/LineContainer/MarginContainer"]
 margin_left = 16.0
-margin_right = 381.0
+margin_right = 393.0
 margin_bottom = 356.0
 grow_horizontal = 0
 grow_vertical = 0

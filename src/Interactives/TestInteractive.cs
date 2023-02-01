@@ -11,7 +11,7 @@ namespace PirateInBetween.Game
 {
 	public class TestInteractive : Interactive
 	{
-		[Export] private string _displayText;
+		[Export] private string _displayText = "";
 
 		public override string GetLookAtText() => _displayText;
 

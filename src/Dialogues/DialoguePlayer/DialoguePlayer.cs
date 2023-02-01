@@ -48,7 +48,6 @@ namespace PirateInBetween.Game.Dialogue
 
 			while (dialogue.HasNext())
 			{
-
 				if (dialogue.RequiresChoice())
 				{
 					next = dialogue.Choose(choice);
@@ -58,6 +57,7 @@ namespace PirateInBetween.Game.Dialogue
 					next = dialogue.Next();
 				}
 
+			
 				portraitTexture.Texture = next.Speaker?.CharacterPortrait;
 				
 				switch (next.Type)

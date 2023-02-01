@@ -24,7 +24,7 @@ namespace PirateInBetween.Game.Dialogue.Tree
 		public IResponds Current;
 
 
-		public DialogueTree(DialogueTreeResourceLoader loader) : base(loader)
+		protected DialogueTree(DialogueTreeResourceLoader loader) : base(loader)
 		{
 			Current = new Start(this);
 		}
@@ -47,6 +47,17 @@ namespace PirateInBetween.Game.Dialogue.Tree
 		}
 
 		#region Tree generation
+
+		public static DialogueTree LoadFromFile(string path, string workingDirectory)
+		{
+			var file = new Godot.File();
+			file.Open(path, Godot.File.ModeFlags.Read);
+
+			DialogueTree ret = StringToTree(file.GetAsText().Split('\n'), workingDirectory);
+
+			file.Close();
+			return ret;
+		}
 
 		public static DialogueTree StringToTree(string[] text, string workingDirectory)
 		{

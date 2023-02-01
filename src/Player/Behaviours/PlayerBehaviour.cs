@@ -100,6 +100,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			Default = Behaviours.All & ~(Behaviours.Noclip),
 			
 			BasicMovementNoJump = Behaviours.HorizontalMovement | Behaviours.Falling,
+			Controllable = Behaviours.HorizontalMovement | Behaviours.Jumping | Behaviours.Interaction | Behaviours.Carrying | Behaviours.MeleeAttack | Behaviours.RangedAttack,
 			BasicMovement = Behaviours.HorizontalMovement | Behaviours.Falling | Behaviours.Jumping,
 		}
 

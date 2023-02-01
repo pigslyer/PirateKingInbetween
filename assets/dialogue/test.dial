@@ -1,0 +1,18 @@
+character player
+character pirateKing as king
+character garyRandoMerchant as gary
+
+: Hey, yo, what's up, fellas?
+king: Nothing much man, just livin life, y'know?
+gary: I concur.
+: good, good. hey...?
+gary: yeah? what's up?
+{
+	:: either of you seen the princess lately?
+	king: oh, no, i haven't.
+	gary: nah, me neither.
+	
+	:: never mind
+	gary: of course.
+}
+: nice seein' ya.

@@ -109,11 +109,11 @@ namespace PirateInBetween.Game.Player.Behaviours
 		protected enum BehavioursPos
 		{
 			HorizontalMovement,
+			MeleeAttack,
 			Falling,
 			Jumping,
 			Carrying,
 			Interaction,
-			MeleeAttack,
 			RangedAttack,
 			Noclip,
 			AnimationSelector,

@@ -38,5 +38,11 @@ namespace PirateInBetween.Game
 
             GlobalPosition = _cameraFollowing.GlobalPosition;
         }
+
+        public void SetFollowing(bool state)
+        {
+            //SmoothingEnabled = state;
+            SetProcess(state);
+        }
     }
 }

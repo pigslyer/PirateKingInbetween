@@ -7,50 +7,59 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Combos;
 using PirateInBetween.Game.Player.Actions;
 
 namespace PirateInBetween.Game.Player.Behaviours
 {
 	public class PlayerMelee : PlayerBehaviour
-	{
-		[Export] private int _slashDamage = 1;
-		[Export] private float _slashDuration = 0.6f;
-		[Export] private float _slashCooldown = 0.2f;
-		[Export] private float _meleeAnimationVelocityMult = 0.1f;
-		
+	{	
 
-		private Task _cooldownTask = null;
+		private ComboSelector _selector = new ComboSelector();
+		private Combo _currentCombo = null;
 
-		private const Behaviours MidSlashDisabled = Behaviours.RangedAttack | Behaviours.Jumping | Behaviours.Interaction | Behaviours.Carrying;
+//		private const Behaviours MidSlashDisabled = Behaviours.RangedAttack | Behaviours.Jumping | Behaviours.Interaction | Behaviours.Carrying;
+		private const Behaviours MidComboDisabled = Behaviours.Default & ~Behaviours.MeleeAttack;
+
+		public override void _Ready()
+		{
+			base._Ready();
+
+			AddChild(_selector);
+		}
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
-
-			if (!IsInControl && CanChangeActive && !data.IsBusy && _cooldownTask == null && InputManager.IsActionJustPressed(InputButton.MeleeAttack))
+			if (CanChangeActive && !IsInControl && ComboSelector.TryDetectInput(data, out ComboInput detected))
 			{
-				data.CurrentAction = new ActionMeleeAttack(new DamageData(_slashDamage, () => GetPlayer().GlobalPosition), _slashDuration);
-				Strike();
-			}
+				GD.Print($"detected input: {detected}");
+				_selector.RegisterEvent(detected, data);
+				_currentCombo = _selector.GetSelected();
 
-			if (IsInControl)
+				if (_currentCombo != null)
+				{
+					GD.Print($"began executing {_currentCombo}");
+					ExecuteBehaviour(data);
+					data.CurrentAction = PlayerAnimation.MeleeAttack;
+				}
+			} 
+			else if (IsInControl)
 			{
-				data.VelocityMult = _meleeAnimationVelocityMult;
+				_currentCombo.GiveFrameData(data);
 				data.CurrentAction = PlayerAnimation.MeleeAttack;
 			}
 		}
 
-
-		private async Task Strike()
+		private async Task ExecuteBehaviour(PlayerCurrentFrameData data)
 		{
 			SetBehaviourChangesDisabled(true);
-			SetBehavioursEnabled(MidSlashDisabled, false);
+			SetBehavioursEnabled(MidComboDisabled, false);
 
-			await this.WaitFor(_slashDuration);
+			await _currentCombo.ExecuteCombo(GetPlayer(), data);
 
 			SetBehaviourChangesDisabled(false);
-			SetBehavioursEnabled(MidSlashDisabled, true);
-
-			_cooldownTask = this.WaitFor(_slashCooldown).ContinueWith(t => _cooldownTask = null);
+			SetBehavioursEnabled(MidComboDisabled, true);
 		}
+
 	}
 }

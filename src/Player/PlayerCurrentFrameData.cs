@@ -1,11 +1,12 @@
 using Godot;
 using System;
 
+using PirateInBetween.Game.Combos;
 using PirateInBetween.Game.Player.Actions;
 
 namespace PirateInBetween.Game.Player
 {
-	public class PlayerCurrentFrameData
+	public class PlayerCurrentFrameData : ICombatFrameData
 	{
 		/// <summary>
 		/// The time since the last frame.
@@ -50,11 +51,19 @@ namespace PirateInBetween.Game.Player
 				}
 			}
 		}
-
-
 		public bool IsBusy => _nextAnimation != null;
 
 		public bool FacingRight = true;
+
+
+		Vector2 ICombatFrameData.Velocity 
+		{ 
+			get => Velocity; 
+			set => Velocity = value; 
+		}
+
+		float ICombatFrameData.Delta => Delta;
+		bool ICombatFrameData.FacingRight => FacingRight;
 
 	}
 

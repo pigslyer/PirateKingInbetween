@@ -4,7 +4,7 @@
 [ext_resource path="res://src/Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Levels/LevelDialoguePlayer.cs" type="Script" id=3]
 [ext_resource path="res://src/Levels/MovingParent.cs" type="Script" id=4]
-[ext_resource path="res://src/Levels/CameraController.cs" type="Script" id=5]
+[ext_resource path="res://assets/pixel.png" type="Texture" id=5]
 [ext_resource path="res://src/Interactives/DialogueInteractive.cs" type="Script" id=6]
 [ext_resource path="res://src/Dialogues/DialoguePlayer/DialoguePlayer.tscn" type="PackedScene" id=8]
 
@@ -88,13 +88,11 @@ tile_data = PoolIntArray( 65533, 1, 0, 65534, 1, 0, 65535, 1, 0, 0, 1, 0, 1, 1, 
 
 [node name="Player" parent="MovingParentBase" instance=ExtResource( 2 )]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-zoom = Vector2( 0.6, 0.6 )
-smoothing_enabled = true
-script = ExtResource( 5 )
-_cameraFollowingPath = NodePath("../MovingParentBase/Player")
-
 [node name="LevelDialoguePlayer" type="CanvasLayer" parent="."]
 script = ExtResource( 3 )
 _dialoguePlayerScene = ExtResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -86, -101 )
+scale = Vector2( 20, 200 )
+texture = ExtResource( 5 )

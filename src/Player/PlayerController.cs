@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Combos;
 using PirateInBetween.Game.Player.Behaviours;
 
 namespace PirateInBetween.Game.Player
 {
-    public class PlayerController : KinematicBody2D
+    public class PlayerController : KinematicBody2D, IComboExecutor
 	{
 		private Vector2 _velocity = Vector2.Zero;
 
@@ -19,6 +20,7 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __playerBehaviourManagerPath = null;
 		[Export] private NodePath __debugLabelPath = null;
 		[Export] private NodePath __movingParentDetectorPath = null;
+		[Export] private NodePath __cameraPath = null;
 #endregion
 
 		// Player's model.
@@ -27,6 +29,7 @@ namespace PirateInBetween.Game.Player
 		// A random label for putting shit on.
 		private Label _debugLabel;
 		private MovingParentDetector _detector;
+		private CameraController _camera;
 
 		public override void _Ready()
 		{
@@ -36,8 +39,24 @@ namespace PirateInBetween.Game.Player
 			_behaviourManager = GetNode<PlayerBehaviourManager>(__playerBehaviourManagerPath);
 			_debugLabel = GetNode<Label>(__debugLabelPath);
 			_detector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
+			_camera = GetNode<CameraController>(__cameraPath);
 
 			_behaviourManager.Initialize(this);
+
+		}
+
+		private bool _movingCamera = false;
+		private bool _movedCamera = false;
+
+		Vector2 IComboExecutor.CameraPosition
+		{
+			get => _camera.GlobalPosition;
+			set
+			{
+				_camera.SetFollowing(false);
+				_movingCamera = true;
+				_camera.GlobalPosition = value;
+			}
 		}
 
 		private bool _lastRight = true;
@@ -51,9 +70,17 @@ namespace PirateInBetween.Game.Player
 				FacingRight = _lastRight,
 			};
 
+			_movedCamera = _movingCamera;
+			_movingCamera = false;
+
 			RunBehaviours(data);
 			ApplyFrameData(data);
 
+			if (_movedCamera && !_movingCamera)
+			{
+				_camera.SetFollowing(true);
+			}
+			
 			DebugOutOfBounds();
 
 			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.CurrentAction.Animation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";

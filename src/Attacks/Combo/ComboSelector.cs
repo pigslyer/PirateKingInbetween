@@ -125,7 +125,7 @@ namespace PirateInBetween.Game.Combos
 		private float _lastRegisteredTime = 0f;
 		private float _currentTime = 0f;
 
-		public bool TryDetectInput(ICombatFrameData data, out ComboInput detected)
+		public static bool TryDetectInput(ICombatFrameData data, out ComboInput detected)
 		{
 			ComboInput? det = null;
 

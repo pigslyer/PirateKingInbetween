@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/jacques idle6.png-8a02d41787dab2ac39df1f63b19152c3.stex"
+path="res://.import/jacques idle6.png-70b9af68bb178c9d3ffce7bd22c288e8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/player/idle animation/jacques idle6.png"
-dest_files=[ "res://.import/jacques idle6.png-8a02d41787dab2ac39df1f63b19152c3.stex" ]
+source_file="res://assets/characters/player/idle animation/normal idle/jacques idle6.png"
+dest_files=[ "res://.import/jacques idle6.png-70b9af68bb178c9d3ffce7bd22c288e8.stex" ]
 
 [params]
 

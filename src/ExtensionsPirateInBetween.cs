@@ -2,7 +2,8 @@ using System.Threading.Tasks;
 using Godot;
 using PirateInBetween;
 
-public static partial class Extensions{
+public static class ExtensionsPirateInBetween
+{
 	
 	#region Overloads
 

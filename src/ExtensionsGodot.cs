@@ -9,7 +9,7 @@ using System.Reflection;
 /// <summary>
 /// Universally useful extensions, no need for them to occupy any namespace. Partial to allow game specific additions.
 /// </summary>
-public static partial class Extensions
+public static class ExtensionsGodot
 {
 
 	public static float GetPercentDone(this Timer timer)
@@ -59,6 +59,9 @@ public static partial class Extensions
 		child.GlobalPosition = temp;
 	}
 
+	public static Vector2 ToVectorDeg(this float deg) => ToVectorRad(Mathf.Deg2Rad(deg));
+	public static Vector2 ToVectorRad(this float rad) => new Vector2(Mathf.Cos(rad), -Mathf.Sin(rad));
+
 	public static T[] ToArray<T>(this Godot.Collections.Array array) => array.Cast<T>().ToArray();
 
 	public static Godot.Area2D[] GetAreas(this Godot.Area2D area) => area.GetOverlappingAreas().ToArray<Godot.Area2D>();
@@ -87,34 +90,4 @@ public static partial class Extensions
 		return ret;
 	}
 
-	/// <summary>
-	/// For use with incrementing enums which use <see cref="EnumString"/>.
-	/// </summary>
-	/// <typeparam name="T">An auto-incrementing enum, each entry of which has the attribute <see cref="EnumString"/>.</typeparam>
-	/// <returns>An array of values <see cref="EnumString.String"/> mapped to their index in <see cref="T"/>.</returns>
-	public static string[] GetEnumStrings<T>() where T : Enum
-	{
-		Type t = typeof(T);
-		List<string> temp = new List<string>();
-
-		foreach (var e in Enum.GetValues(t))
-		{
-			temp.Add(t.GetField(Enum.GetName(t, e)).GetCustomAttribute<EnumString>().String);
-		}
-
-		return temp.ToArray();
-	}
-
-
-}
-
-[AttributeUsage(AttributeTargets.Field)]
-public class EnumString : Attribute
-{
-	public readonly string String;
-
-	public EnumString(string @string)
-	{
-		String = @string;
-	}
 }

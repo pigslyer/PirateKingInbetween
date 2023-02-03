@@ -16,7 +16,7 @@ namespace PirateInBetween
 		/// <summary>
 		/// Maps int values of <see cref="InputButton"/> to their <see cref="EnumString"/> string value.
 		/// </summary>
-		private static readonly string[] _enumToString = Extensions.GetEnumStrings<InputButton>();
+		private static readonly string[] _enumToString = ReflectionHelper.GetEnumStrings<InputButton>();
 
 		public static Vector2 GetMovementVector()
 		{

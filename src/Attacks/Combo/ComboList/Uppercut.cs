@@ -26,7 +26,7 @@ namespace PirateInBetween.Game.Combos
 		private const float FLOAT_TIME = 0.8f;
 		private static readonly Vector2 UPWARD_DIR = new Vector2(0f, 5f);
 
-		public async override Task ExecuteCombo(IComboExecutor callingNode, ICombatFrameData startingData)
+		protected async override Task BeginCombo(IComboExecutor callingNode, ICombatFrameData startingData)
 		{
 			Vector2 initialPos = callingNode.GlobalPosition;
 			Vector2 diff = FLY_DIRECTION.FaceForward(startingData) * FLY_DISTANCE;

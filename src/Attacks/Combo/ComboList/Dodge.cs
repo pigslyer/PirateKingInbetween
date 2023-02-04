@@ -34,7 +34,7 @@ namespace PirateInBetween.Game.Combos
 		private const float DODGE_CAMERA_UP_TIME = DODGE_TIME - DODGE_CAMERA_DOWN_TIME;
 		private static readonly Vector2 CAMERA_DOWN_DIFF = new Vector2(0, 12);
 
-		public override async Task ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
+		protected override async Task BeginCombo(IComboExecutor executor, ICombatFrameData startingData)
 		{
 			Vector2 d = DODGE_DIRECTION.FaceForward(startingData) * DODGE_DISTANCE;
 			Vector2 initialPos = executor.GlobalPosition;
@@ -45,21 +45,29 @@ namespace PirateInBetween.Game.Combos
 
 			startingData.Velocity = Vector2.Zero;
 
+			DoFor(
+				DODGE_CAMERA_DOWN_TIME,
+				startingData : startingData,
+				what : (float elapsed, float delta, float total, ICombatFrameData data) =>
+				{
+					executor.CameraPosition = GetCubicInterp(initialCamera, cameraDownD, elapsed, total);
+				}
+			)
+			.ContinueWith(t => DoFor(
+				DODGE_CAMERA_UP_TIME,
+				startingData : null,
+				what : (float elapsed, float delta, float total, ICombatFrameData data) =>
+				{
+					executor.CameraPosition = GetCubicInterp(afterDownCamera, cameraUpD, elapsed, total);
+				}
+			));
+
 			await DoFor(
 				DODGE_TIME,
 				startingData : startingData,
 				what : (float elapsed, float delta, float total, ICombatFrameData data) =>
 				{
 					executor.GlobalPosition = GetCubicInterp(initialPos, d, elapsed, total);
-
-					if (elapsed < DODGE_CAMERA_DOWN_TIME)
-					{
-						executor.CameraPosition = GetCubicInterp(initialCamera, cameraDownD, elapsed, DODGE_CAMERA_DOWN_TIME);
-					}
-					else
-					{
-						executor.CameraPosition = GetCubicInterp(afterDownCamera, cameraUpD, elapsed - DODGE_CAMERA_DOWN_TIME, DODGE_CAMERA_UP_TIME);
-					}
 				}
 			);
 		}

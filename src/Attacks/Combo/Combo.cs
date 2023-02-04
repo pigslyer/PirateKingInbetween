@@ -19,26 +19,39 @@ namespace PirateInBetween.Game.Combos
 		private static readonly (Combo combo, ComboAttr attr)[] _combos = ReflectionHelper.GetInstancesWithAttribute<Combo, ComboAttr>();
 		public static ReadOnlyCollection<(Combo combo, ComboAttr attr)> Combos => new ReadOnlyCollection<(Combo combo, ComboAttr attr)>(_combos);
 
-		private TaskCompletionSource<ICombatFrameData> _tcs;
+		private List<TaskCompletionSource<ICombatFrameData>> _tasks = new List<TaskCompletionSource<ICombatFrameData>>();
+
+		private bool _executingCombo = false;
+		public async Task ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
+		{
+
+			_executingCombo = true;
+
+			await BeginCombo(executor, startingData);
+
+			_executingCombo = false;
+		}
 
 		public void GiveFrameData(ICombatFrameData data)
 		{
-			if (_tcs == null)
+			if (!_executingCombo)
 			{
-				throw new InvalidOperationException($"Can't give {nameof(ICombatFrameData)} to {GetType()}, when it isn't active.");
+				throw new InvalidOperationException("I swear to god");
 			}
 
-			_tcs.SetResult(data);
+			IEnumerable<TaskCompletionSource<ICombatFrameData>> tasks = _tasks.ToArray();
+			_tasks.Clear();
+
+			foreach (var task in tasks)
+			{
+				task.SetResult(data);
+			}
 		}
 
 		protected async Task<ICombatFrameData> GetNextFrameData()
 		{
-			_tcs = new TaskCompletionSource<ICombatFrameData>();
-
-			var ret = await _tcs.Task;
-
-			_tcs = null;
-			return ret;
+			_tasks.Add(new TaskCompletionSource<ICombatFrameData>());
+			return await _tasks.Last().Task;
 		}
 
 		/// <summary>
@@ -51,7 +64,7 @@ namespace PirateInBetween.Game.Combos
 		protected async Task DoFor(float time, Action<float, float, float, ICombatFrameData> what, ICombatFrameData startingData)
 		{
 			float t = 0f;
-			ICombatFrameData data = startingData;
+			ICombatFrameData data = startingData ?? await GetNextFrameData();
 
 			while (t < time)
 			{
@@ -69,6 +82,6 @@ namespace PirateInBetween.Game.Combos
 			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, Tween.TransitionType.Cubic, Tween.EaseType.InOut);
 		}
 
-		public abstract Task ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData);
+		protected abstract Task BeginCombo(IComboExecutor executor, ICombatFrameData startingData);
 	}
 }

@@ -39,6 +39,8 @@ namespace PirateInBetween.Game.Combos
 			_time = time;
 		}
 
+		public bool EqualsInput(ComboInputContainer o) => Input == o.Input;
+
 		public static bool operator ==(ComboInputContainer a, ComboInputContainer b)
 		{
 			if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
@@ -63,8 +65,16 @@ namespace PirateInBetween.Game.Combos
 
 		public static bool operator !=(ComboInputContainer a, ComboInputContainer b) => !(a == b);
 
-		public override string ToString() => IsConstant ? $"Constant {nameof(ComboInput)}, Input: {Input}, Timing: {_timing}" : $"Dynamic {nameof(ComboInput)}, Input: {Input}, Time: {_time}";
+		public override string ToString()
+		{
+			if (IsConstant) 
+			{
+				return $"Constant {nameof(ComboInput)}, Input: {Input}, Timing: {_timing}";
+			}
 
+			var a = Array.FindIndex(TIMINGS, t => _time - t < EPSILON);
+			return $"Dynamic {nameof(ComboInput)}, Input: {Input}, Time: {_time}, Timing: {(a == -1 ? "None" : Enum.GetName(typeof(ComboTiming), a))}";
+		}
 		public override bool Equals(object obj)
 		{
 			if (obj is ComboInput input)

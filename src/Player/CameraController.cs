@@ -22,6 +22,7 @@ namespace PirateInBetween.Game
         /// The thing we're following at the moment.
         /// </summary>
         private Node2D _cameraFollowing;
+        private bool _isFollowing = true;
 
         public override void _Ready()
         {
@@ -41,8 +42,12 @@ namespace PirateInBetween.Game
 
         public void SetFollowing(bool state)
         {
-            //SmoothingEnabled = state;
-            SetProcess(state);
+            if (_isFollowing != state)
+            {
+				//SmoothingEnabled = state;
+				SetProcess(state);
+                _isFollowing = state;
+			}
         }
     }
 }

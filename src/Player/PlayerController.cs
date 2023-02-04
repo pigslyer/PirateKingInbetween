@@ -59,6 +59,12 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
+		Vector2 IComboExecutor.GlobalPosition
+		{
+			get => GlobalPosition;
+			set => MoveAndCollide(value - GlobalPosition);
+		}
+
 		private bool _lastRight = true;
 
 		public override void _PhysicsProcess(float delta)

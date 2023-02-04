@@ -31,6 +31,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 		protected bool CanChangeActive { get => _state.CanChangeActive(this); }
 		protected bool IsInControl { get => _state.IsInControl(this); }
 
+		protected bool IsEnabled(Behaviours pos) => (_state.ActiveBehaviours & pos) != 0;
+
 		/// <summary>
 		/// If <see cref="CanChangeActive"/> is true, allows the calling behaviour to set whether
 		/// other behaviours can control active behaviours.

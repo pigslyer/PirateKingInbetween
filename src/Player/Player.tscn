@@ -92,6 +92,7 @@ __meta__ = {
 
 [node name="MeleeAttack" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 6 )
+__lastDisplayPath = NodePath("../../CanvasLayer/Label")
 
 [node name="Falling" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 11 )
@@ -150,6 +151,14 @@ Q - shoot
 Darker tiles cannot be jumped/shot through.
 You can damage the \"barrel\" in the hold of both ships."
 autowrap = true
+
+[node name="Label" type="Label" parent="PlayerController/CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -20.0
+margin_right = 20.0
+margin_bottom = 14.0
+grow_horizontal = 2
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

@@ -50,12 +50,12 @@ namespace PirateInBetween.Game.Player
 
 		Vector2 IComboExecutor.CameraPosition
 		{
-			get => _camera.GlobalPosition;
+			get => _camera.GlobalPosition - GlobalPosition;
 			set
 			{
 				_camera.SetFollowing(false);
 				_movingCamera = true;
-				_camera.GlobalPosition = value;
+				_camera.GlobalPosition = GlobalPosition + value;
 			}
 		}
 
@@ -64,6 +64,13 @@ namespace PirateInBetween.Game.Player
 			get => GlobalPosition;
 			set => MoveAndCollide(value - GlobalPosition);
 		}
+
+		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => _model.EnableDamageArea(damageDealer, data);
+
+		void IComboExecutor.StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.DisableDamageArea(damageDealer);
+		
+
+		bool IComboExecutor.IsOnFloor { get => _behaviourManager.IsPlayerOnFloor(); }
 
 		private bool _lastRight = true;
 

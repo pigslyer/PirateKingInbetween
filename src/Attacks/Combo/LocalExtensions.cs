@@ -25,11 +25,25 @@ namespace PirateInBetween.Game.Combos
 			return new Vector2(vec.x * (data.FacingRight ? -1 : 1), vec.y);
 		}
 
+		public static bool IsJustGoingForward(this ICombatFrameData data)
+		{
+			int diff = (InputManager.IsActionJustPressed(InputButton.MoveRight) ? 1 : 0) - (InputManager.IsActionJustPressed(InputButton.MoveLeft) ? 1 : 0);
+
+			if (diff != 0)
+			{
+				return (diff == 1) == data.FacingRight;
+			}
+
+			return false;
+		}
+		
 		public static bool IsGoingForward(this ICombatFrameData data)
 		{
-			if (data.Velocity.x != 0)
+			int diff = (InputManager.IsActionPressed(InputButton.MoveRight) ? 1 : 0) - (InputManager.IsActionPressed(InputButton.MoveLeft) ? 1 : 0);
+
+			if (diff != 0)
 			{
-				return (data.Velocity.x > 0f) == data.FacingRight;
+				return (diff == 1) == data.FacingRight;
 			}
 
 			return false;

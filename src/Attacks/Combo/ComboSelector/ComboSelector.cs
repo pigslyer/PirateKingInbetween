@@ -63,7 +63,7 @@ namespace PirateInBetween.Game.Combos
 				// xor ensures that we don't continue if both have been pressed (however that could have happened)
 				if (InputManager.IsActionJustPressed(InputButton.MoveLeft) != InputManager.IsActionJustPressed(InputButton.MoveRight))
 				{
-					det = data.IsGoingForward() ? ComboInput.Forward : ComboInput.SwitchDirection;
+					det = data.IsJustGoingForward() ? ComboInput.Forward : ComboInput.SwitchDirection;
 				}
 			}
 

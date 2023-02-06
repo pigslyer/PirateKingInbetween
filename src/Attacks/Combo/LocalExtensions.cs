@@ -25,6 +25,15 @@ namespace PirateInBetween.Game.Combos
 			return new Vector2(vec.x * (data.FacingRight ? -1 : 1), vec.y);
 		}
 
-		public static float PowerOf4(this float val) => val * val * val * val;
+		public static bool IsGoingForward(this ICombatFrameData data)
+		{
+			if (data.Velocity.x != 0)
+			{
+				return (data.Velocity.x > 0f) == data.FacingRight;
+			}
+
+			return false;
+		}
+
 	}
 }

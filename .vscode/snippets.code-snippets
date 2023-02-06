@@ -53,11 +53,14 @@
 		]
 	},
 
-	"see cref":{
+	"creating interface":{
 		"scope":"csharp",
-		"prefix":"<see cref=\"",
+		"prefix":"public interface",
 		"body":[
-			"<see cref=\"$1\"/>$0"
+			"public interface ${1:$TM_FILENAME_BASE}",
+			"{",
+			"\t$0",
+			"}"
 		]
 	}
 }

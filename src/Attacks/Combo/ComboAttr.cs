@@ -74,7 +74,7 @@ namespace PirateInBetween.Game.Combos
 			if (IntervalSinceLastCombo != null && IntervalSinceLastCombo != o.IntervalSinceLastCombo)
 			{
 				// i can't concieve of a way to naturally order 2 float intervals so we're doing it like this.
-				return IntervalSinceLastCombo.ToString().CompareTo(IntervalSinceLastCombo.ToString());
+				return IntervalSinceLastCombo.ToString().CompareTo(o.IntervalSinceLastCombo.ToString());
 			}
 
 			// both have it, we have to choose which to put in front

@@ -33,7 +33,7 @@ namespace PirateInBetween
 			);
 		}
 
-		public static bool IsActionPresseed(InputButton button) => Input.IsActionPressed(button.GetString());
+		public static bool IsActionPressed(InputButton button) => Input.IsActionPressed(button.GetString());
 		public static bool IsActionJustPressed(InputButton button) => Input.IsActionJustPressed(button.GetString());
 		public static bool IsActionJustReleased(InputButton button) => Input.IsActionJustReleased(button.GetString());
 

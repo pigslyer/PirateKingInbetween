@@ -31,7 +31,6 @@ namespace PirateInBetween
 				InputButton.MoveLeft.GetString(), InputButton.MoveRight.GetString(), 
 				InputButton.MoveUp.GetString(), InputButton.MoveDown.GetString()
 			);
-		
 		}
 
 		public static bool IsActionPresseed(InputButton button) => Input.IsActionPressed(button.GetString());
@@ -39,17 +38,5 @@ namespace PirateInBetween
 		public static bool IsActionJustReleased(InputButton button) => Input.IsActionJustReleased(button.GetString());
 
 		private static string GetString(this InputButton button) => _enumToString[(int) button];
-	}
-
-	public enum InputButton
-	{
-		[EnumString("mv_right")] 			MoveRight,
-		[EnumString("mv_up")] 				MoveUp,
-		[EnumString("mv_left")] 			MoveLeft,
-		[EnumString("mv_down")] 			MoveDown,
-		[EnumString("attack_melee")] 		MeleeAttack,
-		[EnumString("attack_shoot")]		RangedAttack,
-		[EnumString("player_carry")] 		Carry,
-		[EnumString("interact")]			Interact,
 	}
 }

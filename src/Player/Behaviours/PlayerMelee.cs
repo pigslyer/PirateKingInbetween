@@ -21,7 +21,6 @@ namespace PirateInBetween.Game.Player.Behaviours
 		private Combo _attemptingCombo = null;
 		private PlayerCurrentFrameData _lastData = null;
 
-//		private const Behaviours MidSlashDisabled = Behaviours.RangedAttack | Behaviours.Jumping | Behaviours.Interaction | Behaviours.Carrying;
 		private const Behaviours MidComboDisabled = Behaviours.Default & ~Behaviours.MeleeAttack;
 
 		public override void _Ready()
@@ -57,7 +56,12 @@ namespace PirateInBetween.Game.Player.Behaviours
 			{
 				//GD.Print($"detected input: {detected}");
 				TrackEvent(_selector.RegisterEvent(detected, _lastData));
-				_attemptingCombo = _selector.GetSelected();
+				_attemptingCombo = _selector.GetSelected(GetPlayer());
+
+				if (_attemptingCombo != null)
+				{
+					UpdateDisplay();
+				}
 			}
 		}
 
@@ -86,7 +90,9 @@ namespace PirateInBetween.Game.Player.Behaviours
 				_inputs.RemoveFirst();
 			}
 
-			GetNode<Label>(__lastDisplayPath).Text = string.Join("\n", _inputs);
+			UpdateDisplay();
 		}
+
+		private void UpdateDisplay() => GetNode<Label>(__lastDisplayPath).Text = $"Current combo: {_attemptingCombo?.ToString() ?? "None"}\n{string.Join("\n", _inputs)}";
 	}
 }

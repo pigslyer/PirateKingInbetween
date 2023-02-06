@@ -11,9 +11,10 @@ using PirateInBetween.Game.Combos.Tree;
 
 namespace PirateInBetween.Game.Combos
 {
-	public class ComboSelector : Node
+	public partial class ComboSelector : Node
 	{
 		private static readonly ComboTreeNode _root;
+		private ComboSelectorState _state;
 
 		static ComboSelector()
 		{
@@ -21,20 +22,25 @@ namespace PirateInBetween.Game.Combos
 
 			foreach (var pair in Combo.Combos)
 			{
-				_root.GenerateTree(pair.attr.Inputs, pair.combo);
+				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.combo));
 			}
 
-		
 			GD.Print(_root);
 		}
 
-		
-		public Combo GetSelected()
+		public ComboSelector()
 		{
-			Combo combo = _root.ParseInput(_registered);
+			_state = new ComboSelectorState(this);
+		}
+		
+		public Combo GetSelected(IComboExecutor potentialExecutor)
+		{
+			_state.SetExecutor(potentialExecutor);
+			Combo combo = _root.ParseInput(_registered, _state);
 			
 			if (combo != null)
 			{
+				_state.UsingCombo(combo);
 				_registered.Clear();
 			}
 			
@@ -54,11 +60,10 @@ namespace PirateInBetween.Game.Combos
 
 			// horizontal
 			{
-				int diff = (InputManager.IsActionJustPressed(InputButton.MoveRight) ? 1 : 0) - (InputManager.IsActionJustPressed(InputButton.MoveLeft) ? 1 : 0);
-
-				if (diff != 0)
+				// xor ensures that we don't continue if both have been pressed (however that could have happened)
+				if (InputManager.IsActionJustPressed(InputButton.MoveLeft) != InputManager.IsActionJustPressed(InputButton.MoveRight))
 				{
-					det = (diff == 1) == data.FacingRight ? ComboInput.Forward : ComboInput.SwitchDirection;
+					det = data.IsGoingForward() ? ComboInput.Forward : ComboInput.SwitchDirection;
 				}
 			}
 
@@ -92,6 +97,8 @@ namespace PirateInBetween.Game.Combos
 
 		public ComboInputContainer RegisterEvent(ComboInput input, ICombatFrameData data)
 		{
+			_state.SetLastData(data);
+			
 			float delta = _currentTime - _lastRegisteredTime;
 			//GD.Print($"Delta: {delta}");
 
@@ -114,11 +121,14 @@ namespace PirateInBetween.Game.Combos
 			return _registered.First();
 		}
 
-		public override void _PhysicsProcess(float delta)
+		public override void _Process(float delta)
 		{
-			base._PhysicsProcess(delta);
+			base._Process(delta);
 
 			_currentTime += delta;
+			_state.Process(delta);
 		}
+
+		
 	}
 }

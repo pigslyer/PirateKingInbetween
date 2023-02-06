@@ -12,13 +12,12 @@ namespace PirateInBetween.Game.Combos.Tree
 	public class ComboTreeNode
 	{
 		private List<ComboTreeNode> _connections = new List<ComboTreeNode>();
+		private SortedDictionary<ComboAttr, Combo> _combos = new SortedDictionary<ComboAttr, Combo>();
 
-		private Combo _combo;
 		private ComboInputContainer _input;
-		private bool _requiresInput => _input == null;
 
-		public void GenerateTree(IEnumerable<ComboInputContainer> inputs, Combo finalCombo) => GenerateTree(inputs.Reverse().GetEnumerator(), finalCombo);
-		private void GenerateTree(IEnumerator<ComboInputContainer> inputs, Combo finalCombo)
+		public void GenerateTree(IEnumerable<ComboInputContainer> inputs, (ComboAttr attr, Combo finalCombo) combo) => GenerateTree(inputs.Reverse().GetEnumerator(), combo);
+		private void GenerateTree(IEnumerator<ComboInputContainer> inputs, (ComboAttr attr, Combo finalCombo) combo)
 		{
 			if (inputs.MoveNext())
 			{
@@ -29,39 +28,41 @@ namespace PirateInBetween.Game.Combos.Tree
 					next = AddNodeWith(inputs.Current);
 				}
 
-				next.GenerateTree(inputs, finalCombo);
+				next.GenerateTree(inputs, combo);
 			}
 			else
 			{
-				if (_combo == null)
+				if (_combos.TryGetValue(combo.attr, out var value))
 				{
-					_combo = finalCombo;
+					throw new InvalidOperationException($"Cannot add combo {combo.finalCombo.GetType()} with same signature as {value.GetType()}.");
 				}
 				else
 				{
-					throw new InvalidOperationException($"Cannot add combo {nameof(finalCombo)} with same inputs as {nameof(_combo)}.");
+					_combos.Add(combo.attr, combo.finalCombo);
 				}
 			}
 		}
 
-		public Combo ParseInput(LinkedList<ComboInputContainer> inputs) => ParseInput(this, inputs);
-		public static Combo ParseInput(ComboTreeNode source, IEnumerable<ComboInputContainer> inputs)
+		public Combo ParseInput(LinkedList<ComboInputContainer> inputs, IComboSelectorStandard state) => ParseInput(this, inputs, state);
+		public static Combo ParseInput(ComboTreeNode source, IEnumerable<ComboInputContainer> inputs, IComboSelectorStandard standard)
 		{
 			GD.Print($"scanning {inputs.Count()} elements");
 
 			ComboTreeNode currentNode = source;
 			ComboTreeNode potentialNext;
 
+			Combo validCombo;
+
 			// we're very likely to break out of this early
 			foreach (ComboInputContainer input in inputs)
 			{
 				GD.Print($"current {input}");
 				// if we've hit a combo we take it
-				if (currentNode._combo != null)
+				//if (state.CanUseCombo(currentNode._comboAttr, currentNode._combo))
+				if (TryFindValidCombo(currentNode, standard, out validCombo))
 				{
-
-					GD.Print($"found combo {currentNode._combo}");
-					return currentNode._combo;
+					GD.Print($"found combo {validCombo}");
+					return validCombo;
 				}
 
 				// try to find a precisely matching input
@@ -76,10 +77,10 @@ namespace PirateInBetween.Game.Combos.Tree
 				// try to see if this could be a last input
 				foreach (ComboTreeNode conn in currentNode._connections)
 				{
-					if (conn._combo != null && input.EqualsInput(conn._input))
+					if (input.EqualsInput(conn._input) && TryFindValidCombo(conn, standard, out validCombo))
 					{
-						GD.Print($"found imprecise match {conn}");
-						return conn._combo;
+						GD.Print($"found imprecise match {validCombo}");
+						return validCombo;
 					}
 				}
 
@@ -87,20 +88,11 @@ namespace PirateInBetween.Game.Combos.Tree
 				// we can't find a path out of this node
 				break;
 			}
-
-			return currentNode?._combo;
-		}
-
-		private Combo ParseInput(IEnumerator<ComboInputContainer> inputs)
-		{
-			if (_combo != null)
+			
+			// if we have N inputs and a perfectly inputted combo of N inputs, then we need to check N+1 times
+			if (TryFindValidCombo(currentNode, standard, out validCombo))
 			{
-				return _combo;
-			}
-
-			if (inputs.MoveNext() && TryFindNodeWith(this, inputs.Current, out var node))
-			{
-				return node.ParseInput(inputs);
+				return validCombo;
 			}
 
 			return null;
@@ -121,6 +113,20 @@ namespace PirateInBetween.Game.Combos.Tree
 			return false;
 		}
 
+		private static bool TryFindValidCombo(ComboTreeNode on, IComboSelectorStandard standard, out Combo validCombo)
+		{
+			foreach (var pair in on._combos)
+			{
+				if (standard.CanUseCombo(pair.Key, pair.Value))
+				{
+					validCombo = pair.Value;
+					return true;
+				}
+			}
+
+			validCombo = null;
+			return false;
+		}
 		
 		private ComboTreeNode AddNodeWith(ComboInputContainer input)
 		{
@@ -130,7 +136,7 @@ namespace PirateInBetween.Game.Combos.Tree
 
 		public override string ToString()
 		{
-			return $"Input: ( {_input} ), Combo: ( {_combo} ); ( {string.Join(", ", _connections)} )";
+			return $"Input: ( {_input} ), Combo count: ( { _combos.Count } ); ( {string.Join(", ", _connections)} )";
 		}
 	}
 }

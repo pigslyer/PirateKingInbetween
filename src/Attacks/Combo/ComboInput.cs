@@ -39,7 +39,7 @@ namespace PirateInBetween.Game.Combos
 			_time = time;
 		}
 
-		public bool EqualsInput(ComboInputContainer o) => Input == o.Input;
+		public bool EqualsInput(ComboInputContainer o) => Input == o?.Input;
 
 		public static bool operator ==(ComboInputContainer a, ComboInputContainer b)
 		{

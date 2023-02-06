@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Combos;
 using PirateInBetween.Game.Player.Actions;
 
 namespace PirateInBetween.Game.Player
@@ -88,6 +89,26 @@ namespace PirateInBetween.Game.Player
 			await this.WaitFor(duration);
 
 			preview.Hide();
+		}
+
+		public void EnableDamageArea(ComboExecutorDamageDealers area, DamageData data)
+		{
+			GetComboDamageDealer(area).Enable(data);
+			GetNode<Sprite>(__damageDealerTempPreviewPath).Show();
+		}
+		public void DisableDamageArea(ComboExecutorDamageDealers area)
+		{
+			GetComboDamageDealer(area).Disable();
+			GetNode<Sprite>(__damageDealerTempPreviewPath).Hide();
+		}
+		private DamageDealer GetComboDamageDealer(ComboExecutorDamageDealers area)
+		{
+			switch (area)
+			{
+				default:
+				case ComboExecutorDamageDealers.Front:
+				return _damageDealerSlash;
+			}
 		}
 	}
 }

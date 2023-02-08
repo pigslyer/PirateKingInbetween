@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween
 {
+	[ScenePath("res://src/GenericUseful/FancyInWorldText.tscn")]
 	public class FancyInWorldText : Node2D, ITextDisplay
 	{
 		const string APPEAR_ANIMATION = "AppearShorter";

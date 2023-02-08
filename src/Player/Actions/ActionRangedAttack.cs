@@ -11,9 +11,9 @@ namespace PirateInBetween.Game.Player.Actions
 {
 	public class ActionRangedAttack : PlayerAction
 	{
-		public readonly IProjectile Bullet;
+		public readonly Projectile Bullet;
 		
-		public ActionRangedAttack(IProjectile bullet) : base(PlayerAnimation.RangedAttack)
+		public ActionRangedAttack(Projectile bullet) : base(PlayerAnimation.RangedAttack)
 		{
 			Bullet = bullet;	
 		}

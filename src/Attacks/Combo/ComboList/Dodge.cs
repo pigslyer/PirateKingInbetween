@@ -58,9 +58,9 @@ namespace PirateInBetween.Game.Combos.List
 				time : DODGE_CAMERA_UP_TIME
 			);
 
-			AddTask().CubicInterpFor(
+			AddTask().CubicInterpFor<Vector2>(
 				from : CurrentExecutor.GlobalPosition,
-				to : CurrentExecutor.GlobalPosition + DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
+				delta : DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
 				setter : val => CurrentExecutor.GlobalPosition = val,
 				time : DODGE_TIME
 			);

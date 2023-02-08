@@ -30,6 +30,7 @@ namespace PirateInBetween.Game.Combos
 			CurrentExecutor = executor;
 			executor.OnDamageTakenSet(OnDamageTaken);
 			
+			
 			BeginCombo();
 		}
 
@@ -78,7 +79,9 @@ namespace PirateInBetween.Game.Combos
 			return new ComboTask(this, _taskPool.Register(() => { }, () => true)).WaitFor(_waitingTime);
 		}
 
-
+		/// <summary>
+		/// Represents 1 operation that a combo requests, be that waiting, interpolation or what have you.
+		/// </summary>
 		protected class ComboTask
 		{
 			private readonly Combo _combo;

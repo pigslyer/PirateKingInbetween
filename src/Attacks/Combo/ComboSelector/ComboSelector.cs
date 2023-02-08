@@ -25,7 +25,7 @@ namespace PirateInBetween.Game.Combos
 				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.inst));
 			}
 
-			GD.Print(_root);
+			ComboTreeNode.PrintDebug(_root.ToString());
 		}
 
 		public ComboSelector()

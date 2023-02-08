@@ -17,7 +17,7 @@ namespace PirateInBetween.Game
 	{
 		private const string WORKING_DIRECTORY = "res://assets/dialogue/";
 
-		[Export] private PackedScene _dialoguePlayerScene = null;
+		private PackedScene _dialoguePlayerScene = ResourceLoader.Load<PackedScene>("res://src/Dialogues/DialoguePlayer/DialoguePlayer.tscn");
 
 		private DialoguePlayer _dialoguePlayer;
 

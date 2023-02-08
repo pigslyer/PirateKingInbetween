@@ -20,8 +20,14 @@ namespace PirateInBetween.Game.Combos
 
 		bool IsOnFloor { get; }
 
-		void DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data);
+		void DealDamage(ComboExecutorDamageDealers damageDealer, DamageAmount data);
 		void StopDealingDamage(ComboExecutorDamageDealers damageDealer);
+
+		void TakeDamage(ComboExecutorDamageTaker to);
+		void StopTakingDamage(ComboExecutorDamageTaker to);
+
+		void OnDamageTakenSet(Action<ICombatFrameData, DamageData> damageTaken);
+		void OnDamageTakenReset();
 	}
 
 	/// <summary>
@@ -30,5 +36,13 @@ namespace PirateInBetween.Game.Combos
 	public enum ComboExecutorDamageDealers
 	{
 		Front,
+	}
+
+	/// <summary>
+	/// Represents the various damage taking areas around the controller.
+	/// </summary>
+	public enum ComboExecutorDamageTaker
+	{
+		Body,
 	}
 }

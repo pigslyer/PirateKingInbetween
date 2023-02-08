@@ -37,16 +37,34 @@ namespace PirateInBetween.Game.Combos
 			return false;
 		}
 		
-		public static bool IsGoingForward(this ICombatFrameData data)
+		public static bool IsGoingBackwards(this ICombatFrameData data)
 		{
-			int diff = (InputManager.IsActionPressed(InputButton.MoveRight) ? 1 : 0) - (InputManager.IsActionPressed(InputButton.MoveLeft) ? 1 : 0);
-
-			if (diff != 0)
+			if (data is Player.PlayerCurrentFrameData playerData)
 			{
-				return (diff == 1) == data.FacingRight;
+				return (playerData.Input.x < 0f) == data.FacingRight;
 			}
 
-			return false;
+			return (data.Velocity.x < 0f) == data.FacingRight;
+		}
+
+		public static bool IsGoingForward(this ICombatFrameData data)
+		{
+			if (data is Player.PlayerCurrentFrameData playerData)
+			{
+				return (playerData.Input.x > 0f) == playerData.FacingRight; 
+			}
+
+			return (data.Velocity.x > 0f) == data.FacingRight;
+		}
+
+		public static bool IsMoving(this ICombatFrameData data)
+		{
+			if (data is Player.PlayerCurrentFrameData playerData)
+			{
+				return playerData.Input.x != 0f;
+			}
+
+			return data.Velocity.x != 0f;
 		}
 
 	}

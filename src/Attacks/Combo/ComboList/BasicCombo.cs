@@ -13,21 +13,41 @@ namespace PirateInBetween.Game.Combos.List
 	public abstract class BasicComboBase : Combo
 	{
 		private readonly float _comboLength;
+		private readonly float _velocity;
 		private readonly ReadOnlyCollection<(DamageAmount damage, ComboExecutorDamageDealers damageDealer, FloatInterval validRange)> _damageInstances;
-		protected BasicComboBase(float length, params (DamageAmount damage, ComboExecutorDamageDealers damageDealer, FloatInterval valid)[] damageInstances)
+		protected BasicComboBase(float length, float velocity, params (DamageAmount damage, ComboExecutorDamageDealers damageDealer, FloatInterval valid)[] damageInstances)
 		{ 
-			_comboLength = length;
+			_comboLength = length; _velocity = velocity;
 			_damageInstances = new ReadOnlyCollection<(DamageAmount damage, ComboExecutorDamageDealers damageDealer, FloatInterval validRange)>(damageInstances);
 		}
 
-		protected override async Task BeginCombo(IComboExecutor executor)
+		protected override void BeginCombo()
 		{
 			foreach (var instance in _damageInstances)
 			{
-				DealDamageFor(instance.validRange, instance.damageDealer, new DamageData(instance.damage, () => executor.GlobalPosition));
+				AddTask().DealDamageFor(instance.validRange, instance.damageDealer, instance.damage);
 			}
 
-			await WaitFor(_comboLength);
+			AddTask().DoFor(
+				_comboLength,
+				(float elapsed, float delta, float total) =>
+				{
+					if (CurrentData.IsMoving())
+					{
+						if (CurrentData.IsGoingBackwards())
+						{
+							CurrentData.SwitchDirection();
+						}
+
+						CurrentData.Velocity = 0f.FaceForward(CurrentData) * _velocity;
+					}
+					else
+					{
+						CurrentData.Velocity = Vector2.Zero;
+					}
+				}
+			);
+
 		}
 	}
 
@@ -43,6 +63,7 @@ namespace PirateInBetween.Game.Combos.List
 	{
 		public BasicCombo1() : base(
 			length: 0.6f,
+			velocity: 20f,
 			(1, ComboExecutorDamageDealers.Front, (0.3f, 0.5f))
 		) { }
 	}
@@ -61,6 +82,7 @@ namespace PirateInBetween.Game.Combos.List
 	{
 		public BasicCombo2() : base(
 			length : 0.4f,
+			velocity: 5f,
 			(1, ComboExecutorDamageDealers.Front, (0.1f, 0.3f))
 		) { }
 	}
@@ -79,6 +101,7 @@ namespace PirateInBetween.Game.Combos.List
 	{
 		public BasicCombo3() : base(
 			length : 1.5f,
+			velocity: 2f,
 			(3, ComboExecutorDamageDealers.Front, (0.5f, 0.8f))
 		) { }
 	}

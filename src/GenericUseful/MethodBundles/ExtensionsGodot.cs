@@ -54,13 +54,7 @@ public static class ExtensionsGodot
 	/// <summary>
 	/// Waits for alloted time.
 	/// </summary>
-	public static async Task WaitFor(this Node node, float time)
-	{
-		if (time > 0f)
-		{
-			await node.ToSignal(node.GetTree().CreateTimer(time), "timeout");
-		}
-	}
+	public static async Task WaitFor(this Node node, float time) => await WaitFor(node, time, () => true);
 
 	/// <summary>
 	/// Much like its functionless pair, but this one also checks the given condition. If given condition is ever false, timer preemptively stops
@@ -81,17 +75,28 @@ public static class ExtensionsGodot
 
 	public static void Reparent(this Node child, Node newParent)
 	{
-		child.GetParent().RemoveChild(child);
+		if (child.GetParent() != null)
+		{
+			child.GetParent().RemoveChild(child);
+		}
 		newParent.AddChild(child);
 	}
 
 	public static void Reparent2D(this Node2D child, Node newParent)
 	{
-		Vector2 temp = child.GlobalPosition;
-		Reparent(child, newParent);
-		child.GlobalPosition = temp;
+		if (child.GetParent() != null)
+		{
+			Vector2 temp = child.GlobalPosition;
+			Reparent(child, newParent);
+			child.GlobalPosition = temp;
+		}
+		else
+		{
+			Reparent(child, newParent);
+		}
 	}
 
+	public static Vector2 ToVectorDeg(this float deg, float speed) => ToVectorDeg(deg) * speed;
 	public static Vector2 ToVectorDeg(this float deg) => ToVectorRad(Mathf.Deg2Rad(deg));
 	public static Vector2 ToVectorRad(this float rad) => new Vector2(Mathf.Cos(rad), -Mathf.Sin(rad));
 
@@ -165,4 +170,5 @@ public static class ExtensionsGodot
 
 		return ret;
 	}
+
 }

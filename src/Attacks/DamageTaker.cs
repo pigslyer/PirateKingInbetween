@@ -14,5 +14,8 @@ namespace PirateInBetween.Game
 		[Signal] public delegate void OnDamageTaken(DamageData data);
 
 		public void TakeDamage(DamageData data) => EmitSignal(nameof(OnDamageTaken), data);
+
+		public void Enable() => SetEnabled(true);
+		public void Disable() => SetEnabled(false);
 	}
 }

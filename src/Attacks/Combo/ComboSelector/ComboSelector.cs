@@ -20,9 +20,9 @@ namespace PirateInBetween.Game.Combos
 		{
 			_root = new ComboTreeNode();
 
-			foreach (var pair in Combo.Combos)
+			foreach (var pair in ReflectionHelper.GetInstancesWithAttribute<Combo, ComboAttr>())
 			{
-				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.combo));
+				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.inst));
 			}
 
 			GD.Print(_root);
@@ -100,7 +100,6 @@ namespace PirateInBetween.Game.Combos
 			_state.SetLastData(data);
 			
 			float delta = _currentTime - _lastRegisteredTime;
-			//GD.Print($"Delta: {delta}");
 
 			if (delta > TIME_UNTIL_REFRESH)
 			{

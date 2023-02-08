@@ -35,12 +35,23 @@ namespace PirateInBetween.Game.Player.Behaviours
 			_lastData = data;
 			if (CanChangeActive && !IsInControl && _attemptingCombo != null)
 			{
-				GD.Print($"began executing {_attemptingCombo}");
 				_currentCombo = _attemptingCombo;
+				SetBehaviourChangesDisabled(true);
+				SetBehavioursEnabled(MidComboDisabled, false);
 
-				ExecuteBehaviour(data);
+				_currentCombo.ExecuteCombo(GetPlayer(), data);
+
 				data.CurrentAction = PlayerAnimation.MeleeAttack;
 			} 
+			else if (IsInControl && _currentCombo.IsDone())
+			{
+				_currentCombo.Stop();
+
+				SetBehaviourChangesDisabled(false);
+				SetBehavioursEnabled(MidComboDisabled, true);
+
+				_currentCombo = _attemptingCombo = null;
+			}
 			else if (IsInControl)
 			{
 				_currentCombo.GiveFrameData(data);
@@ -63,19 +74,6 @@ namespace PirateInBetween.Game.Player.Behaviours
 					UpdateDisplay();
 				}
 			}
-		}
-
-		private async Task ExecuteBehaviour(PlayerCurrentFrameData data)
-		{
-			SetBehaviourChangesDisabled(true);
-			SetBehavioursEnabled(MidComboDisabled, false);
-
-			await _currentCombo.ExecuteCombo(GetPlayer(), data);
-
-			SetBehaviourChangesDisabled(false);
-			SetBehavioursEnabled(MidComboDisabled, true);
-			
-			_currentCombo = _attemptingCombo = null;
 		}
 
 		private const int TRACKED_COUNT = 2;

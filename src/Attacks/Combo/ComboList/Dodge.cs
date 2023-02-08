@@ -15,7 +15,7 @@ namespace PirateInBetween.Game.Combos.List
 			AttrInput.SwitchDirection,
 			AttrInput.Forward,
 		}, 
-		holdForward : UsageReq.Required,
+		holdForward : UsageReq.Optional,
 		onFloor : UsageReq.Optional
 	)]
 	[ComboAttr(
@@ -24,7 +24,7 @@ namespace PirateInBetween.Game.Combos.List
 			AttrInput.Forward,
 			AttrInput.Forward,
 		},
-		holdForward : UsageReq.Required,
+		holdForward : UsageReq.Optional,
 		onFloor : UsageReq.Optional
 	)]
 	public class Dodge : Combo
@@ -38,27 +38,30 @@ namespace PirateInBetween.Game.Combos.List
 		private const float DODGE_CAMERA_UP_TIME = DODGE_TIME - DODGE_CAMERA_DOWN_TIME;
 		private static readonly Vector2 CAMERA_DOWN_DIFF = new Vector2(0, 12);
 
-		protected override async Task BeginCombo(IComboExecutor executor)
+		protected override void BeginCombo()
 		{
 			CurrentData.Velocity = Vector2.Zero;
 
-			CubicInterpFor(
+			AddTask().DisableDamageFor(DODGE_TIME, ComboExecutorDamageTaker.Body);
+
+			AddTask()
+			.CubicInterpFor(
 				from : Vector2.Zero,
 				to : CAMERA_DOWN_DIFF,
-				setter : val => executor.CameraPosition = val,
+				setter : val => CurrentExecutor.CameraPosition = val,
 				time : DODGE_CAMERA_DOWN_TIME
 			)
-			.ContinueWith(t => CubicInterpFor(
+			.CubicInterpFor(
 				from : CAMERA_DOWN_DIFF,
 				to : Vector2.Zero,
-				setter : val => executor.CameraPosition = val,
+				setter : val => CurrentExecutor.CameraPosition = val,
 				time : DODGE_CAMERA_UP_TIME
-			));
+			);
 
-			await CubicInterpFor(
-				from : executor.GlobalPosition,
-				to : executor.GlobalPosition + DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
-				setter : val => executor.GlobalPosition = val,
+			AddTask().CubicInterpFor(
+				from : CurrentExecutor.GlobalPosition,
+				to : CurrentExecutor.GlobalPosition + DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
+				setter : val => CurrentExecutor.GlobalPosition = val,
 				time : DODGE_TIME
 			);
 		}

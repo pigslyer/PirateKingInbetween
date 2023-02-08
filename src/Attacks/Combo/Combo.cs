@@ -2,6 +2,7 @@ using Godot;
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,41 +14,40 @@ namespace PirateInBetween.Game.Combos
 {
 	public abstract class Combo
 	{
-		protected class TaskData
-		{ }
-
 		// genuinely surprised Godot doesn't throw a fit, this is for interpolation.
 		private static readonly SceneTreeTween _tween = new SceneTreeTween();
 
-		private static readonly (Combo combo, ComboAttr attr)[] _combos = ReflectionHelper.GetInstancesWithAttribute<Combo, ComboAttr>();
-		public static ReadOnlyCollection<(Combo combo, ComboAttr attr)> Combos => new ReadOnlyCollection<(Combo combo, ComboAttr attr)>(_combos);
-
 		protected ICombatFrameData CurrentData { get; private set; }
 		protected IComboExecutor CurrentExecutor { get; private set; }
-		private List<TaskCompletionSource<TaskData>> _tasks = new List<TaskCompletionSource<TaskData>>();
 
-		private TaskCompletionSource<float> _comboFinishTask = new TaskCompletionSource<float>();
-
-		private bool _executingCombo = false;
 		private List<Action> _onFinished = new List<Action>();
 
-		public async Task ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
+		private SyncTaskPool _taskPool = new SyncTaskPool();
+
+		public void ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
 		{
-			_executingCombo = true;
 			CurrentData = startingData;
 			CurrentExecutor = executor;
+			executor.OnDamageTakenSet(OnDamageTaken);
+			
+			BeginCombo();
+		}
 
-			await BeginCombo(executor);
+		public bool IsDone() => _taskPool.IsDone();
+
+		public void Stop()
+		{
+			CurrentExecutor.OnDamageTakenReset();
 
 			CurrentData = null;
 			CurrentExecutor = null;
-
+			
 			_onFinished.ForEach(action => action());
 			_onFinished.Clear();
-
-			_executingCombo = false;
-
 		}
+
+		protected virtual void OnDamageTaken(ICombatFrameData frameData, DamageData data)
+		{ }
 
 		/// <summary>
 		/// Performs action when combo finishes. This list is cleared when the combo finishes, meaning registering things before it begins is valid.
@@ -57,99 +57,96 @@ namespace PirateInBetween.Game.Combos
 
 		public void GiveFrameData(ICombatFrameData data)
 		{
-			if (!_executingCombo)
-			{
-				throw new InvalidOperationException("I swear to god");
-			}
-
 			CurrentData = data;
-
-			Update();
+			_taskPool.Run();
 		}
-
-		private void Update()
-		{
-			IEnumerable<TaskCompletionSource<TaskData>> tasks = _tasks.ToArray();
-			_tasks.Clear();
-
-			foreach (var task in tasks)
-			{
-				task.SetResult(null);
-			}
-
-		}
-
-		protected async Task<TaskData> AwaitNextFrameData()
-		{
-			_tasks.Add(new TaskCompletionSource<TaskData>());
-			return await _tasks.Last().Task;
-		}
-
-		/// <summary>
-		/// The argumnets of what are: elapsed time, delta time, total time.
-		/// </summary>
-		/// <param name="time"></param>
-		/// <param name="what"></param>
-		/// <param name="startingData"></param>
-		/// <returns></returns>
-		protected async Task DoFor(float time, Action<float, float, float> what)
-		{
-			float t = 0f;
-			
-			while (t < time)
-			{
-				what(t, Mathf.Max(CurrentData.Delta, time - t), time);
-
-				t += CurrentData.Delta;
-
-				await AwaitNextFrameData();
-			}
-		}
-
-		protected async Task WaitFor(float time) => await DoFor(time, (a, b, c) => {});
-
-		protected async Task DealDamageFor(FloatInterval time, ComboExecutorDamageDealers area, DamageData data)
-		{
-			await WaitFor(time.Start);
-			
-			CurrentExecutor.DealDamage(area, data);
-			
-			await WaitFor(time.Delta);
-
-			CurrentExecutor.StopDealingDamage(area);
-		}
-
-		/// <summary>
-		/// Essentially an overload of <see cref="DoFor"/> which directly cubically interpolates the given value and sets it to the target.
-		/// </summary>
-		/// <param name="from"></param>
-		/// <param name="delta"></param>
-		/// <param name="setter"></param>
-		/// <param name="time"></param>
-		/// <param name="startingData"></param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		protected async Task CubicInterpFor<T>(T from, T delta, Action<T> setter, float time)
-		{
-			float t = 0f;
-
-			while (t < time)
-			{
-				setter(GetCubicInterp<T>(from, delta, t, time));
-
-				t += CurrentData.Delta;
-				await AwaitNextFrameData();
-			}
-		}
-
-		protected async Task CubicInterpFor(Vector2 from, Vector2 to, Action<Vector2> setter, float time) => await CubicInterpFor<Vector2>(from, to - from, setter, time);
-		protected async Task CubicInterpFor(float from, float to, Action<float> setter, float time) => await CubicInterpFor<float>(from, to - from, setter, time);
 
 		protected static T GetCubicInterp<T>(T init, T delta, float elapsed, float duration)
 		{
 			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, Tween.TransitionType.Cubic, Tween.EaseType.InOut);
 		}
 
-		protected abstract Task BeginCombo(IComboExecutor executor);
+		protected abstract void BeginCombo();
+
+
+		private float _waitingTime = 0f;
+
+		protected void Wait(float time) => _waitingTime += time;
+
+		protected ComboTask AddTask()
+		{
+			return new ComboTask(this, _taskPool.Register(() => { }, () => true)).WaitFor(_waitingTime);
+		}
+
+
+		protected class ComboTask
+		{
+			private readonly Combo _combo;
+			private readonly IChainable<(Action, Func<bool>)> _currentLink;
+			
+			private float _totalTime = 0f;
+			private float _elapsedTime = 0f;
+
+			private ComboTask(Combo comboBase, ComboTask prev, Action<ComboTask> whatDo, float time)			
+			{
+				_combo = comboBase;
+				_currentLink = prev._currentLink.Chain((() => whatDo(this), Countdown));
+				_totalTime = time;
+			}
+
+			public ComboTask(Combo comboBase, IChainable<(Action, Func<bool>)> taskBase)
+			{
+				_combo = comboBase;
+				_currentLink = taskBase;
+			}
+
+			public ComboTask DisableDamageFor(FloatInterval time, ComboExecutorDamageTaker area)
+			{
+				return WaitFor(time.Start)
+					.Do(() => _combo.CurrentExecutor.StopTakingDamage(area))
+					.WaitFor(time.Delta)
+					.Do(() => _combo.CurrentExecutor.TakeDamage(area));
+			}
+
+			public ComboTask DealDamageFor(FloatInterval time, ComboExecutorDamageDealers area, DamageAmount amount)
+			{
+				return WaitFor(time.Start)
+					.Do(() => _combo.CurrentExecutor.DealDamage(area, amount))
+					.WaitFor(time.Delta)
+					.Do(() => _combo.CurrentExecutor.StopDealingDamage(area)
+				);
+			}
+
+			public ComboTask CubicInterpFor(Vector2 from, Vector2 to, Action<Vector2> setter, float time) => CubicInterpFor<Vector2>(from, to - from, setter, time);
+			public ComboTask CubicInterpFor(float from, float to, Action<float> setter, float time) => CubicInterpFor<float>(from, to - from, setter, time);
+
+			public ComboTask CubicInterpFor<T>(T from, T delta, Action<T> setter, float time)
+			{
+				return DoFor(time, (elapsed, _, total) => setter(GetCubicInterp<T>(from, delta, elapsed, total)));
+			}
+
+			public ComboTask Do(Action what) => Generate(c => what(), 0f);
+
+			public ComboTask DoFor(float time, Action<float, float, float> what)
+			{
+				return Generate(
+					whatDo: c => what(c._elapsedTime, Mathf.Min(c._combo.CurrentData.Delta, c._totalTime - c._elapsedTime), c._totalTime),
+					time : time
+				);
+			}
+
+			public ComboTask WaitFor(float time) => time > 0f ? Generate(c => {}, time) : this;
+
+			protected ComboTask Generate(Action<ComboTask> whatDo, float time)
+			{
+				return new ComboTask(_combo, this, whatDo, time);
+			}
+
+			private bool Countdown()
+			{
+				_elapsedTime += _combo.CurrentData.Delta;
+				return _elapsedTime >= _totalTime;
+			}
+		}
 	}
 }

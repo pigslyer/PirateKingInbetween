@@ -11,18 +11,13 @@ namespace PirateInBetween.Game.Player
 		/// <summary>
 		/// The time since the last frame.
 		/// </summary>
-		public readonly float Delta;
+		public float Delta;
 		
 		/// <summary>
 		/// What InputManager.GetMovementVector would return this frame.
 		/// </summary>
 		/// <returns></returns>
 		public readonly Vector2 Input = InputManager.GetMovementVector();
-
-		public PlayerCurrentFrameData(float delta)
-		{
-			Delta = delta;
-		}
 
 		/// <summary>
 		/// Velocity in pixels per second which is to be saved until the next frame.
@@ -64,6 +59,7 @@ namespace PirateInBetween.Game.Player
 
 		float ICombatFrameData.Delta => Delta;
 		bool ICombatFrameData.FacingRight => FacingRight;
+		void ICombatFrameData.SwitchDirection() => FacingRight = !FacingRight;
 
 	}
 

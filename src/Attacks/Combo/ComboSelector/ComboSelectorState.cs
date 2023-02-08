@@ -22,7 +22,7 @@ namespace PirateInBetween.Game.Combos
 			private float _currentTime;
 			private IComboExecutor _executor;
 
-			private bool MovingForward => _lastData.IsGoingForward();
+			private bool MovingForward => _lastData.IsMoving();
 
 			public ComboSelectorState(ComboSelector selector)
 			{

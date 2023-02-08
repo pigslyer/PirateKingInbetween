@@ -21,6 +21,7 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __debugLabelPath = null;
 		[Export] private NodePath __movingParentDetectorPath = null;
 		[Export] private NodePath __cameraPath = null;
+		[Export] private NodePath __damageTakerPath = null;
 #endregion
 
 		// Player's model.
@@ -30,6 +31,9 @@ namespace PirateInBetween.Game.Player
 		private Label _debugLabel;
 		private MovingParentDetector _detector;
 		private CameraController _camera;
+		private DamageTaker _damageTaker;
+
+		private PlayerCurrentFrameData _nextFrameData;
 
 		public override void _Ready()
 		{
@@ -40,54 +44,49 @@ namespace PirateInBetween.Game.Player
 			_debugLabel = GetNode<Label>(__debugLabelPath);
 			_detector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
 			_camera = GetNode<CameraController>(__cameraPath);
+			_damageTaker = GetNode<DamageTaker>(__damageTakerPath);
 
 			_behaviourManager.Initialize(this);
 
-		}
+			OnDamageTakenReset();
+			_damageTaker.Connect(nameof(DamageTaker.OnDamageTaken), this, nameof(OnDamageTakenSignalReceived));
 
-		private bool _movingCamera = false;
-		private bool _movedCamera = false;
-
-		Vector2 IComboExecutor.CameraPosition
-		{
-			get => _camera.GlobalPosition - GlobalPosition;
-			set
-			{
-				_camera.SetFollowing(false);
-				_movingCamera = true;
-				_camera.GlobalPosition = GlobalPosition + value;
-			}
-		}
-
-		Vector2 IComboExecutor.GlobalPosition
-		{
-			get => GlobalPosition;
-			set => MoveAndCollide(value - GlobalPosition);
-		}
-
-		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => _model.EnableDamageArea(damageDealer, data);
-
-		void IComboExecutor.StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.DisableDamageArea(damageDealer);
-		
-
-		bool IComboExecutor.IsOnFloor { get => _behaviourManager.IsPlayerOnFloor(); }
-
-		private bool _lastRight = true;
-
-		public override void _PhysicsProcess(float delta)
-		{
-			var data = new PlayerCurrentFrameData(delta)
+			_nextFrameData = new PlayerCurrentFrameData()
 			{
 				Velocity = _velocity,
 				VelocityMult = 1f,
 				FacingRight = _lastRight,
 			};
+		}
+
+
+		#region Controlling bit
+
+		private Action<PlayerCurrentFrameData, DamageData> _onDamageTaken;
+
+		private void OnDamageTakenSignalReceived(DamageData data) => _onDamageTaken(_nextFrameData, data);
+
+		private void OnDamageTakenBase(PlayerCurrentFrameData frameData, DamageData data)
+		{
+			frameData.Velocity = new Vector2(1000,-1000);
+		}
+
+		public void OnDamageTakenReset() => _onDamageTaken = OnDamageTakenBase;
+
+		private bool _lastRight = true;
+
+		public override void _PhysicsProcess(float delta)
+		{
+			_nextFrameData.Delta = delta;
 
 			_movedCamera = _movingCamera;
 			_movingCamera = false;
 
-			RunBehaviours(data);
-			ApplyFrameData(data);
+			RunBehaviours(_nextFrameData);
+
+			//GD.Print($"velocity: {_nextFrameData.Velocity}");
+
+			ApplyFrameData(_nextFrameData);
 
 			if (_movedCamera && !_movingCamera)
 			{
@@ -96,14 +95,21 @@ namespace PirateInBetween.Game.Player
 			
 			DebugOutOfBounds();
 
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), data.CurrentAction.Animation)}\nFacing right: {data.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
+			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), _nextFrameData.CurrentAction.Animation)}\nFacing right: {_nextFrameData.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
+
+			_nextFrameData = new PlayerCurrentFrameData()
+			{
+				Velocity = _velocity,
+				VelocityMult = 1f,
+				FacingRight = _lastRight,
+			};
 		}
 
 		private void RunBehaviours(PlayerCurrentFrameData data) => _behaviourManager.RunBehaviours(data);
 
 		private void ApplyFrameData(PlayerCurrentFrameData data)
 		{
-			if (data.VelocityMult > 0f)
+			if (data.VelocityMult > 0f && data.Velocity.LengthSquared() > 0f)
 			{
 				_velocity = MoveAndSlide(data.Velocity * data.VelocityMult, Vector2.Up) / data.VelocityMult;
 			}
@@ -128,6 +134,41 @@ namespace PirateInBetween.Game.Player
 		}
 
 		public MovingParentDetector GetMovingParentDetector() => _detector;
-		
+
+		#endregion
+
+
+		#region IComboExecutor bit
+
+		private bool _movingCamera = false;
+		private bool _movedCamera = false;
+
+		Vector2 IComboExecutor.CameraPosition
+		{
+			get => _camera.GlobalPosition - GlobalPosition;
+			set
+			{
+				_camera.SetFollowing(false);
+				_movingCamera = true;
+				_camera.GlobalPosition = GlobalPosition + value;
+			}
+		}
+
+		Vector2 IComboExecutor.GlobalPosition
+		{
+			get => GlobalPosition;
+			set => MoveAndCollide(value - GlobalPosition);
+		}
+
+		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageAmount data) => _model.DamageDealerEnable(damageDealer, data);
+
+		void IComboExecutor.StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.DamageDealerDisable(damageDealer);
+		void IComboExecutor.TakeDamage(ComboExecutorDamageTaker to) => _model.DamageTakerEnable(to);
+		void IComboExecutor.StopTakingDamage(ComboExecutorDamageTaker to) => _model.DamageTakerDisable(to);
+
+		bool IComboExecutor.IsOnFloor { get => _behaviourManager.IsPlayerOnFloor(); }
+
+		void IComboExecutor.OnDamageTakenSet(Action<ICombatFrameData, DamageData> damageTaken) => _onDamageTaken = damageTaken;
+		#endregion
 	}
 }

@@ -14,5 +14,6 @@ namespace PirateInBetween.Game.Combos
 		Vector2 Velocity { get; set; }
 		float Delta { get; }
 		bool FacingRight { get; }
+		void SwitchDirection();
 	}
 }

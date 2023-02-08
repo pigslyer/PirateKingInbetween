@@ -45,7 +45,7 @@ namespace PirateInBetween.Game
 
 		private void OnDamageDealtSignal(Area2D area)
 		{
-			if (area is DamageTaker taker)
+			if (area is DamageTaker taker && ShouldHit(taker))
 			{
 				taker.TakeDamage(_currentDamage);
 				EmitSignal(nameof(OnDamageDealt), taker);
@@ -55,6 +55,8 @@ namespace PirateInBetween.Game
 				GD.PushWarning($"Collided with area which isn't {nameof(DamageTaker)}: {area.Name}");
 			}
 		}
+
+		protected virtual bool ShouldHit(DamageTaker area) => true;
 
 		private void OnHitSignal(Node node) => EmitSignal(nameof(OnHit), node);
 	}

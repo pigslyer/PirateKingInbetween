@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
@@ -12,13 +12,8 @@
 [ext_resource path="res://src/Player/Behaviours/PlayerCarrying.cs" type="Script" id=10]
 [ext_resource path="res://src/Player/Behaviours/PlayerFalling.cs" type="Script" id=11]
 [ext_resource path="res://src/Player/Behaviours/PlayerHorizontalMovement.cs" type="Script" id=12]
-[ext_resource path="res://src/Attacks/DamageTaker.cs" type="Script" id=13]
 [ext_resource path="res://src/Player/Behaviours/PlayerBehaviourManager.cs" type="Script" id=14]
-[ext_resource path="res://src/Attacks/Bullets/StraightBullet.tscn" type="PackedScene" id=15]
 [ext_resource path="res://src/Player/CameraController.cs" type="Script" id=16]
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 7, 21.5 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 15, 15.5 )
@@ -29,13 +24,14 @@ extents = Vector2( 11.5, 28 )
 [node name="Player" type="Node2D"]
 
 [node name="PlayerController" type="KinematicBody2D" parent="."]
-collision_layer = 2
+collision_layer = 4
 script = ExtResource( 1 )
 __playerModelPath = NodePath("PlayerModel")
 __playerBehaviourManagerPath = NodePath("BehaviourManager")
 __debugLabelPath = NodePath("CanvasLayer/DebugLabel")
 __movingParentDetectorPath = NodePath("MovingParentDetector")
 __cameraPath = NodePath("../Camera2D")
+__damageTakerPath = NodePath("PlayerModel/Flippable/DamageTaker")
 
 [node name="PlayerModel" parent="PlayerController" instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
@@ -54,25 +50,15 @@ __meta__ = {
 visible = false
 position = Vector2( 27, -11 )
 
-[node name="DamageTaker" type="Area2D" parent="PlayerController/PlayerModel/Flippable" index="6"]
-visible = false
+[node name="InteractionArea" type="Area2D" parent="PlayerController/PlayerModel/Flippable" index="6"]
 collision_layer = 0
-collision_mask = 0
-script = ExtResource( 13 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController/PlayerModel/Flippable/DamageTaker"]
-position = Vector2( 0, -2.5 )
-shape = SubResource( 3 )
-
-[node name="InteractionArea" type="Area2D" parent="PlayerController/PlayerModel/Flippable" index="7"]
-collision_layer = 0
-collision_mask = 16
+collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController/PlayerModel/Flippable/InteractionArea"]
 position = Vector2( 12, 12.5 )
 shape = SubResource( 2 )
 
-[node name="BoxLiftedPosition" type="Position2D" parent="PlayerController/PlayerModel/Flippable" index="8"]
+[node name="BoxLiftedPosition" type="Position2D" parent="PlayerController/PlayerModel/Flippable" index="7"]
 visible = false
 position = Vector2( 0, -48 )
 
@@ -115,7 +101,6 @@ __interactionDetectionAreaPath = NodePath("../../PlayerModel/Flippable/Interacti
 
 [node name="RangedAttack" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 5 )
-_bulletScene = ExtResource( 15 )
 _bulletSpeed = 400.0
 
 [node name="NoclipMovement" type="Node" parent="PlayerController/BehaviourManager"]
@@ -158,6 +143,13 @@ anchor_bottom = 0.5
 margin_top = -7.0
 margin_right = 40.0
 margin_bottom = 7.0
+
+[node name="Label" type="Label" parent="PlayerController/CanvasLayer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+margin_right = 40.0
+text = "5 lives left"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

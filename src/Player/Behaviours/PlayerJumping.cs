@@ -62,7 +62,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 				_jumpDelta = 0f;
 			}
-			else if (_isJumping)
+			else if (_isJumping && IsInControl)
 			{
                 _jumpDelta = Mathf.Min(_jumpDelta + data.Delta, _jumpLength);
                 data.Velocity.y += _gravity * data.Delta * (_jumpDelta / _jumpLength) * _jumpDampening;

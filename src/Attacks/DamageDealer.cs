@@ -66,12 +66,12 @@ namespace PirateInBetween.Game
 
 		/// <summary>
 		/// Represents the direction in which a damage amount passed with <see cref="DamageDealer.Enable(DamageAmount)"/> should be faced.
-		/// If this method isn't overriden, <see cref="Vector2.Zero"/> is used, if <see cref="DamageDealer.Enable(DamageAmount)"/> was used, it is ignored.
+		/// If this method isn't overridden, <see cref="Vector2.Zero"/> is used, if <see cref="DamageDealer.Enable(DamageData)"/> was used, it is ignored.
 		/// </summary>
 		/// <returns></returns>
 		protected virtual Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => null;
 
-		private DamageData GetDamageData(Vector2 position) => _currentDamageData != null ? _currentDamageData : new DamageData(_currentDamageAmount, GetDamageDirection(position));
+		private DamageData GetDamageData(Vector2 position) => _currentDamageData ?? new DamageData(_currentDamageAmount, GetDamageDirection(position));
 
 		protected virtual bool ShouldHit(DamageTaker area) => true;
 

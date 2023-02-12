@@ -1,7 +1,9 @@
-using System.Diagnostics;
 using Godot;
-using static Godot.GD;
+
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -12,6 +14,8 @@ namespace PirateInBetween.Game.Player
 {
     public class PlayerController : KinematicBody2D, IComboExecutor
 	{
+		private const int MAX_HEALTH = 100;
+		private int _health = MAX_HEALTH;
 		private Vector2 _velocity = Vector2.Zero;
 
 #region Paths
@@ -22,6 +26,7 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __movingParentDetectorPath = null;
 		[Export] private NodePath __cameraPath = null;
 		[Export] private NodePath __damageTakerPath = null;
+		[Export] private NodePath __uiManagerPath = null;
 #endregion
 
 		// Player's model.
@@ -32,7 +37,7 @@ namespace PirateInBetween.Game.Player
 		private MovingParentDetector _detector;
 		private CameraController _camera;
 		private DamageTaker _damageTaker;
-
+		private PlayerUIManager _uiManager;
 		private PlayerCurrentFrameData _nextFrameData;
 
 		public override void _Ready()
@@ -45,33 +50,61 @@ namespace PirateInBetween.Game.Player
 			_detector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
 			_camera = GetNode<CameraController>(__cameraPath);
 			_damageTaker = GetNode<DamageTaker>(__damageTakerPath);
+			_uiManager = GetNode<PlayerUIManager>(__uiManagerPath);
+
+			_onDamageTaken = OnDamageTakenDefault();
+			_damageTaker.Connect(nameof(DamageTaker.OnDamageTaken), this, nameof(OnDamageTakenSignalReceived));
 
 			_behaviourManager.Initialize(this);
 
-			OnDamageTakenReset();
-			_damageTaker.Connect(nameof(DamageTaker.OnDamageTaken), this, nameof(OnDamageTakenSignalReceived));
+			_uiManager.UpdateHealth(_health, MAX_HEALTH);
 
-			_nextFrameData = new PlayerCurrentFrameData()
-			{
-				Velocity = _velocity,
-				VelocityMult = 1f,
-				FacingRight = _lastRight,
-			};
+			GenerateNextFrameData();
 		}
 
 
 		#region Controlling bit
 
-		private Action<PlayerCurrentFrameData, DamageData> _onDamageTaken;
+		private Combo.OnHitReaction _onDamageTaken;
 
-		private void OnDamageTakenSignalReceived(DamageData data) => _onDamageTaken(_nextFrameData, data);
-
-		private void OnDamageTakenBase(PlayerCurrentFrameData frameData, DamageData data)
+		private void OnDamageTakenSignalReceived(DamageData data)
 		{
-			frameData.Velocity = new Vector2(1000,-1000);
+			DamageData appliedData = data.Apply(_onDamageTaken());
+
+			if (appliedData.Damage > 0)
+			{
+				_health -= appliedData.Damage;
+				_uiManager.UpdateHealth(_health, MAX_HEALTH);
+			}
+
+			if (_health <= 0)
+			{
+				DeathSequence();
+			}
+
+			bool knocked = appliedData.Direction.LengthSquared() > 0f;
+			bool stunned = appliedData.StunDuration > 0f;
+
+			if (knocked || stunned)
+			{
+				
+			}
+
+			if (knocked)
+			{
+				GD.PushWarning("You haven't added knockbacks yet.");
+			}
+
+			if (stunned)
+			{
+				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).StunFor(appliedData.StunDuration);
+			}
 		}
 
-		public void OnDamageTakenReset() => _onDamageTaken = OnDamageTakenBase;
+		private void DeathSequence()
+		{
+			_uiManager.ShowDeathMenu();
+		}
 
 		private bool _lastRight = true;
 
@@ -83,20 +116,26 @@ namespace PirateInBetween.Game.Player
 			_movingCamera = false;
 
 			RunBehaviours(_nextFrameData);
-
-			//GD.Print($"velocity: {_nextFrameData.Velocity}");
-
 			ApplyFrameData(_nextFrameData);
 
 			if (_movedCamera && !_movingCamera)
 			{
 				_camera.SetFollowing(true);
 			}
-			
+
 			DebugOutOfBounds();
+			DebugOutput();
 
-			_debugLabel.Text = $"Animation: {Enum.GetName(typeof(PlayerAnimation), _nextFrameData.CurrentAction.Animation)}\nFacing right: {_nextFrameData.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
+			GenerateNextFrameData();
+		}
 
+		private void DebugOutput()
+		{
+			_debugLabel.Text = $"Fps: {Performance.GetMonitor(Performance.Monitor.TimeFps)}\nAnimation: {Enum.GetName(typeof(PlayerAnimation), _nextFrameData.CurrentAction.Animation)}\nFacing right: {_nextFrameData.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
+		}
+
+		private void GenerateNextFrameData()
+		{
 			_nextFrameData = new PlayerCurrentFrameData()
 			{
 				Velocity = _velocity,
@@ -116,7 +155,7 @@ namespace PirateInBetween.Game.Player
 
 			if (data.CurrentAction == null)
 			{
-				PushError("Player action was never set this frame.");
+				GD.PushError("Player action was never set this frame.");
 				data.CurrentAction = PlayerAnimation.Idle;
 			}
 			
@@ -129,7 +168,7 @@ namespace PirateInBetween.Game.Player
 		{
 			if (GlobalPosition.y > 300f)
 			{
-				GetTree().ReloadCurrentScene();
+				_uiManager.ShowDeathMenu();
 			}
 		}
 
@@ -145,12 +184,12 @@ namespace PirateInBetween.Game.Player
 
 		Vector2 IComboExecutor.CameraPosition
 		{
-			get => _camera.GlobalPosition - GlobalPosition;
+			get => _camera.RelativePosition;
 			set
 			{
 				_camera.SetFollowing(false);
 				_movingCamera = true;
-				_camera.GlobalPosition = GlobalPosition + value;
+				_camera.RelativePosition = value;
 			}
 		}
 
@@ -160,15 +199,19 @@ namespace PirateInBetween.Game.Player
 			set => MoveAndCollide(value - GlobalPosition);
 		}
 
-		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageAmount data) => _model.DamageDealerEnable(damageDealer, data);
+		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => _model.DamageDealerEnable(damageDealer, data);
 
 		void IComboExecutor.StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.DamageDealerDisable(damageDealer);
 		void IComboExecutor.TakeDamage(ComboExecutorDamageTaker to) => _model.DamageTakerEnable(to);
 		void IComboExecutor.StopTakingDamage(ComboExecutorDamageTaker to) => _model.DamageTakerDisable(to);
 
-		bool IComboExecutor.IsOnFloor { get => _behaviourManager.IsPlayerOnFloor(); }
+		bool IComboExecutor.IsOnFloor 
+		{ 
+			get => _behaviourManager.IsPlayerOnFloor() && !_behaviourManager.GetBehaviour<PlayerJumping>(PlayerBehaviour.Behaviours.Jumping).HasJumped; 
+		}
 
-		void IComboExecutor.OnDamageTakenSet(Action<ICombatFrameData, DamageData> damageTaken) => _onDamageTaken = damageTaken;
+		void IComboExecutor.OnDamageTakenSet(Combo.OnHitReaction damageTaken) => _onDamageTaken = damageTaken;
+		public Combo.OnHitReaction OnDamageTakenDefault() => _behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).TakeDamage;
 		#endregion
 	}
 }

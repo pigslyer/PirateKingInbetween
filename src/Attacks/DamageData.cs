@@ -11,23 +11,38 @@ namespace PirateInBetween.Game
 {
 	public struct DamageAmount
 	{
-		public int Amount;
+		public int AmountOfDamage;
+		public float Stun;
 
-		public DamageAmount(int amount)
+		public DamageAmount(int amount, float stun)
 		{
-			Amount = amount;
+			AmountOfDamage = amount; Stun = stun;
 		}
-		public static implicit operator DamageAmount(int amount) => new DamageAmount(amount);
+		public static implicit operator DamageAmount(int amount) => new DamageAmount(amount, 0f);
+
+		public static implicit operator int(DamageAmount data) => data.AmountOfDamage;
 	}
 
-	public class DamageData : Reference
+	public class DamageData
 	{
-		public readonly DamageAmount Damage;
-		public readonly Func<Vector2> Source;
+		public int Damage => DamageAmount.AmountOfDamage;
+		public float StunDuration => DamageAmount.Stun;
+		
+		public readonly DamageAmount DamageAmount;
+		public readonly Vector2 Direction;
 
-		public DamageData(DamageAmount damage, Func<Vector2> source)
+		public DamageData(DamageAmount damage, Vector2? direction = null)
 		{
-			Damage = damage; Source = source;
+			DamageAmount = damage; Direction = direction ?? Vector2.Zero;
 		}
+
+		public DamageData Apply(DamageReaction reaction) => new DamageData(
+			new DamageAmount(
+				Mathf.RoundToInt(
+					DamageAmount.AmountOfDamage * reaction.DamageMult)
+					, DamageAmount.Stun * reaction.StunMult
+				),
+				Direction * reaction.KnockbackMult
+			);
 	}
 }

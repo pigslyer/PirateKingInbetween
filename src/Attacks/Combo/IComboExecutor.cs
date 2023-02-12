@@ -20,14 +20,14 @@ namespace PirateInBetween.Game.Combos
 
 		bool IsOnFloor { get; }
 
-		void DealDamage(ComboExecutorDamageDealers damageDealer, DamageAmount data);
+		void DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data);
 		void StopDealingDamage(ComboExecutorDamageDealers damageDealer);
 
 		void TakeDamage(ComboExecutorDamageTaker to);
 		void StopTakingDamage(ComboExecutorDamageTaker to);
 
-		void OnDamageTakenSet(Action<ICombatFrameData, DamageData> damageTaken);
-		void OnDamageTakenReset();
+		void OnDamageTakenSet(Combo.OnHitReaction damageTaken);
+		Combo.OnHitReaction OnDamageTakenDefault();
 	}
 
 	/// <summary>

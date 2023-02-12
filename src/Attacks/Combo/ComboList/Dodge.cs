@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game.Combos.List
 {
+	/*
 	[ComboAttr(
 		inputs : new AttrInput[]
 		{
@@ -16,7 +17,7 @@ namespace PirateInBetween.Game.Combos.List
 			AttrInput.Forward,
 		}, 
 		holdForward : UsageReq.Optional,
-		onFloor : UsageReq.Optional
+		onFloor : UsageReq.Required
 	)]
 	[ComboAttr(
 		inputs : new AttrInput[]
@@ -25,11 +26,19 @@ namespace PirateInBetween.Game.Combos.List
 			AttrInput.Forward,
 		},
 		holdForward : UsageReq.Optional,
-		onFloor : UsageReq.Optional
+		onFloor : UsageReq.Required
+	)]*/
+	[ComboAttr(
+		inputs: new AttrInput[]
+		{
+			AttrInput.Forward | AttrInput.Dodge
+		},
+		holdForward: UsageReq.Optional,
+		onFloor: UsageReq.Required
 	)]
 	public class Dodge : Combo
 	{
-		private const float DODGE_TIME = 0.4f;
+		private const float DODGE_TIME = 1f;
 		private const float DODGE_DISTANCE = 100f;
 		private const float DODGE_DIRECTION = 0f;
 
@@ -58,12 +67,28 @@ namespace PirateInBetween.Game.Combos.List
 				time : DODGE_CAMERA_UP_TIME
 			);
 
-			AddTask().CubicInterpFor<Vector2>(
-				from : CurrentExecutor.GlobalPosition,
-				delta : DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
-				setter : val => CurrentExecutor.GlobalPosition = val,
+			// ensures a slower fall
+			AddTask().DoFor(DODGE_TIME, (float elapsed, float delta, float total) => CurrentData.Velocity = new Vector2(CurrentData.Velocity.x, CurrentData.Velocity.y * 0.5f));
+
+			AddTask().DoIf(
+				DODGE_TIME, 
+				() => !(CurrentData.IsGoingForward() && InputManager.IsActionPressed(InputButton.Dodge)), 
+				() =>
+				{
+					CurrentExecutor.TakeDamage(ComboExecutorDamageTaker.Body); 
+					Stop();
+				}
+			);
+
+//			EnableHorizontalControl(DODGE_TIME, DODGE_DISTANCE / DODGE_TIME * 4f, DODGE_DISTANCE / DODGE_TIME);
+
+			AddTask().CubicInterpFor<float>(
+				from : CurrentExecutor.GlobalPosition.x,
+				delta : CurrentData.GetDirection() * DODGE_DISTANCE,
+				setter : val => CurrentExecutor.GlobalPosition = new Vector2(val, CurrentExecutor.GlobalPosition.y),
 				time : DODGE_TIME
 			);
+
 		}
 	}
 }

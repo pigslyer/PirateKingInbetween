@@ -17,4 +17,5 @@ public enum InputButton
 	[EnumString("attack_shoot")] RangedAttack,
 	[EnumString("player_carry")] Carry,
 	[EnumString("interact")] Interact,
+	[EnumString("dodge")] Dodge,
 }

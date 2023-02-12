@@ -8,7 +8,7 @@ namespace PirateInBetween.Game.Enemies
 
 		public void OnDamage(DamageData data)
 		{
-			_health -= data.Damage.Amount;
+			_health -= data.DamageAmount.AmountOfDamage;
 
 			if (_health <= 0)
 			{

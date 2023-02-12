@@ -91,6 +91,14 @@ namespace PirateInBetween.Game.Combos
 				}
 			}
 
+			// dodges?
+			{
+				if (InputManager.IsActionJustPressed(InputButton.Dodge) && InputManager.IsActionPressed(InputButton.MoveLeft) != InputManager.IsActionPressed(InputButton.MoveRight))
+				{
+					det = ComboInput.Dodge | (data.IsGoingForward() ? ComboInput.Forward : ComboInput.SwitchDirection);
+				}
+			}
+
 			detected = det ?? ComboInput.Forward;
 			return det != null;
 		}

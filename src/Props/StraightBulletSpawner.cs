@@ -29,7 +29,7 @@ namespace PirateInBetween.Game.Props
 			while (!IsQueuedForDeletion())
 			{
 				StraightBullet bullet = _bullet.Instance<StraightBullet>();
-				bullet.Initialize(PhysicsLayers.PlayerHittable, 1, _fireAngle.ToVectorDeg(_velocity));
+				bullet.Initialize(PhysicsLayers.PlayerHittable, 10, _fireAngle.ToVectorDeg(_velocity));
 				bullet.Shoot(GlobalPosition, MovingParent.GetMovingParentOf(this));
 
 				await this.WaitFor(_firingInterval);

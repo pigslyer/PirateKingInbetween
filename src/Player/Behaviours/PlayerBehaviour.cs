@@ -21,7 +21,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 		protected Vector2 Position => _player.Position;
 		protected Vector2 GlobalPosition => _player.GlobalPosition;
-		
+		public void NotOnFloor() => _state.NotOnFloor();
 		
 		protected bool IsOnFloor() => _state.IsPlayerOnFloor();
 
@@ -32,6 +32,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 		protected bool IsInControl { get => _state.IsInControl(this); }
 
 		protected bool IsEnabled(Behaviours pos) => (_state.ActiveBehaviours & pos) != 0;
+
+		protected bool IsEnabled() => IsEnabled((Behaviours)(1 << GetPositionInParent()));
 
 		/// <summary>
 		/// If <see cref="CanChangeActive"/> is true, allows the calling behaviour to set whether
@@ -79,12 +81,20 @@ namespace PirateInBetween.Game.Player.Behaviours
 			}
 		}
 
+		protected void ForceBehaviourChangesDisabled()
+		{
+			_state.StopActive();
+		}
+
 		public abstract void Run(PlayerCurrentFrameData data);
+		public virtual void ResetState()
+		{ }
 
 		[Flags] public enum Behaviours
 		{
 			None = 0,
 			All = (1 << (BehavioursPos.Last + 1)) - 1,
+			DamageHandler = 1 << BehavioursPos.DamageHandler,
 			HorizontalMovement = 1 << BehavioursPos.HorizontalMovement,
 			Falling = 1 << BehavioursPos.Falling,
 			Jumping = 1 << BehavioursPos.Jumping,
@@ -110,6 +120,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 		// Behaviours is automatically changed to reflect changes in this enum, so long as new states are added to it
 		protected enum BehavioursPos
 		{
+			DamageHandler,
 			HorizontalMovement,
 			MeleeAttack,
 			Falling,

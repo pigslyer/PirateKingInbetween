@@ -94,10 +94,10 @@ namespace PirateInBetween.Game.Player
 			preview.Hide();
 		}
 
-		public void DamageDealerEnable(ComboExecutorDamageDealers area, DamageAmount amount)
+		public void DamageDealerEnable(ComboExecutorDamageDealers area, DamageData damageData)
 		{
 			var dealer = GetComboDamageDealer(area);
-			dealer.Enable(new DamageData(amount, () => dealer.GlobalPosition));
+			dealer.Enable(damageData);
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Show();
 		}
 		public void DamageDealerDisable(ComboExecutorDamageDealers area)

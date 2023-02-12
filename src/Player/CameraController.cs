@@ -49,5 +49,11 @@ namespace PirateInBetween.Game
                 _isFollowing = state;
 			}
         }
+
+        public Vector2 RelativePosition
+        {
+            get => GlobalPosition - _cameraFollowing.GlobalPosition;
+            set => GlobalPosition = _cameraFollowing.GlobalPosition + value;
+        }
     }
 }

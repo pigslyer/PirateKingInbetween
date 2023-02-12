@@ -17,28 +17,52 @@ namespace PirateInBetween.Game.Combos
 		// genuinely surprised Godot doesn't throw a fit, this is for interpolation.
 		private static readonly SceneTreeTween _tween = new SceneTreeTween();
 
+		public delegate DamageReaction OnHitReaction();
+		protected delegate void DoForStatement(float elapsed, float delta, float total);
+
 		protected ICombatFrameData CurrentData { get; private set; }
 		protected IComboExecutor CurrentExecutor { get; private set; }
 
 		private List<Action> _onFinished = new List<Action>();
 
 		private SyncTaskPool _taskPool = new SyncTaskPool();
+		private bool _isProcessing = false;
+		private bool _preemptiveStop = false;
 
 		public void ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
 		{
+			_isProcessing = _preemptiveStop = false;
 			CurrentData = startingData;
 			CurrentExecutor = executor;
 			executor.OnDamageTakenSet(OnDamageTaken);
-			
 			
 			BeginCombo();
 		}
 
 		public bool IsDone() => _taskPool.IsDone();
 
+
+		/// <summary>
+		/// Stops execution of current combo, clears all data and calls all actions registered in <see cref="OnFinished(Action)"/>.
+		/// Safe to be called from a <see cref="ComboTask"/>.
+		/// </summary>
 		public void Stop()
 		{
-			CurrentExecutor.OnDamageTakenReset();
+			if (_isProcessing)
+			{
+				_preemptiveStop = true;
+				return;
+			}
+
+			// if we're already stopped then CurrenteExecutor is null, which is bad
+			if (IsDone())
+			{
+				return;
+			}
+
+			CurrentExecutor.OnDamageTakenSet(CurrentExecutor.OnDamageTakenDefault());
+
+			_taskPool.Clear();
 
 			CurrentData = null;
 			CurrentExecutor = null;
@@ -47,8 +71,10 @@ namespace PirateInBetween.Game.Combos
 			_onFinished.Clear();
 		}
 
-		protected virtual void OnDamageTaken(ICombatFrameData frameData, DamageData data)
-		{ }
+		protected virtual DamageReaction OnDamageTaken()
+		{
+			return CurrentExecutor.OnDamageTakenDefault().Invoke();
+		}
 
 		/// <summary>
 		/// Performs action when combo finishes. This list is cleared when the combo finishes, meaning registering things before it begins is valid.
@@ -58,19 +84,54 @@ namespace PirateInBetween.Game.Combos
 
 		public void GiveFrameData(ICombatFrameData data)
 		{
+			_isProcessing = true;
 			CurrentData = data;
 			_taskPool.Run();
+
+			_isProcessing = false;
+			if (_preemptiveStop)
+			{
+				Stop();
+			}
 		}
 
 		protected static T GetCubicInterp<T>(T init, T delta, float elapsed, float duration)
 		{
-			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, Tween.TransitionType.Cubic, Tween.EaseType.InOut);
+			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, Tween.TransitionType.Cubic, Tween.EaseType.Out);
 		}
 
 		protected abstract void BeginCombo();
 
 
 		private float _waitingTime = 0f;
+
+		protected void EnableHorizontalControl(FloatInterval when, float accel, float maxVelocity)
+		{
+			float velocity = 0f;
+
+			AddTask().WaitFor(when.Start).DoFor(
+				when.Delta,
+				(float elapsed, float delta, float total) =>
+				{
+					if (CurrentData.IsMoving())
+					{
+						if (CurrentData.IsGoingBackwards())
+						{
+							CurrentData.SwitchDirection();
+							velocity = 0f;
+						}
+
+						velocity = Mathf.Min(velocity + accel * CurrentData.Delta, maxVelocity);
+					}
+					else
+					{
+						velocity = 0f;
+					}
+
+					CurrentData.Velocity = new Vector2(velocity * CurrentData.GetDirection(), CurrentData.Velocity.y);
+				}
+			);
+		}
 
 		protected void Wait(float time) => _waitingTime += time;
 
@@ -111,12 +172,12 @@ namespace PirateInBetween.Game.Combos
 					.Do(() => _combo.CurrentExecutor.TakeDamage(area));
 			}
 
-			public ComboTask DealDamageFor(FloatInterval time, ComboExecutorDamageDealers area, DamageAmount amount)
+			public ComboTask DealDamageFor(DamageInstance damage)
 			{
-				return WaitFor(time.Start)
-					.Do(() => _combo.CurrentExecutor.DealDamage(area, amount))
-					.WaitFor(time.Delta)
-					.Do(() => _combo.CurrentExecutor.StopDealingDamage(area)
+				return WaitFor(damage.ValidInterval.Start)
+					.Do(() => _combo.CurrentExecutor.DealDamage(damage.TargetArea, (DamageData) damage))
+					.WaitFor(damage.ValidInterval.Delta)
+					.Do(() => _combo.CurrentExecutor.StopDealingDamage(damage.TargetArea)
 				);
 			}
 
@@ -130,7 +191,23 @@ namespace PirateInBetween.Game.Combos
 
 			public ComboTask Do(Action what) => Generate(c => what(), 0f);
 
-			public ComboTask DoFor(float time, Action<float, float, float> what)
+			public ComboTask DoIf(float checkFor, Func<bool> ifWhat, Action whatDo)
+			{
+				bool hasDone = false;
+
+				return Generate(
+					c =>
+					{
+						if (!hasDone && ifWhat())
+						{
+							whatDo();
+							hasDone = true;
+						}
+					}, 
+					time: checkFor);
+			}
+
+			public ComboTask DoFor(float time, DoForStatement what)
 			{
 				return Generate(
 					whatDo: c => what(c._elapsedTime, Mathf.Min(c._combo.CurrentData.Delta, c._totalTime - c._elapsedTime), c._totalTime),
@@ -150,6 +227,22 @@ namespace PirateInBetween.Game.Combos
 				_elapsedTime += _combo.CurrentData.Delta;
 				return _elapsedTime >= _totalTime;
 			}
+		}
+
+		protected struct DamageInstance
+		{
+			public readonly DamageAmount Damage;
+			public readonly Func<Vector2> KnockbackDirection;
+			public readonly FloatInterval ValidInterval;
+			public readonly ComboExecutorDamageDealers TargetArea;
+
+			public DamageInstance(DamageAmount damageAmount, FloatInterval validInterval, ComboExecutorDamageDealers targetArea, Func<Vector2> knockbackDirection = null)
+			{
+				Damage = damageAmount; ValidInterval = validInterval; TargetArea = targetArea; KnockbackDirection = knockbackDirection;
+			}
+
+
+			public static explicit operator DamageData(DamageInstance value) => new DamageData(value.Damage, value.KnockbackDirection?.Invoke());
 		}
 	}
 }

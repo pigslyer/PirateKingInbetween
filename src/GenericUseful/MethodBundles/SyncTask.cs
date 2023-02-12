@@ -32,6 +32,7 @@ public class SyncTaskPool
 				if (node.Value.OnDone != null)
 				{
 					next = _tasks.AddAfter(node, node.Value.OnDone);
+					next.Value.WhatDo();
 				}
 
 				_tasks.Remove(node);

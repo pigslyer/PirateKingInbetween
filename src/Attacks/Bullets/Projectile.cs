@@ -12,11 +12,11 @@ namespace PirateInBetween.Game
 
 	public abstract class Projectile : DamageDealer
 	{ 
-		private DamageData _damageData;
+		private DamageAmount? _damageAmount;
 
 		protected void Initialize(PhysicsLayers hitting, DamageAmount amount)
 		{
-			_damageData = new DamageData(amount, () => GlobalPosition);
+			_damageAmount = amount;
 			
 			CollisionLayer = PhysicsLayers.None;
 			CollisionMask = hitting;
@@ -42,12 +42,12 @@ namespace PirateInBetween.Game
 
 		protected abstract void Destroy();
 
-		protected abstract bool ShouldHitDestroy(DamageTaker taker);
+		protected abstract bool ShouldHitDestroy(DamageTaker becasueOf);
 
 
 		public void Shoot(Vector2 startingPosition, MovingParent parent)
 		{
-			if (_damageData == null)
+			if (_damageAmount == null)
 			{
 				throw new InvalidOperationException($"{GetType()} never called internal {nameof(Initialize)} method with {nameof(DamageAmount)}.");
 			}
@@ -60,10 +60,12 @@ namespace PirateInBetween.Game
 			Connect(nameof(OnDamageDealt), this, nameof(OnHitDestroy));
 			Connect(nameof(OnHit), this, nameof(OnHitDestroy));
 
-			Enable(_damageData);
+			Enable((DamageAmount) _damageAmount);
 			
 			OnTreeEntered();
 		}
+
+		protected override Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => null;
 
 		protected abstract void OnTreeEntered();
 	}

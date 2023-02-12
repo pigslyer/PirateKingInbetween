@@ -24,11 +24,18 @@ namespace PirateInBetween.Game.Player.Behaviours
         public PlayerBehaviour.Behaviours ActiveBehaviours = PlayerBehaviour.Behaviours.Default;
 		private PlayerBehaviour _activeStoppingBehaviour = null;
         
+        public T GetBehaviour<T>(PlayerBehaviour.Behaviours which) where T : PlayerBehaviour => GetChild<T>(((int) which).TrailingZeroCount());
         public bool IsInControl(PlayerBehaviour who) => _activeStoppingBehaviour == who;
         public bool CanChangeActive(PlayerBehaviour who) => _activeStoppingBehaviour == null || _activeStoppingBehaviour == who;
         public void SetStoppingBehaviourActive(PlayerBehaviour stopper)
         {
             _activeStoppingBehaviour = stopper;
+        }
+        public void StopActive()
+        {
+            _activeStoppingBehaviour?.ResetState();
+            SetStoppingBehaviourActive(null);
+            ActiveBehaviours |= PlayerBehaviour.Behaviours.Default;
         }
 
 		public bool IsBehaviourActive(PlayerBehaviour.Behaviours behaviour) => (ActiveBehaviours & behaviour) != 0;
@@ -65,6 +72,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 				}
 			}
         }
+
+        public void NotOnFloor() => _timeSinceOnFloor = float.PositiveInfinity;
 
         private float _timeSinceOnFloor = 0f;
         public override void _PhysicsProcess(float delta)

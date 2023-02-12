@@ -68,7 +68,6 @@ namespace PirateInBetween.Game
 
 		protected override bool ShouldHitDestroy(DamageTaker taker)
 		{
-			GD.Print($"hit: {taker.GetPath()}");
 			return true;
 		}
 	}

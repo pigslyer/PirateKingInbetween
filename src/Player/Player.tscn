@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://src/Player/PlayerController.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/PlayerModel.tscn" type="PackedScene" id=2]
@@ -12,7 +12,9 @@
 [ext_resource path="res://src/Player/Behaviours/PlayerCarrying.cs" type="Script" id=10]
 [ext_resource path="res://src/Player/Behaviours/PlayerFalling.cs" type="Script" id=11]
 [ext_resource path="res://src/Player/Behaviours/PlayerHorizontalMovement.cs" type="Script" id=12]
+[ext_resource path="res://src/Player/PlayerUIManager.cs" type="Script" id=13]
 [ext_resource path="res://src/Player/Behaviours/PlayerBehaviourManager.cs" type="Script" id=14]
+[ext_resource path="res://src/Player/Behaviours/PlayerDamageHandler.cs" type="Script" id=15]
 [ext_resource path="res://src/Player/CameraController.cs" type="Script" id=16]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -22,16 +24,18 @@ extents = Vector2( 15, 15.5 )
 extents = Vector2( 11.5, 28 )
 
 [node name="Player" type="Node2D"]
+physics_interpolation_mode = 2
 
 [node name="PlayerController" type="KinematicBody2D" parent="."]
 collision_layer = 4
 script = ExtResource( 1 )
 __playerModelPath = NodePath("PlayerModel")
 __playerBehaviourManagerPath = NodePath("BehaviourManager")
-__debugLabelPath = NodePath("CanvasLayer/DebugLabel")
+__debugLabelPath = NodePath("UIManager/DebugLabel")
 __movingParentDetectorPath = NodePath("MovingParentDetector")
 __cameraPath = NodePath("../Camera2D")
 __damageTakerPath = NodePath("PlayerModel/Flippable/DamageTaker")
+__uiManagerPath = NodePath("UIManager")
 
 [node name="PlayerModel" parent="PlayerController" instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
@@ -62,6 +66,9 @@ shape = SubResource( 2 )
 visible = false
 position = Vector2( 0, -48 )
 
+[node name="CameraPosition" type="Position2D" parent="PlayerController/PlayerModel/Flippable" index="9"]
+position = Vector2( 40, 0 )
+
 [node name="Body" type="CollisionShape2D" parent="PlayerController"]
 visible = false
 position = Vector2( 0, -28 )
@@ -69,6 +76,9 @@ shape = SubResource( 1 )
 
 [node name="BehaviourManager" type="Node" parent="PlayerController"]
 script = ExtResource( 14 )
+
+[node name="DamageHandler" type="Node" parent="PlayerController/BehaviourManager"]
+script = ExtResource( 15 )
 
 [node name="HorizontalMovement" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 12 )
@@ -78,7 +88,7 @@ __meta__ = {
 
 [node name="MeleeAttack" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 6 )
-__lastDisplayPath = NodePath("../../CanvasLayer/ComboDataLabel")
+__lastDisplayPath = NodePath("../../UIManager/ComboDataLabel")
 
 [node name="Falling" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 11 )
@@ -116,14 +126,17 @@ cast_to = Vector2( 0, 10 )
 script = ExtResource( 9 )
 _movingWhoPath = NodePath("..")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="PlayerController"]
+[node name="UIManager" type="CanvasLayer" parent="PlayerController"]
 layer = 128
+script = ExtResource( 13 )
+__healthBarPath = NodePath("HealthBar")
+__youDiedPopup = NodePath("AcceptDialog")
 
-[node name="DebugLabel" type="Label" parent="PlayerController/CanvasLayer"]
+[node name="DebugLabel" type="Label" parent="PlayerController/UIManager"]
 margin_right = 40.0
 margin_bottom = 14.0
 
-[node name="Instructions" type="Label" parent="PlayerController/CanvasLayer"]
+[node name="Instructions" type="Label" parent="PlayerController/UIManager"]
 visible = false
 anchor_left = 1.0
 anchor_right = 1.0
@@ -137,25 +150,45 @@ Darker tiles cannot be jumped/shot through.
 You can damage the \"barrel\" in the hold of both ships."
 autowrap = true
 
-[node name="ComboDataLabel" type="Label" parent="PlayerController/CanvasLayer"]
+[node name="ComboDataLabel" type="Label" parent="PlayerController/UIManager"]
 anchor_top = 0.5
 anchor_bottom = 0.5
 margin_top = -7.0
 margin_right = 40.0
 margin_bottom = 7.0
 
-[node name="Label" type="Label" parent="PlayerController/CanvasLayer"]
+[node name="HealthBar" type="ProgressBar" parent="PlayerController/UIManager"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -14.0
-margin_right = 40.0
-text = "5 lives left"
+margin_left = 14.0
+margin_top = -58.0
+margin_right = 314.0
+margin_bottom = -14.0
+grow_vertical = 0
+step = 1.0
+rounded = true
+
+[node name="AcceptDialog" type="AcceptDialog" parent="PlayerController/UIManager"]
+pause_mode = 2
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -70.5
+margin_top = -29.0
+margin_right = 70.5
+margin_bottom = 29.0
+window_title = "You died!"
+dialog_text = "Press OK to restart."
 
 [node name="Camera2D" type="Camera2D" parent="."]
+physics_interpolation_mode = 2
 current = true
 zoom = Vector2( 0.6, 0.6 )
 smoothing_enabled = true
+smoothing_speed = 3.5
 script = ExtResource( 16 )
-_cameraFollowingPath = NodePath("../PlayerController")
+_cameraFollowingPath = NodePath("../PlayerController/PlayerModel/Flippable/CameraPosition")
 
 [editable path="PlayerController/PlayerModel"]

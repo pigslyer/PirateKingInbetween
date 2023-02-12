@@ -53,7 +53,7 @@ namespace PirateInBetween.Game.Combos
 
 				if (!attr.IntervalSinceLastCombo.IsInRange(_currentTime))
 				{
-					ComboTreeNode.PrintDebug("not in interval");
+					ComboTreeNode.PrintDebug($"{_currentTime} not in interval {attr.IntervalSinceLastCombo}");
 					return false;
 				}
 

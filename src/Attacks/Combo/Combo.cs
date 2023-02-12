@@ -1,3 +1,4 @@
+using System.IO;
 using Godot;
 
 using System;
@@ -19,19 +20,21 @@ namespace PirateInBetween.Game.Combos
 
 		public delegate DamageReaction OnHitReaction();
 		protected delegate void DoForStatement(float elapsed, float delta, float total);
-
+		
 		protected ICombatFrameData CurrentData { get; private set; }
 		protected IComboExecutor CurrentExecutor { get; private set; }
 
 		private List<Action> _onFinished = new List<Action>();
 
 		private SyncTaskPool _taskPool = new SyncTaskPool();
+		private bool _isExecuting = false;
 		private bool _isProcessing = false;
 		private bool _preemptiveStop = false;
 
 		public void ExecuteCombo(IComboExecutor executor, ICombatFrameData startingData)
 		{
 			_isProcessing = _preemptiveStop = false;
+			_isExecuting = true;
 			CurrentData = startingData;
 			CurrentExecutor = executor;
 			executor.OnDamageTakenSet(OnDamageTaken);
@@ -53,9 +56,8 @@ namespace PirateInBetween.Game.Combos
 				_preemptiveStop = true;
 				return;
 			}
-
-			// if we're already stopped then CurrenteExecutor is null, which is bad
-			if (IsDone())
+ 
+			if (!_isExecuting)
 			{
 				return;
 			}
@@ -69,6 +71,8 @@ namespace PirateInBetween.Game.Combos
 			
 			_onFinished.ForEach(action => action());
 			_onFinished.Clear();
+
+			_isExecuting = false;
 		}
 
 		protected virtual DamageReaction OnDamageTaken()
@@ -95,9 +99,9 @@ namespace PirateInBetween.Game.Combos
 			}
 		}
 
-		protected static T GetCubicInterp<T>(T init, T delta, float elapsed, float duration)
+		protected static T GetInterp<T>(T init, T delta, float elapsed, float duration, Tween.TransitionType trans, Tween.EaseType ease)
 		{
-			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, Tween.TransitionType.Cubic, Tween.EaseType.Out);
+			return (T)_tween.InterpolateValue(init, delta, elapsed, duration, trans, ease);
 		}
 
 		protected abstract void BeginCombo();
@@ -181,12 +185,12 @@ namespace PirateInBetween.Game.Combos
 				);
 			}
 
-			public ComboTask CubicInterpFor(Vector2 from, Vector2 to, Action<Vector2> setter, float time) => CubicInterpFor<Vector2>(from, to - from, setter, time);
-			public ComboTask CubicInterpFor(float from, float to, Action<float> setter, float time) => CubicInterpFor<float>(from, to - from, setter, time);
+			public ComboTask InterpFor(Vector2 from, Vector2 to, Action<Vector2> setter, float time, Tween.TransitionType trans = Tween.TransitionType.Cubic, Tween.EaseType ease = Tween.EaseType.Out) => InterpFor<Vector2>(from, to - from, setter, time, trans, ease);
+			public ComboTask InterpFor(float from, float to, Action<float> setter, float time, Tween.TransitionType trans = Tween.TransitionType.Cubic, Tween.EaseType ease = Tween.EaseType.Out) => InterpFor<float>(from, to - from, setter, time, trans, ease);
 
-			public ComboTask CubicInterpFor<T>(T from, T delta, Action<T> setter, float time)
+			public ComboTask InterpFor<T>(T from, T delta, Action<T> setter, float time, Tween.TransitionType trans = Tween.TransitionType.Cubic, Tween.EaseType ease = Tween.EaseType.Out)
 			{
-				return DoFor(time, (elapsed, _, total) => setter(GetCubicInterp<T>(from, delta, elapsed, total)));
+				return DoFor(time, (elapsed, _, total) => setter(GetInterp<T>(from, delta, elapsed, total, trans, ease)));
 			}
 
 			public ComboTask Do(Action what) => Generate(c => what(), 0f);
@@ -229,7 +233,7 @@ namespace PirateInBetween.Game.Combos
 			}
 		}
 
-		protected struct DamageInstance
+		protected class DamageInstance
 		{
 			public readonly DamageAmount Damage;
 			public readonly Func<Vector2> KnockbackDirection;

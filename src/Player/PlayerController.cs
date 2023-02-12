@@ -53,8 +53,8 @@ namespace PirateInBetween.Game.Player
 			_uiManager = GetNode<PlayerUIManager>(__uiManagerPath);
 
 			_onDamageTaken = OnDamageTakenDefault();
-			_damageTaker.Connect(nameof(DamageTaker.OnDamageTaken), this, nameof(OnDamageTakenSignalReceived));
-
+			_damageTaker.OnDamageTaken += OnDamageTakenSignalReceived;
+			
 			_behaviourManager.Initialize(this);
 
 			_uiManager.UpdateHealth(_health, MAX_HEALTH);
@@ -67,7 +67,7 @@ namespace PirateInBetween.Game.Player
 
 		private Combo.OnHitReaction _onDamageTaken;
 
-		private void OnDamageTakenSignalReceived(DamageData data)
+		private void OnDamageTakenSignalReceived(DamageTaker source, DamageData data)
 		{
 			DamageData appliedData = data.Apply(_onDamageTaken());
 
@@ -82,23 +82,24 @@ namespace PirateInBetween.Game.Player
 				DeathSequence();
 			}
 
-			bool knocked = appliedData.Direction.LengthSquared() > 0f;
 			bool stunned = appliedData.StunDuration > 0f;
-
-			if (knocked || stunned)
+			bool knocked = appliedData.Direction.LengthSquared() > 0f;
+			
+			if (stunned || knocked)
 			{
-				
-			}
-
-			if (knocked)
-			{
-				GD.PushWarning("You haven't added knockbacks yet.");
+				// i have no clue why i added this. dropping items?
 			}
 
 			if (stunned)
 			{
-				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).StunFor(appliedData.StunDuration);
+				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).StunFor(appliedData.StunDuration, _nextFrameData);
 			}
+
+			if (knocked)
+			{
+				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).KnockbackFor(appliedData.Direction, _nextFrameData);
+			}
+
 		}
 
 		private void DeathSequence()

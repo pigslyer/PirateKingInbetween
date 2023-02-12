@@ -36,13 +36,13 @@ namespace PirateInBetween.Game.Combos.List
 			CurrentData.Velocity = Vector2.Zero;
 
 			AddTask().
-			CubicInterpFor<Vector2>(
+			InterpFor<Vector2>(
 				from: CurrentExecutor.GlobalPosition, 
 				delta: diff, 
 				setter: val => CurrentExecutor.GlobalPosition = val,
 				time: FLY_TIME
 			)
-			.CubicInterpFor<Vector2>(
+			.InterpFor<Vector2>(
 				from: CurrentExecutor.GlobalPosition + diff,
 				delta: UPWARD_DIR,
 				setter: val => CurrentExecutor.GlobalPosition = val,

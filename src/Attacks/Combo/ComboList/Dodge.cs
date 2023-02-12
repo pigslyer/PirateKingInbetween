@@ -9,25 +9,6 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game.Combos.List
 {
-	/*
-	[ComboAttr(
-		inputs : new AttrInput[]
-		{
-			AttrInput.SwitchDirection,
-			AttrInput.Forward,
-		}, 
-		holdForward : UsageReq.Optional,
-		onFloor : UsageReq.Required
-	)]
-	[ComboAttr(
-		inputs : new AttrInput[]
-		{
-			AttrInput.Forward,
-			AttrInput.Forward,
-		},
-		holdForward : UsageReq.Optional,
-		onFloor : UsageReq.Required
-	)]*/
 	[ComboAttr(
 		inputs: new AttrInput[]
 		{
@@ -54,13 +35,13 @@ namespace PirateInBetween.Game.Combos.List
 			AddTask().DisableDamageFor(DODGE_TIME, ComboExecutorDamageTaker.Body);
 
 			AddTask()
-			.CubicInterpFor(
+			.InterpFor(
 				from : Vector2.Zero,
 				to : CAMERA_DOWN_DIFF,
 				setter : val => CurrentExecutor.CameraPosition = val,
 				time : DODGE_CAMERA_DOWN_TIME
 			)
-			.CubicInterpFor(
+			.InterpFor(
 				from : CAMERA_DOWN_DIFF,
 				to : Vector2.Zero,
 				setter : val => CurrentExecutor.CameraPosition = val,
@@ -82,7 +63,7 @@ namespace PirateInBetween.Game.Combos.List
 
 //			EnableHorizontalControl(DODGE_TIME, DODGE_DISTANCE / DODGE_TIME * 4f, DODGE_DISTANCE / DODGE_TIME);
 
-			AddTask().CubicInterpFor<float>(
+			AddTask().InterpFor<float>(
 				from : CurrentExecutor.GlobalPosition.x,
 				delta : CurrentData.GetDirection() * DODGE_DISTANCE,
 				setter : val => CurrentExecutor.GlobalPosition = new Vector2(val, CurrentExecutor.GlobalPosition.y),

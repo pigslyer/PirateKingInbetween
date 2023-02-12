@@ -4,11 +4,22 @@ namespace PirateInBetween.Game.Enemies
 {
 	public class TestEnemy : Node2D
 	{
+		#region Paths
+		[Export] private NodePath __damageTakerPath = null;
+		#endregion
+
 		[Export] private int _health = 3;
 
-		public void OnDamage(DamageData data)
+		public override void _Ready()
 		{
-			_health -= data.DamageAmount.AmountOfDamage;
+			base._Ready();
+
+			GetNode<DamageTaker>(__damageTakerPath).OnDamageTaken += OnDamage;
+		}
+
+		public void OnDamage(DamageTaker taker, DamageData data)
+		{
+			_health -= data.Damage;
 
 			if (_health <= 0)
 			{

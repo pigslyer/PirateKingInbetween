@@ -11,9 +11,11 @@ namespace PirateInBetween.Game
 {
 	public class DamageTaker : Area2D
 	{
-		[Signal] public delegate void OnDamageTaken(DamageData data);
 
-		public void TakeDamage(DamageData data) => EmitSignal(nameof(OnDamageTaken), data);
+		public delegate void OnDamageTakenEventHandler(DamageTaker source, DamageData data);
+		public event OnDamageTakenEventHandler OnDamageTaken;
+
+		public void TakeDamage(DamageData data) => OnDamageTaken(this, data);
 
 		public void Enable() => SetEnabled(true);
 		public void Disable() => SetEnabled(false);

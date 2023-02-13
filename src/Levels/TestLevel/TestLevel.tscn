@@ -101,5 +101,17 @@ rotation = 1.57079
 scale = Vector2( 0.447538, 1 )
 texture = ExtResource( 8 )
 
+[node name="Spawner2" type="Position2D" parent="MovingParentBase"]
+position = Vector2( 551, -149 )
+script = ExtResource( 10 )
+_firingInterval = 1.0
+_firingDirection = Vector2( -1, 0 )
+
+[node name="Sprite" type="Sprite" parent="MovingParentBase/Spawner2"]
+position = Vector2( 13, 0 )
+rotation = 1.57079
+scale = Vector2( 0.447538, 1 )
+texture = ExtResource( 8 )
+
 [node name="LevelDialoguePlayer" type="CanvasLayer" parent="."]
 script = ExtResource( 3 )

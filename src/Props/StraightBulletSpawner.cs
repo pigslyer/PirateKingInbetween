@@ -17,7 +17,8 @@ namespace PirateInBetween.Game.Props
 		[Export] private float _stunDuration = 2f;
 
 		[Export] private float _firingInterval = 10f;
-		[Export] private float _fireAngle = 0f;
+
+		[Export] private Vector2 _firingDirection = Vector2.Right;
 		[Export] private float _velocity = 100f;
 
 		public override void _Ready()
@@ -25,6 +26,7 @@ namespace PirateInBetween.Game.Props
 			base._Ready();
 
 			CallDeferred(nameof(Fire));
+			_firingDirection = _firingDirection.Normalized();
 		}
 
 		public async void Fire()
@@ -32,7 +34,7 @@ namespace PirateInBetween.Game.Props
 			while (!IsQueuedForDeletion())
 			{
 				StraightBullet bullet = _bullet.Instance<StraightBullet>();
-				bullet.Initialize(PhysicsLayers.PlayerHittable, new DamageAmount(_damageAmount, _stunDuration), _fireAngle.ToVectorDeg(_velocity));
+				bullet.Initialize(PhysicsLayers.PlayerHittable, new DamageAmount(_damageAmount, _stunDuration), _firingDirection * _velocity);
 				bullet.Shoot(GlobalPosition, MovingParent.GetMovingParentOf(this));
 
 				await this.WaitFor(_firingInterval);

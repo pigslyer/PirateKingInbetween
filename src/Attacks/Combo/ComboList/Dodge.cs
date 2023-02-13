@@ -67,7 +67,8 @@ namespace PirateInBetween.Game.Combos.List
 				from : CurrentExecutor.GlobalPosition.x,
 				delta : CurrentData.GetDirection() * DODGE_DISTANCE,
 				setter : val => CurrentExecutor.GlobalPosition = new Vector2(val, CurrentExecutor.GlobalPosition.y),
-				time : DODGE_TIME
+				time : DODGE_TIME,
+				trans: Tween.TransitionType.Sine
 			);
 
 		}

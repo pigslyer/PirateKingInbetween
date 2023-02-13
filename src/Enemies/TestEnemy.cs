@@ -17,7 +17,7 @@ namespace PirateInBetween.Game.Enemies
 			GetNode<DamageTaker>(__damageTakerPath).OnDamageTaken += OnDamage;
 		}
 
-		public void OnDamage(DamageTaker taker, DamageData data)
+		public void OnDamage(DamageTaker takerSource, DamageDealer dealerSource, DamageData data)
 		{
 			_health -= data.Damage;
 

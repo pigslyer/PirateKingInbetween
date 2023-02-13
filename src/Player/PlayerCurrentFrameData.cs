@@ -72,5 +72,7 @@ namespace PirateInBetween.Game.Player
 		MeleeAttack,
 		RangedAttack,
 		Pushing,
+		Stunned,
+		StunnedAir,
 	}
 }

@@ -30,7 +30,7 @@ namespace PirateInBetween.Game.Player.Behaviours
         /// <summary>
         /// Because of coyote time, jumping, releasing jump in midair and then jumping again causes you to jump a second time. This is here to stop that.
         /// </summary>
-        private bool _hasJumped = false;
+        public bool HasJumped { get; private set; } = false;
 		private bool _isJumping = false;
 		private float _jumpDelta;
         
@@ -38,31 +38,22 @@ namespace PirateInBetween.Game.Player.Behaviours
         public override void Run(PlayerCurrentFrameData data)
         {
 
-            /*
-			float JumpLength() => Mathf.Sqrt(2 * _jumpHeight / _gravity);
-
-			float JumpVelocity()
-			{
-				float t = JumpLength();
-				return -(_jumpHeight + _gravity * t * t * 0.5f) / t;
-			}
-			*/
-
 			float JumpVelocityNoGravity() => -_jumpHeight / _jumpLength;
 
             
 			// if we're on the floor, not doing anything else and holding down jump
-			if (CanChangeActive && !_isJumping && !_hasJumped && IsOnFloor() && data.Input.y < 0f)
+			if (CanChangeActive && !_isJumping && !HasJumped && IsOnFloor() && data.Input.y < 0f)
 			{
 				data.Velocity.y = JumpVelocityNoGravity();
                 
-                _hasJumped = _isJumping = true;
+                HasJumped = _isJumping = true;
+                //NotOnFloor();
                 SetBehaviourChangesDisabled(true);
                 SetBehavioursEnabled(Behaviours.Falling, false);
 
 				_jumpDelta = 0f;
 			}
-			else if (_isJumping)
+			else if (_isJumping && IsInControl)
 			{
                 _jumpDelta = Mathf.Min(_jumpDelta + data.Delta, _jumpLength);
                 data.Velocity.y += _gravity * data.Delta * (_jumpDelta / _jumpLength) * _jumpDampening;
@@ -79,11 +70,15 @@ namespace PirateInBetween.Game.Player.Behaviours
                 data.Velocity.y += _gravity * data.Delta;
             }
 
-
-            if (_hasJumped && !IsOnFloor())
+            if (HasJumped && (!IsOnFloor() || (data.Velocity.y > 0f && IsOnFloor())))
             {
-                _hasJumped = false;
+                HasJumped = false;
             }
+        }
+
+        public override void ResetState()
+        {
+            _isJumping = false;
         }
     }
 }

@@ -15,8 +15,11 @@ public enum PhysicsLayers : uint
 {
 	None = 0,
 	World = 1,
-	Player = 2,
-	WorldHittable = 4,
-	CarriableBox = 8,
-	Interaction = 16,
+	WorldHittable = 2,
+	Player = 4,
+	PlayerHittable = 8,
+	Enemy = 16,
+	EnemyHittable = 32,
+	CarriableBox = 64,
+	Interaction = 128,
 }

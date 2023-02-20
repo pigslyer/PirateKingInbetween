@@ -14,75 +14,57 @@ namespace PirateInBetween.Game
 	/// <summary>
 	/// The bullet is given a target position and speed and by Jove it goes in a straight line from here to there.
 	/// </summary>
-	public class StraightBullet : DamageDealer, IProjectile<StraightBullet.Data>
+	[ScenePath("res://src/Attacks/Bullets/StraightBullet.tscn")]
+	public class StraightBullet : Projectile
 	{
+		private bool? _wasGivenPosition = null;
+		
 		private Vector2 _velocity;
-		private DamageData _damageData;
-		private Data _movementData;
-
-		public void SetData(DamageData damageData, Data data)
+		
+		private float _speed;
+		private Vector2 _targetPosition;
+		
+		public void Initialize(PhysicsLayers hitting, DamageAmount amount, float speed, Vector2 targetPosition)
 		{
-			_damageData = damageData; _movementData = data;
+			_wasGivenPosition = true;
+
+			_speed = speed;
+			_targetPosition = targetPosition;
+
+			Initialize(hitting, amount);
 		}
 
-		public void Shoot(Vector2 startingPosition, MovingParent parent)
+		public void Initialize(PhysicsLayers hitting, DamageAmount amount, Vector2 velocity)
 		{
-			ProjectileManager.SetupProjectile<StraightBullet>(this, startingPosition, parent);
+			_wasGivenPosition = false;
 
-			if (_movementData.IsCalculated)
+			_velocity = velocity;
+
+			Initialize(hitting, amount);
+		}
+		
+		protected override void OnTreeEntered()
+		{
+			if (_wasGivenPosition == null)
 			{
-				_velocity = _movementData.Velocity;
+				throw new InvalidOperationException($"{nameof(StraightBullet)} must have one of its {nameof(Initialize)} methods run before it is shot.");
 			}
-			else
+
+			if ((bool) _wasGivenPosition)
 			{
-				_velocity = (_movementData.TargetPosition - startingPosition).Normalized() * _movementData.Speed;
+				_velocity = (_targetPosition - GlobalPosition).Normalized() * _speed;
 			}
 
-			Connect(nameof(OnDamageDealt), this, nameof(Destroy));
-			Connect(nameof(OnHit), this, nameof(Destroy));
-			
-			Enable(_damageData);
+			GlobalRotation = _velocity.Angle();
 		}
 
-		public override void _PhysicsProcess(float delta)
-		{
-			base._PhysicsProcess(delta);
+		protected override void Move(float delta) => Position += _velocity * delta;
 
-			Position += _velocity * delta;
-		}
-
-		public void Destroy(Node target)
+		protected override void Destroy()
 		{
 			QueueFree();
 		}
 
-		public class Data
-		{
-			public readonly bool IsCalculated;
-
-			public readonly Vector2 Velocity;
-			public readonly Vector2 TargetPosition;
-			public readonly float Speed;
-			
-			public Data(float speed, Vector2 targetPosition)
-			{
-				IsCalculated = false;
-
-				Speed = speed;
-				TargetPosition = targetPosition;
-				
-				Velocity = default(Vector2);
-			}
-
-			public Data(Vector2 velocity)
-			{
-				IsCalculated = true;
-				
-				Velocity = velocity;
-
-				TargetPosition = default(Vector2);
-				Speed = default(float);
-			}
-		}
+		protected override bool ShouldHitDestroy(DamageTaker taker) => true;
 	}
 }

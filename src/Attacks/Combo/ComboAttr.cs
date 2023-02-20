@@ -110,6 +110,7 @@ namespace PirateInBetween.Game.Combos
 		Melee,
 		Ranged,
 
+		Dodge = 1 << 29,
 		TimingMask = 3 << 30,
 		Short = 0,
 		Medium = 1 << 30,

@@ -22,6 +22,12 @@ namespace PirateInBetween.Game.Combos
 
 		void DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data);
 		void StopDealingDamage(ComboExecutorDamageDealers damageDealer);
+
+		void TakeDamage(ComboExecutorDamageTaker to);
+		void StopTakingDamage(ComboExecutorDamageTaker to);
+
+		void OnDamageTakenSet(Combo.OnHitReaction damageTaken);
+		Combo.OnHitReaction OnDamageTakenDefault();
 	}
 
 	/// <summary>
@@ -30,5 +36,13 @@ namespace PirateInBetween.Game.Combos
 	public enum ComboExecutorDamageDealers
 	{
 		Front,
+	}
+
+	/// <summary>
+	/// Represents the various damage taking areas around the controller.
+	/// </summary>
+	public enum ComboExecutorDamageTaker
+	{
+		Body,
 	}
 }

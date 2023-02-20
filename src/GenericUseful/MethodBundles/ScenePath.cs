@@ -7,13 +7,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PirateInBetween.Game.Combos
+[AttributeUsage(AttributeTargets.Class)]
+public class ScenePath : Attribute
 {
-	public interface ICombatFrameData
+	public readonly string Path;
+
+	public ScenePath(string path)
 	{
-		Vector2 Velocity { get; set; }
-		float Delta { get; }
-		bool FacingRight { get; }
-		void SwitchDirection();
+		Path = path;
 	}
 }

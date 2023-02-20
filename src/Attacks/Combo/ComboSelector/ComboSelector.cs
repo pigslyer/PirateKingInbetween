@@ -20,12 +20,12 @@ namespace PirateInBetween.Game.Combos
 		{
 			_root = new ComboTreeNode();
 
-			foreach (var pair in Combo.Combos)
+			foreach (var pair in ReflectionHelper.GetInstancesWithAttribute<Combo, ComboAttr>())
 			{
-				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.combo));
+				_root.GenerateTree(pair.attr.Inputs, (pair.attr, pair.inst));
 			}
 
-			GD.Print(_root);
+			ComboTreeNode.PrintDebug(_root.ToString());
 		}
 
 		public ComboSelector()
@@ -91,6 +91,14 @@ namespace PirateInBetween.Game.Combos
 				}
 			}
 
+			// dodges?
+			{
+				if (InputManager.IsActionJustPressed(InputButton.Dodge) && InputManager.IsActionPressed(InputButton.MoveLeft) != InputManager.IsActionPressed(InputButton.MoveRight))
+				{
+					det = ComboInput.Dodge | (data.IsGoingForward() ? ComboInput.Forward : ComboInput.SwitchDirection);
+				}
+			}
+
 			detected = det ?? ComboInput.Forward;
 			return det != null;
 		}
@@ -100,7 +108,6 @@ namespace PirateInBetween.Game.Combos
 			_state.SetLastData(data);
 			
 			float delta = _currentTime - _lastRegisteredTime;
-			//GD.Print($"Delta: {delta}");
 
 			if (delta > TIME_UNTIL_REFRESH)
 			{

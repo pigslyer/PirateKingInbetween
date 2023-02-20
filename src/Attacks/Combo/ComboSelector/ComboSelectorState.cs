@@ -22,7 +22,7 @@ namespace PirateInBetween.Game.Combos
 			private float _currentTime;
 			private IComboExecutor _executor;
 
-			private bool MovingForward => _lastData.IsGoingForward();
+			private bool MovingForward => _lastData.IsMoving();
 
 			public ComboSelectorState(ComboSelector selector)
 			{
@@ -35,25 +35,25 @@ namespace PirateInBetween.Game.Combos
 			{
 				if (attr.LastRequiredCombo != null && attr.LastRequiredCombo != _lastCombo)
 				{
-					GD.Print("last required combo");
+					ComboTreeNode.PrintDebug("last required combo");
 					return false;
 				}
 
 				if (!attr.MustHoldForward.Evaluate(MovingForward))
 				{
-					GD.Print("must hold forward");
+					ComboTreeNode.PrintDebug("must hold forward");
 					return false;
 				}
 
 				if (!attr.MustBeOnFloor.Evaluate(_executor.IsOnFloor))
 				{
-					GD.Print("must be on floor");
+					ComboTreeNode.PrintDebug("must be on floor");
 					return false;
 				}
 
 				if (!attr.IntervalSinceLastCombo.IsInRange(_currentTime))
 				{
-					GD.Print("not in interval");
+					ComboTreeNode.PrintDebug($"{_currentTime} not in interval {attr.IntervalSinceLastCombo}");
 					return false;
 				}
 

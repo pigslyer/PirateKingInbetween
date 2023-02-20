@@ -1,3 +1,5 @@
+//#define COMBO_TREE_DEBUG
+
 using Godot;
 
 using System;
@@ -46,7 +48,7 @@ namespace PirateInBetween.Game.Combos.Tree
 		public Combo ParseInput(LinkedList<ComboInputContainer> inputs, IComboSelectorStandard state) => ParseInput(this, inputs, state);
 		public static Combo ParseInput(ComboTreeNode source, IEnumerable<ComboInputContainer> inputs, IComboSelectorStandard standard)
 		{
-			GD.Print($"scanning {inputs.Count()} elements");
+			ComboTreeNode.PrintDebug($"scanning {inputs.Count()} elements");
 
 			ComboTreeNode currentNode = source;
 			ComboTreeNode potentialNext;
@@ -56,12 +58,12 @@ namespace PirateInBetween.Game.Combos.Tree
 			// we're very likely to break out of this early
 			foreach (ComboInputContainer input in inputs)
 			{
-				GD.Print($"current {input}");
+				ComboTreeNode.PrintDebug($"current {input}");
 				// if we've hit a combo we take it
 				//if (state.CanUseCombo(currentNode._comboAttr, currentNode._combo))
 				if (TryFindValidCombo(currentNode, standard, out validCombo))
 				{
-					GD.Print($"found combo {validCombo}");
+					ComboTreeNode.PrintDebug($"found combo {validCombo}");
 					return validCombo;
 				}
 
@@ -69,7 +71,7 @@ namespace PirateInBetween.Game.Combos.Tree
 				if (TryFindNodeWith(currentNode, input, out potentialNext))
 				{
 
-					GD.Print($"found precisely matching node {potentialNext}");
+					ComboTreeNode.PrintDebug($"found precisely matching node {potentialNext}");
 					currentNode = potentialNext;
 					continue;
 				}
@@ -79,12 +81,12 @@ namespace PirateInBetween.Game.Combos.Tree
 				{
 					if (input.EqualsInput(conn._input) && TryFindValidCombo(conn, standard, out validCombo))
 					{
-						GD.Print($"found imprecise match {validCombo}");
+						ComboTreeNode.PrintDebug($"found imprecise match {validCombo}");
 						return validCombo;
 					}
 				}
 
-				GD.Print("found nothing");
+				ComboTreeNode.PrintDebug("found nothing");
 				// we can't find a path out of this node
 				break;
 			}
@@ -137,6 +139,13 @@ namespace PirateInBetween.Game.Combos.Tree
 		public override string ToString()
 		{
 			return $"Input: ( {_input} ), Combo count: ( { _combos.Count } ); ( {string.Join(", ", _connections)} )";
+		}
+
+		public static void PrintDebug(string message)
+		{
+#if COMBO_TREE_DEBUG
+			GD.Print(message);
+#endif
 		}
 	}
 }

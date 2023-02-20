@@ -96,6 +96,7 @@ namespace PirateInBetween.Game.Combos
 		Down,
 		Melee,
 		Ranged,
+		Dodge = AttrInput.Dodge,
 	};
 
 	public enum ComboTiming

@@ -13,7 +13,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 {
 	public class PlayerRangedAttack : PlayerBehaviour
 	{
-		[Export] private PackedScene _bulletScene = null;
+		private PackedScene _bulletScene = ReflectionHelper.LoadScene<StraightBullet>();
 		[Export] private int _damage = 1; 
 		[Export] private float _bulletSpeed = 200f;
 
@@ -21,12 +21,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 		{
 			if (InputManager.IsActionJustPressed(InputButton.RangedAttack))
 			{
-				var bullet = _bulletScene.Instance<StraightBullet>();
-
-				bullet.SetData(
-						damageData : new DamageData(_damage, () => bullet.GlobalPosition), 
-						data : new StraightBullet.Data(new Vector2(_bulletSpeed * (data.FacingRight ? 1 : -1), 0f))
-				);
+				StraightBullet bullet = _bulletScene.Instance<StraightBullet>();
+				bullet.Initialize(PhysicsLayers.WorldHittable, _damage, new Vector2(_bulletSpeed * (data.FacingRight ? 1 : -1), 0f));
 
 				data.CurrentAction = new ActionRangedAttack(bullet);
 			}

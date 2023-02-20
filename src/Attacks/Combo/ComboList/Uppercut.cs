@@ -28,29 +28,25 @@ namespace PirateInBetween.Game.Combos.List
 		private const float FLOAT_TIME = 0.8f;
 		private static readonly Vector2 UPWARD_DIR = new Vector2(0f, 5f);
 
-		protected async override Task BeginCombo(IComboExecutor callingNode)
+		protected override void BeginCombo()
 		{
-			Vector2 initialPos = callingNode.GlobalPosition;
+			Vector2 initialPos = CurrentExecutor.GlobalPosition;
 			Vector2 diff = FLY_DIRECTION.FaceForward(CurrentData) * FLY_DISTANCE;
 
 			CurrentData.Velocity = Vector2.Zero;
 
-			await DoFor(
-				time: FLY_TIME,
-				what: (float elapsed, float delta, float total) =>
-				{
-					callingNode.GlobalPosition = (Vector2) GetCubicInterp(initialPos, diff, elapsed, total);
-				}
-			);
-
-			initialPos = callingNode.GlobalPosition;
-
-			await DoFor(
-				time: FLOAT_TIME,
-				what: (float elapsed, float delta, float total) =>
-				{
-					callingNode.GlobalPosition = GetCubicInterp(initialPos, UPWARD_DIR, elapsed, total);
-				}
+			AddTask().
+			InterpFor<Vector2>(
+				from: CurrentExecutor.GlobalPosition, 
+				delta: diff, 
+				setter: val => CurrentExecutor.GlobalPosition = val,
+				time: FLY_TIME
+			)
+			.InterpFor<Vector2>(
+				from: CurrentExecutor.GlobalPosition + diff,
+				delta: UPWARD_DIR,
+				setter: val => CurrentExecutor.GlobalPosition = val,
+				time: FLOAT_TIME
 			);
 		}
 	}

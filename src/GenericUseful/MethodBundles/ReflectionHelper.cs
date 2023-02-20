@@ -62,6 +62,23 @@ public static class ReflectionHelper
 	{
 		return GetTypesWithAttribute<A>().Select(d => ( (C) (Activator.CreateInstance(d.@class)), d.attr ) ).ToArray();
 	}
+
+	/// <summary>
+	/// Uses T's <see cref="ScenePath"/> attribute to load given scene, returning the PackedScene.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public static PackedScene LoadScene<T>() where T : class
+	{
+		var type = typeof(T);
+		var attr = type.GetCustomAttribute<ScenePath>();
+
+		if (attr == null)
+		{
+			throw new ArgumentException($"Parameter {type} to {nameof(LoadScene)} must have attribute {nameof(ScenePath)}.");
+		}
+
+		return ResourceLoader.Load<PackedScene>(attr.Path);
+	}
 }
 
 

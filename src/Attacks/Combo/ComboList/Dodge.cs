@@ -10,26 +10,16 @@ using System.Collections.ObjectModel;
 namespace PirateInBetween.Game.Combos.List
 {
 	[ComboAttr(
-		inputs : new AttrInput[]
+		inputs: new AttrInput[]
 		{
-			AttrInput.SwitchDirection,
-			AttrInput.Forward,
-		}, 
-		holdForward : UsageReq.Required,
-		onFloor : UsageReq.Optional
-	)]
-	[ComboAttr(
-		inputs : new AttrInput[]
-		{
-			AttrInput.Forward,
-			AttrInput.Forward,
+			AttrInput.Forward | AttrInput.Dodge
 		},
-		holdForward : UsageReq.Required,
-		onFloor : UsageReq.Optional
+		holdForward: UsageReq.Optional,
+		onFloor: UsageReq.Required
 	)]
 	public class Dodge : Combo
 	{
-		private const float DODGE_TIME = 0.4f;
+		private const float DODGE_TIME = 1f;
 		private const float DODGE_DISTANCE = 100f;
 		private const float DODGE_DIRECTION = 0f;
 
@@ -38,29 +28,48 @@ namespace PirateInBetween.Game.Combos.List
 		private const float DODGE_CAMERA_UP_TIME = DODGE_TIME - DODGE_CAMERA_DOWN_TIME;
 		private static readonly Vector2 CAMERA_DOWN_DIFF = new Vector2(0, 12);
 
-		protected override async Task BeginCombo(IComboExecutor executor)
+		protected override void BeginCombo()
 		{
 			CurrentData.Velocity = Vector2.Zero;
 
-			CubicInterpFor(
+			AddTask().DisableDamageFor(DODGE_TIME, ComboExecutorDamageTaker.Body);
+
+			AddTask()
+			.InterpFor(
 				from : Vector2.Zero,
 				to : CAMERA_DOWN_DIFF,
-				setter : val => executor.CameraPosition = val,
+				setter : val => CurrentExecutor.CameraPosition = val,
 				time : DODGE_CAMERA_DOWN_TIME
 			)
-			.ContinueWith(t => CubicInterpFor(
+			.InterpFor(
 				from : CAMERA_DOWN_DIFF,
 				to : Vector2.Zero,
-				setter : val => executor.CameraPosition = val,
+				setter : val => CurrentExecutor.CameraPosition = val,
 				time : DODGE_CAMERA_UP_TIME
-			));
+			);
 
-			await CubicInterpFor(
-				from : executor.GlobalPosition,
-				to : executor.GlobalPosition + DODGE_DIRECTION.FaceForward(CurrentData) * DODGE_DISTANCE,
-				setter : val => executor.GlobalPosition = val,
+			// ensures a slower fall
+			AddTask().DoFor(DODGE_TIME, (float elapsed, float delta, float total) => CurrentData.Velocity = new Vector2(CurrentData.Velocity.x, CurrentData.Velocity.y * 0.5f));
+
+			AddTask().DoIf(
+				DODGE_TIME, 
+				() => !(CurrentData.IsGoingForward() && InputManager.IsActionPressed(InputButton.Dodge)), 
+				() =>
+				{
+					CurrentExecutor.TakeDamage(ComboExecutorDamageTaker.Body); 
+					Stop();
+				}
+			);
+
+//			EnableHorizontalControl(DODGE_TIME, DODGE_DISTANCE / DODGE_TIME * 4f, DODGE_DISTANCE / DODGE_TIME);
+
+			AddTask().InterpFor<float>(
+				from : CurrentExecutor.GlobalPosition.x,
+				delta : CurrentData.GetDirection() * DODGE_DISTANCE,
+				setter : val => CurrentExecutor.GlobalPosition = new Vector2(val, CurrentExecutor.GlobalPosition.y),
 				time : DODGE_TIME
 			);
+
 		}
 	}
 }

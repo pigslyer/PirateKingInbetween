@@ -31,4 +31,16 @@ public static class CSharpExtensions
 	/// Otherwise it returns false.
 	/// </returns>
 	public static bool Evaluate(this UsageReq usageRequirement, bool condition) => usageRequirement == UsageReq.Optional || (condition != (usageRequirement == UsageReq.Never));
+
+	public static int TrailingZeroCount(this int value)
+	{
+		int ret = 0;
+
+		for (int i = 1; i < 32 && (value & i) == 0; i <<= 1)
+		{
+			ret++;
+		}
+		
+		return ret;
+	}
 }

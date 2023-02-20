@@ -21,7 +21,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 		private Combo _attemptingCombo = null;
 		private PlayerCurrentFrameData _lastData = null;
 
-		private const Behaviours MidComboDisabled = Behaviours.Default & ~Behaviours.MeleeAttack;
+		private const Behaviours MidComboDisabled = Behaviours.Default & ~(Behaviours.MeleeAttack | Behaviours.DamageHandler | Behaviours.Falling);
 
 		public override void _Ready()
 		{
@@ -33,14 +33,28 @@ namespace PirateInBetween.Game.Player.Behaviours
 		public override void Run(PlayerCurrentFrameData data)
 		{
 			_lastData = data;
+
+			// if we aren't doing anything and have a combo queued
 			if (CanChangeActive && !IsInControl && _attemptingCombo != null)
 			{
-				GD.Print($"began executing {_attemptingCombo}");
 				_currentCombo = _attemptingCombo;
+				SetBehaviourChangesDisabled(true);
+				SetBehavioursEnabled(MidComboDisabled, false);
 
-				ExecuteBehaviour(data);
+				_currentCombo.ExecuteCombo(GetPlayer(), data);
+
 				data.CurrentAction = PlayerAnimation.MeleeAttack;
 			} 
+			// if we're doing a combo
+			else if (IsInControl && _currentCombo.IsDone())
+			{
+				_currentCombo.Stop();
+
+				SetBehaviourChangesDisabled(false);
+				SetBehavioursEnabled(MidComboDisabled, true);
+
+				_currentCombo = _attemptingCombo = null;
+			}
 			else if (IsInControl)
 			{
 				_currentCombo.GiveFrameData(data);
@@ -48,11 +62,17 @@ namespace PirateInBetween.Game.Player.Behaviours
 			}
 		}
 
+		public override void ResetState()
+		{
+			_currentCombo.Stop();
+			_currentCombo = _attemptingCombo = null;
+		}
+
 		public override void _Input(InputEvent @event)
 		{
 			base._Input(@event);
 
-			if (IsEnabled(Behaviours.MeleeAttack) && CanChangeActive && !IsInControl && _attemptingCombo == null && _currentCombo == null && _lastData != null && ComboSelector.TryDetectInput(_lastData, out ComboInput detected))
+			if (IsEnabled() && CanChangeActive && !IsInControl && _attemptingCombo == null && _currentCombo == null && _lastData != null && ComboSelector.TryDetectInput(_lastData, out ComboInput detected))
 			{
 				//GD.Print($"detected input: {detected}");
 				TrackEvent(_selector.RegisterEvent(detected, _lastData));
@@ -63,19 +83,6 @@ namespace PirateInBetween.Game.Player.Behaviours
 					UpdateDisplay();
 				}
 			}
-		}
-
-		private async Task ExecuteBehaviour(PlayerCurrentFrameData data)
-		{
-			SetBehaviourChangesDisabled(true);
-			SetBehavioursEnabled(MidComboDisabled, false);
-
-			await _currentCombo.ExecuteCombo(GetPlayer(), data);
-
-			SetBehaviourChangesDisabled(false);
-			SetBehavioursEnabled(MidComboDisabled, true);
-			
-			_currentCombo = _attemptingCombo = null;
 		}
 
 		private const int TRACKED_COUNT = 2;

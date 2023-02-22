@@ -5,7 +5,7 @@ namespace PirateInBetween.Game
 {
 	public class MovingParentDetector : RayCast2D
 	{
-		[Signal] delegate void OnChangedParent();
+		public event EventDelegates.OnSomethingHappened<MovingParent> OnMovingParentChanged;
 
 		#region Paths
 
@@ -21,6 +21,7 @@ namespace PirateInBetween.Game
 		{
 			_movingWho = GetNode<Node2D>(_movingWhoPath);
 			CurrentMovingParent = MovingParent.GetMovingParentOf(_movingWho);
+			OnMovingParentChanged?.Invoke(CurrentMovingParent);
 		}
 
 		public override void _PhysicsProcess(float _)
@@ -52,7 +53,7 @@ namespace PirateInBetween.Game
 			CurrentMovingParent = newParent;
 			_checked.Clear();
 
-			EmitSignal(nameof(OnChangedParent));
+			OnMovingParentChanged?.Invoke(newParent);
 		}
 	} 
 }

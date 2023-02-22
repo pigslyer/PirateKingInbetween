@@ -52,9 +52,10 @@ namespace PirateInBetween.Game.Combos.List
 			length: 1.5f,
 			velocity: 20f,
 			new DamageInstance(
-				1,
+				new DamageAmount(1, 3f),
 				(0.3f, 0.5f),
-				ComboExecutorDamageDealers.Front
+				ComboExecutorDamageDealers.Front,
+				() => 60f.ToVectorDeg(10f)
 			)
 		) { }
 	}

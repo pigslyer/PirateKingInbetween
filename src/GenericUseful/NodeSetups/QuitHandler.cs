@@ -20,7 +20,7 @@ public class QuitHandler : ConfirmationDialog
 			GetTree().AutoAcceptQuit = false;
 		}
 
-		Connect("confirmed", this, nameof(OnConfirmed));
+		Connect("confirmed", this, nameof(OnConfirmed), null, (uint) Node.ConnectFlags.Deferred);
 	}
 
 	public override void _Notification(int what)

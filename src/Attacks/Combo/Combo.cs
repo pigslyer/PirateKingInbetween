@@ -90,9 +90,11 @@ namespace PirateInBetween.Game.Combos
 		{
 			_isProcessing = true;
 			CurrentData = data;
+
 			_taskPool.Run();
 
 			_isProcessing = false;
+
 			if (_preemptiveStop)
 			{
 				Stop();
@@ -179,7 +181,7 @@ namespace PirateInBetween.Game.Combos
 			public ComboTask DealDamageFor(DamageInstance damage)
 			{
 				return WaitFor(damage.ValidInterval.Start)
-					.Do(() => _combo.CurrentExecutor.DealDamage(damage.TargetArea, (DamageData) damage))
+					.Do(() => _combo.CurrentExecutor.DealDamage(damage.TargetArea, damage.ToData(_combo.CurrentData)))
 					.WaitFor(damage.ValidInterval.Delta)
 					.Do(() => _combo.CurrentExecutor.StopDealingDamage(damage.TargetArea)
 				);
@@ -245,8 +247,10 @@ namespace PirateInBetween.Game.Combos
 				Damage = damageAmount; ValidInterval = validInterval; TargetArea = targetArea; KnockbackDirection = knockbackDirection;
 			}
 
-
-			public static explicit operator DamageData(DamageInstance value) => new DamageData(value.Damage, value.KnockbackDirection?.Invoke());
+			public DamageData ToData(ICombatFrameData frameData)
+			{
+				return new DamageData(Damage, KnockbackDirection?.Invoke().FaceForward(frameData) ?? Vector2.Zero);
+			}
 		}
 	}
 }

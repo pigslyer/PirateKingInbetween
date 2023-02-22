@@ -15,7 +15,7 @@ namespace PirateInBetween.Game.Combos
 	public class ComboInputContainer
 	{
 		private const float EPSILON = 0.3f;
-		private static readonly float[] TIMINGS = ReflectionHelper.GetEnumFloats<ComboTiming>();
+		private static readonly float[] TIMINGS = ReflectionHelper.GetEnumFloats<ComboTiming>().Cast<float>().ToArray();
 
 		public readonly bool IsConstant;
 

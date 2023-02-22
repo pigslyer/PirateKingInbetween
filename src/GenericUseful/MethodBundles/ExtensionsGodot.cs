@@ -100,6 +100,10 @@ public static class ExtensionsGodot
 	public static Vector2 ToVectorDeg(this float deg) => ToVectorRad(Mathf.Deg2Rad(deg));
 	public static Vector2 ToVectorRad(this float rad) => new Vector2(Mathf.Cos(rad), -Mathf.Sin(rad));
 
+	public static Vector2 Move(this Vector2 org, float x, float y) => org + new Vector2(x, y);
+	public static Vector2 MoveX(this Vector2 org, float x) => org + new Vector2(x, 0f);
+	public static Vector2 MoveY(this Vector2 org, float y) => org + new Vector2(0f, y);
+
 	public static T[] ToArray<T>(this Godot.Collections.Array array) => array.Cast<T>().ToArray();
 
 	public static Godot.Area2D[] GetAreas(this Godot.Area2D area) => area.GetOverlappingAreas().ToArray<Godot.Area2D>();
@@ -171,4 +175,116 @@ public static class ExtensionsGodot
 		return ret;
 	}
 
+	#region Tilemap assistance
+
+	/// <summary>
+	/// Returns the distance that an object at <paramref name="fromGlobal"/> would have to move to reach the edge of their floor.
+	/// </summary>
+	/// <param name="fromGlobal"></param>
+	/// <param name="goingRight"></param>
+	/// <returns>
+	/// The absolute distance from <paramref name="fromGlobal"/> to the edge, in appropriate direction,
+	/// or null if <paramref name="fromGlobal"/> isn't on any floor tiles.
+	/// </returns>
+	public static float? GetDistanaceToEdge(this TileMap map, Vector2 fromGlobal, bool goingRight)
+	{
+		int WalkUntil(int fromX, int fromY, int incX)
+		{
+			// because the do while triggers once by defult, steps has a minimum value of 0
+			int steps = -1;
+
+			int curX = fromX, curY = fromY;
+			int curCell;
+
+			do
+			{
+				curX += incX;
+				curCell = map.GetCell(curX, curY);
+
+				steps++;
+			} while (curCell != TileMap.InvalidCell);
+
+			return steps;
+		}
+
+		Vector2 mapCoord = map.WorldToMap(map.ToLocal(fromGlobal));
+
+		int x = (int)mapCoord.x, y = (int)mapCoord.y;
+
+		// finding the floor
+
+		if (map.GetCell(x, y) == TileMap.InvalidCell)
+		{
+			if (map.GetCell(x, ++y) == TileMap.InvalidCell)
+			{
+				return null;
+			}
+		}
+
+		int tilesToEdge = WalkUntil(x, y, goingRight.Sign());
+
+		// the distance from the current cell to the edge
+		float lengthToEdge = tilesToEdge * map.CellSize.x;
+
+
+		float lengthToCurrentEdge = map.GetLengthToEndOfCurrentTile(fromGlobal, goingRight);
+
+		return lengthToCurrentEdge + lengthToEdge;
+	}
+
+	public static float? GetDistanceToWall(this TileMap map, Vector2 fromGlobal, bool goingRight)
+	{
+		int WalkUntil(int fromX, int fromY, int incX, int diffY)
+		{
+			int steps = -2;
+
+			int curX = fromX, curY = fromY;
+			do{
+				curX += incX;
+				steps++;
+			} while (map.GetCell(curX, curY) == TileMap.InvalidCell && map.GetCell(curX - incX, curY + diffY) != TileMap.InvalidCell);
+
+			return steps;
+		}
+
+		Vector2 mapCoord = map.WorldToMap(map.ToLocal(fromGlobal));
+
+		int x = (int)mapCoord.x, y = (int)mapCoord.y;
+
+		// finding the tile above the floor
+		if (map.GetCell(x, y) != TileMap.InvalidCell)
+		{
+			if (map.GetCell(x, --y) != TileMap.InvalidCell)
+			{
+				return null;
+			}
+		}
+
+		int tilesToWall = WalkUntil(x, y, goingRight.Sign(), 1);
+		float lengthToWall = tilesToWall * map.CellSize.x;
+
+		float lengthToCurrentEdge = map.GetLengthToEndOfCurrentTile(fromGlobal, goingRight);
+
+		return lengthToCurrentEdge + lengthToWall;
+	}
+
+	private static float GetLengthToEndOfCurrentTile(this TileMap map, Vector2 fromGlobal, bool goingRight)
+	{
+		Vector2 fromLocal = map.ToLocal(fromGlobal);
+
+		Vector2 mapPos = map.WorldToMap(fromLocal);
+
+		Vector2 topLeftTilePos = map.MapToWorld(mapPos);
+
+		float diff = fromLocal.x - topLeftTilePos.x;
+
+		if (goingRight)
+		{
+			diff = map.CellSize.x - diff;
+		}
+
+		return diff;
+	}
+
+	#endregion
 }

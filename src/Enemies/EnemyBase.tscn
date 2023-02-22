@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/Enemies/EnemyController.cs" type="Script" id=1]
+[ext_resource path="res://src/Enemies/EnemyModel.cs" type="Script" id=2]
+[ext_resource path="res://src/Attacks/DamageTaker.cs" type="Script" id=3]
+
+[node name="EnemyBase" type="Node2D"]
+
+[node name="EnemyController" type="KinematicBody2D" parent="."]
+collision_layer = 16
+script = ExtResource( 1 )
+__enemyModelPath = NodePath("EnemyModel")
+__basicBehaviourPath = NodePath("BasicBehaviour")
+__damageTakerPath = NodePath("DamageTaker")
+
+[node name="EnemyModel" type="Node2D" parent="EnemyController"]
+script = ExtResource( 2 )
+
+[node name="WallCheck" type="RayCast2D" parent="EnemyController/EnemyModel"]
+position = Vector2( 16, -21 )
+cast_to = Vector2( 30, 0 )
+
+[node name="BasicBehaviour" type="Node" parent="EnemyController"]
+
+[node name="DamageTaker" type="Area2D" parent="EnemyController"]
+collision_layer = 32
+collision_mask = 0
+script = ExtResource( 3 )

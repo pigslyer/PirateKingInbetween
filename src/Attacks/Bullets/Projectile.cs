@@ -24,10 +24,10 @@ namespace PirateInBetween.Game
 
 		public override void _PhysicsProcess(float delta)
 		{
-			Move(delta);
+			Position += GetMovementDelta(delta);
 		}
 
-		protected abstract void Move(float delta);
+		protected abstract Vector2 GetMovementDelta(float delta);
 
 		private void OnHitDestroy(Node hitWhat)
 		{
@@ -64,6 +64,7 @@ namespace PirateInBetween.Game
 			
 			OnTreeEntered();
 		}
+
 
 		protected override Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => null;
 

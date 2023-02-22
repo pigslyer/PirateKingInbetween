@@ -13,6 +13,8 @@ namespace PirateInBetween.Game.Player.Behaviours
 	{
 		private const Behaviours DISABLED_DURING_STUN = Behaviours.Controllable | Behaviours.AnimationSelector;
 
+		[Export] private float _stunnedOnFloorDeaccel = 50f;
+
 		private float _stunTimer = 0f;
 
 		public DamageReaction TakeDamage()
@@ -54,7 +56,11 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 		public void KnockbackFor(Vector2 velocity, PlayerCurrentFrameData data)
 		{
-			NotOnFloor();
+			if (velocity.y < 0f)
+			{
+				NotOnFloor();
+			}
+
 			data.Velocity = velocity;
 		}
 
@@ -65,7 +71,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			{
 				if (IsOnFloor())
 				{
-					data.Velocity.x = 0;
+					data.Velocity.x = data.Velocity.x.MoveTowards(0, _stunnedOnFloorDeaccel * data.Delta);
 				}
 
 				_stunTimer -= data.Delta;

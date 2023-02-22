@@ -79,6 +79,7 @@ script = ExtResource( 14 )
 
 [node name="DamageHandler" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 15 )
+_stunnedOnFloorDeaccel = 200.0
 
 [node name="HorizontalMovement" type="Node" parent="PlayerController/BehaviourManager"]
 script = ExtResource( 12 )

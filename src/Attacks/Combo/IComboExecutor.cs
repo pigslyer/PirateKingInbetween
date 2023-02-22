@@ -36,6 +36,7 @@ namespace PirateInBetween.Game.Combos
 	public enum ComboExecutorDamageDealers
 	{
 		Front,
+		Count
 	}
 
 	/// <summary>
@@ -44,5 +45,6 @@ namespace PirateInBetween.Game.Combos
 	public enum ComboExecutorDamageTaker
 	{
 		Body,
+		Count
 	}
 }

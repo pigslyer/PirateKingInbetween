@@ -14,7 +14,7 @@ namespace PirateInBetween.Game.Player
 {
 	public class PlayerModel : Node2D
 	{
-		[Export] PackedScene _inWorldDescription = ReflectionHelper.LoadScene<FancyInWorldText>();
+		[Export] PackedScene _inWorldDescription = ReflectionHelper.LoadScene<FancyInWorldDisplay>();
 
 #region Paths
 		[Export] private NodePath __flippablePath = null;

@@ -58,12 +58,14 @@ namespace PirateInBetween.Game
 			GlobalRotation = _velocity.Angle();
 		}
 
-		protected override void Move(float delta) => Position += _velocity * delta;
+		protected override Vector2 GetMovementDelta(float delta) => _velocity * delta;
 
 		protected override void Destroy()
 		{
 			QueueFree();
 		}
+
+		protected override Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => (_velocity.x > 0? 30f : 150f).ToVectorDeg();
 
 		protected override bool ShouldHitDestroy(DamageTaker taker) => true;
 	}

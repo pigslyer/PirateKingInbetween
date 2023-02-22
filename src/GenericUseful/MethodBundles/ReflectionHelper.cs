@@ -13,7 +13,7 @@ public static class ReflectionHelper
 {
 
 	/// <summary>
-	/// For use with incrementing enums which use <see cref="A"/>.
+	/// For use with incrementing enums which use attribute A.
 	/// </summary>
 	/// <typeparam name="E"></typeparam>
 	/// <typeparam name="A"></typeparam>
@@ -25,6 +25,7 @@ public static class ReflectionHelper
 
 		foreach (var e in Enum.GetValues(t))
 		{
+
 			temp.Add(t.GetField(Enum.GetName(t, e)).GetCustomAttribute<A>());
 		}
 
@@ -36,9 +37,9 @@ public static class ReflectionHelper
 	/// For use with incrementing enums which use <see cref="EnumString"/>.
 	/// </summary>
 	/// <typeparam name="T">An auto-incrementing enum, each entry of which has the attribute <see cref="EnumString"/>.</typeparam>
-	/// <returns>An array of values <see cref="EnumString.String"/> mapped to their index in <see cref="T"/>.</returns>
-	public static string[] GetEnumStrings<T>() where T : Enum => GetEnumsAttribute<T, EnumString>().Select(e => e.String).ToArray();
-	public static float[] GetEnumFloats<T>() where T : Enum => GetEnumsAttribute<T, EnumFloat>().Select(e => e.Float).ToArray();
+	/// <returns>An array of values <see cref="EnumString.String"/> mapped to their index in T.</returns>
+	public static string[] GetEnumStrings<T>() where T : Enum => GetEnumsAttribute<T, EnumString>().Select(e => e?.String).ToArray();
+	public static float?[] GetEnumFloats<T>() where T : Enum => GetEnumsAttribute<T, EnumFloat>().Select(e => e?.Float).ToArray();
 
 	public static (Type @class, A attr)[] GetTypesWithAttribute<A>() where A : Attribute
 	{

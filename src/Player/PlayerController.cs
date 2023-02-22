@@ -67,7 +67,7 @@ namespace PirateInBetween.Game.Player
 
 		private Combo.OnHitReaction _onDamageTaken;
 
-		private void OnDamageTakenSignalReceived(DamageTaker source, DamageData data)
+		private void OnDamageTakenSignalReceived(DamageTaker takerSource, DamageDealer dealerSource, DamageData data)
 		{
 			DamageData appliedData = data.Apply(_onDamageTaken());
 
@@ -84,7 +84,9 @@ namespace PirateInBetween.Game.Player
 
 			bool stunned = appliedData.StunDuration > 0f;
 			bool knocked = appliedData.Direction.LengthSquared() > 0f;
-			
+
+			Vector2 knockbackVector = appliedData.Direction * appliedData.Damage * 20;
+
 			if (stunned || knocked)
 			{
 				// i have no clue why i added this. dropping items?
@@ -97,7 +99,7 @@ namespace PirateInBetween.Game.Player
 
 			if (knocked)
 			{
-				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).KnockbackFor(appliedData.Direction, _nextFrameData);
+				_behaviourManager.GetBehaviour<PlayerDamageHandler>(PlayerBehaviour.Behaviours.DamageHandler).KnockbackFor(knockbackVector, _nextFrameData);
 			}
 
 		}
@@ -167,8 +169,9 @@ namespace PirateInBetween.Game.Player
 
 		private void DebugOutOfBounds()
 		{
-			if (GlobalPosition.y > 300f)
+			if (GlobalPosition.y > 300f && _health > 0)
 			{
+				_health = -1;
 				_uiManager.ShowDeathMenu();
 			}
 		}

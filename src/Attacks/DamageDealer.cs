@@ -55,7 +55,7 @@ namespace PirateInBetween.Game
 		{
 			if (area is DamageTaker taker && ShouldHit(taker))
 			{
-				taker.TakeDamage(GetDamageData(area.GlobalPosition));
+				taker.TakeDamage(GetDamageData(area.GlobalPosition), this);
 				EmitSignal(nameof(OnDamageDealt), taker);
 			}
 			else
@@ -72,6 +72,7 @@ namespace PirateInBetween.Game
 		protected virtual Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => null;
 
 		private DamageData GetDamageData(Vector2 position) => _currentDamageData ?? new DamageData(_currentDamageAmount, GetDamageDirection(position));
+
 
 		protected virtual bool ShouldHit(DamageTaker area) => true;
 

@@ -43,4 +43,15 @@ public static class CSharpExtensions
 		
 		return ret;
 	}
+
+	public static float MoveTowards(this float what, float to, float delta) => Mathf.MoveToward(what, to, delta);
+
+	public static float Sqr(this float what) => what * what;
+
+	/// <summary>
+	/// Returns 1 if <paramref name="of"/> is true, otherwise -1.
+	/// </summary>
+	/// <param name="of"></param>
+	/// <returns></returns>
+	public static int Sign(this bool of) => of ? 1 : -1;
 }

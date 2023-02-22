@@ -28,15 +28,22 @@ public struct FloatInterval : IEquatable<FloatInterval>
 		Start = 0f; End = end;
 	}
 
-	public static implicit operator FloatInterval(float end) => new FloatInterval(end);
-	public static implicit operator FloatInterval((float start, float end) val) => new FloatInterval(val.start, val.end);
 
 	public bool IsInRange(float what) => Start <= what && what <= End;
+
+	public float GetRandom(RandomNumberGenerator generator = null)
+	{
+		return generator == null ? (float)GD.RandRange(Start, End) : generator.RandfRange(Start, End);
+	}
 
 	public override string ToString()
 	{
 		return $"[{Start}, {End}]";
 	}
+
+
+	public static implicit operator FloatInterval(float end) => new FloatInterval(end);
+	public static implicit operator FloatInterval((float start, float end) val) => new FloatInterval(val.start, val.end);
 
 	public static bool operator==(FloatInterval a, FloatInterval b) => a.Start == b.Start && a.End == b.End;
 	public static bool operator!=(FloatInterval a, FloatInterval b) => !(a == b);

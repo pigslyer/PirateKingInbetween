@@ -287,4 +287,52 @@ public static class ExtensionsGodot
 	}
 
 	#endregion
+
+	public static T GetValueOrThrow<T>(this ConfigFile file, string section, string key, string message = "")
+	{
+		if (file.HasSectionKey(section, key))
+		{
+			return (T) file.GetValue(section, key);
+		}
+
+		throw new KeyNotFoundException(message);
+	}
+
+	public static IEnumerator<string> ListDir(this string path, bool skipNavi = false, bool skipHidden = false)
+	{
+		Directory dir = new Directory();
+		dir.Open(path);
+		return new DirectoryEnumerator(dir, (skipNavi, skipHidden));
+	}
+
+	private class DirectoryEnumerator : IEnumerator<string>
+	{
+		private readonly Directory _dir;
+		private string _current;
+		private (bool a, bool b) _settings;
+
+		public DirectoryEnumerator(Directory dir, (bool, bool) settings)
+		{
+			_dir = dir; _settings = settings;
+			_dir.ListDirBegin(settings.Item1, settings.Item2);
+		}
+
+		public string Current => _current;
+
+		object IEnumerator.Current => _current;
+
+		public void Dispose()
+		{
+			_dir.ListDirEnd();
+		}
+
+		public bool MoveNext() => "" != (_current = _dir.GetNext());
+
+		public void Reset()
+		{
+			_dir.ListDirEnd();
+			_dir.ListDirBegin(_settings.a, _settings.b);
+		}
+	}
+
 }

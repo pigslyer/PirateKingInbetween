@@ -6,5 +6,11 @@
 		"Mult",
 		"Noclip",
 		"tscn"
-	]
+	],
+
+	"files.exclude": {
+		".import": true,
+		"**/*.import": true,
+		".mono": true,
+	}
 }

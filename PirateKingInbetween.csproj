@@ -6,8 +6,4 @@
   <PropertyGroup>
     <NoWarn> 4014 </NoWarn>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
 </Project>

@@ -1,0 +1,35 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/jacques running left wooden leg4.png-a8f3f1484b611f04b6babc92c96deebb.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/characters/player/running animation/running wooden leg/left/jacques running left wooden leg4.png"
+dest_files=[ "res://.import/jacques running left wooden leg4.png-a8f3f1484b611f04b6babc92c96deebb.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=0
+flags/filter=false
+flags/mipmaps=false
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+process/normal_map_invert_y=false
+stream=false
+size_limit=0
+detect_3d=false
+svg/scale=1.0

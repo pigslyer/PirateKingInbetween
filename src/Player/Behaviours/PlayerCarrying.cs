@@ -63,7 +63,7 @@ namespace PirateInBetween.Game.Player.Behaviours
                 data.VelocityMult = _pushingVelMult;
                 box.ApplyVelocity(new Vector2(data.Velocity.x * data.VelocityMult, 0));
                 
-                data.CurrentAction = PlayerAnimation.Pushing;
+                data.CurrentAction = Animations.Pushing;
             }
             else if (IsOnFloor() && CanChangeActive && !_isCarryingBox && TrySeeCarriableBox(data, out box))
             {

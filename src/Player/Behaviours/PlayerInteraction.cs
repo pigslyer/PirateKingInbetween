@@ -36,7 +36,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 		{
 			if (IsInControl)
 			{
-				data.CurrentAction = PlayerAnimation.Idle;
+				data.CurrentAction = Animations.Idle;
 			}
 
 			var array = _interactionDetectionArea.GetAreas();

@@ -36,6 +36,7 @@ namespace PirateInBetween.Game.Player
 		private Position2D _interactionDisplayPosition;
 		private AnimatedSprite _playerSprite;
 		private PlayerController _player;
+		
 
 		public override void _Ready()
 		{
@@ -47,12 +48,27 @@ namespace PirateInBetween.Game.Player
 			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
 			_player = GetNode<PlayerController>(__playerPath);
 
-			_playerSprite.Play("Idle");
+
+			Directory dir = new Directory();
+			dir.Open("res://assets/characters/player/idle animation/smoking idle/leg/left/smoking");
+			dir.ListDirBegin();
+
+			string file = dir.GetNext();
+
+			while (file != "")
+			{
+				GD.Print(file);
+				file = dir.GetNext();
+			}
+
+			dir.ListDirEnd();
 		}
 
-		public void SetAnimation(PlayerAction action, bool facingRight)
+		public void UpdateModel(PlayerCurrentFrameData data)
 		{
-			_flippable.Scale = new Vector2(facingRight ? 1f : -1f, 1f);
+			_flippable.Scale = new Vector2(data.FacingRight ? 1f : -1f, 1f);
+
+			PlayerAction action = data.CurrentAction;
 
 			if (action is ActionMeleeAttack melee)
 			{
@@ -81,6 +97,29 @@ namespace PirateInBetween.Game.Player
 				}
 			}
 
+			string anim = GetAnimation(data);
+
+			if (_playerSprite.Frames.HasAnimation(anim))
+			{
+				_playerSprite.Play(anim);
+			}
+		}
+
+		private string GetAnimation(PlayerCurrentFrameData data)
+		{
+			//string AnimationLeft(string anim) => $"{anim}L";
+			string AnimationMoving(string anim) => $"Moving{anim}";
+			
+			string str = data.CurrentAction.Animation.GetString();
+
+			switch (data.CurrentAction.Animation)
+			{
+				case Animations.Jump:
+				return data.IsMoving() ? AnimationMoving(str) : str;
+
+				default:
+				return str;
+			}
 		}
 
 		private async Task ShowTempDamageDealer(float duration)

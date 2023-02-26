@@ -78,7 +78,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 				if (IsStunned())
 				{
-					data.CurrentAction = IsOnFloor() ? PlayerAnimation.Stunned : PlayerAnimation.StunnedAir;
+					data.CurrentAction = IsOnFloor() ? (data.Velocity.x != 0f ? Animations.Stunned : Animations.StunnedMoving) : Animations.StunnedAir;
 				}
 				else
 				{

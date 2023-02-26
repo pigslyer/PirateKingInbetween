@@ -21,10 +21,10 @@ namespace PirateInBetween.Game.Player.Behaviours
 			}
 		}
 
-		public (bool FacingRight, PlayerAnimation Animation) GetDefaultAnimation(PlayerCurrentFrameData data)
+		public (bool FacingRight, Animations Animation) GetDefaultAnimation(PlayerCurrentFrameData data)
 		{
 			bool facing = data.FacingRight;
-			PlayerAnimation animation;
+			Animations animation;
 
 			if (data.Velocity.x != 0f)
 			{
@@ -33,19 +33,19 @@ namespace PirateInBetween.Game.Player.Behaviours
 			
 			if (data.Velocity.y > 0f && !IsOnFloor())
 			{
-				animation = PlayerAnimation.Fall;
+				animation = Animations.Fall;
 			}
 			else if (data.Velocity.y < 0f)
 			{
-				animation = PlayerAnimation.Jump;
+				animation = Animations.Jump;
 			}
 			else if (data.Velocity.x != 0f)
 			{
-				animation = PlayerAnimation.Run;
+				animation = Animations.Run;
 			}
 			else
 			{
-				animation = PlayerAnimation.Idle;
+				animation = Animations.Idle;
 			}
 
 			return (facing, animation);

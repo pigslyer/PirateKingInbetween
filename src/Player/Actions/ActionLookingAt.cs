@@ -13,7 +13,7 @@ namespace PirateInBetween.Game.Player.Actions
 	{
 		public readonly string Text;
 
-		public ActionLookingAt(PlayerAnimation animation, string description) : base(animation)
+		public ActionLookingAt(Animations animation, string description) : base(animation)
 		{
 			Text = description;
 		}

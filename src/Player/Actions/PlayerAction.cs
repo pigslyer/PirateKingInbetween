@@ -11,13 +11,13 @@ namespace PirateInBetween.Game.Player.Actions
 {
 	public class PlayerAction
 	{
-		public readonly PlayerAnimation Animation;
+		public readonly Animations Animation;
 
-		public PlayerAction(PlayerAnimation animation)
+		public PlayerAction(Animations animation)
 		{
 			Animation = animation;
 		}
 
-		public static implicit operator PlayerAction(PlayerAnimation animation) => new PlayerAction(animation);
+		public static implicit operator PlayerAction(Animations animation) => new PlayerAction(animation);
 	}
 }

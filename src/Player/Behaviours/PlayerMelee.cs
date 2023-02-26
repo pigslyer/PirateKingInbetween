@@ -43,7 +43,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 				_currentCombo.ExecuteCombo(GetPlayer(), data);
 
-				data.CurrentAction = PlayerAnimation.MeleeAttack;
+				data.CurrentAction = Animations.Idle;
 			} 
 			// if we're doing a combo
 			else if (IsInControl && _currentCombo.IsDone())
@@ -58,7 +58,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			else if (IsInControl)
 			{
 				_currentCombo.GiveFrameData(data);
-				data.CurrentAction = PlayerAnimation.MeleeAttack;
+				data.CurrentAction = Animations.Idle;
 			}
 		}
 

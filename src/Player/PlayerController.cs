@@ -159,12 +159,12 @@ namespace PirateInBetween.Game.Player
 			if (data.CurrentAction == null)
 			{
 				GD.PushError("Player action was never set this frame.");
-				data.CurrentAction = PlayerAnimation.Idle;
+				data.CurrentAction = Animations.Idle;
 			}
 			
 			_lastRight = data.FacingRight;
 			
-			_model.SetAnimation(data.CurrentAction, data.FacingRight);
+			_model.UpdateModel(data);
 		}
 
 		private void DebugOutOfBounds()

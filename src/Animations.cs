@@ -19,5 +19,13 @@ namespace PirateInBetween.Game
 		[EnumString("Stunned")] Stunned,
 		[EnumString("StunnedMoving")] StunnedMoving,
 		[EnumString("StunnedAir")] StunnedAir,
+		[EnumString("Idle")] WIP,
+	}
+
+	public static class AnimationsExtensions
+	{
+		private static string[] _animationStrings = ReflectionHelper.GetEnumStrings<Animations>();
+
+		public static string GetString(this Animations animation) => _animationStrings[(int) animation];
 	}
 }

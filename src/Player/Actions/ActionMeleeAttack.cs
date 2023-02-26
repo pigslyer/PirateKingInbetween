@@ -14,7 +14,7 @@ namespace PirateInBetween.Game.Player.Actions
 		public readonly DamageData DamageData; 
 		public readonly float SlashDuration;
 
-		public ActionMeleeAttack(DamageData damageData, float slashDuration) : base(PlayerAnimation.MeleeAttack)
+		public ActionMeleeAttack(DamageData damageData, float slashDuration) : base(Animations.WIP)
 		{
 			DamageData = damageData; SlashDuration = slashDuration;
 		}

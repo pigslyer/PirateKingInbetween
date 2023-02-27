@@ -46,6 +46,7 @@ namespace PirateInBetween.Game.Player
 				}
 			}
 		}
+		public Animations Animation => CurrentAction.Animation;
 		public bool IsBusy => _nextAnimation != null;
 
 		public bool FacingRight = true;

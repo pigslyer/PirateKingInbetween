@@ -298,6 +298,7 @@ public static class ExtensionsGodot
 		throw new KeyNotFoundException(message);
 	}
 
+#region List dir
 	public static IEnumerator<string> ListDir(this string path, bool skipNavi = false, bool skipHidden = false)
 	{
 		Directory dir = new Directory();
@@ -334,5 +335,10 @@ public static class ExtensionsGodot
 			_dir.ListDirBegin(_settings.a, _settings.b);
 		}
 	}
-
+#endregion
+	
+	public static float GetAnimationTime(this SpriteFrames frames, string animation)
+	{
+		return frames.GetFrameCount(animation) / frames.GetAnimationSpeed(animation);
+	}
 }

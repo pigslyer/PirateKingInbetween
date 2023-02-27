@@ -66,7 +66,7 @@ shape = SubResource( 2 )
 visible = false
 position = Vector2( 0, -48 )
 
-[node name="CameraPosition" type="Position2D" parent="PlayerController/PlayerModel/Flippable" index="9"]
+[node name="CameraPosition" type="Position2D" parent="PlayerController/PlayerModel/Flippable" index="8"]
 position = Vector2( 40, 0 )
 
 [node name="Body" type="CollisionShape2D" parent="PlayerController"]
@@ -138,17 +138,17 @@ margin_right = 40.0
 margin_bottom = 14.0
 
 [node name="Instructions" type="Label" parent="PlayerController/UIManager"]
-visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -212.0
 margin_bottom = 14.0
-text = "A, D - left and right
-W - jump
-F - slash
-Q - shoot
-Darker tiles cannot be jumped/shot through.
-You can damage the \"barrel\" in the hold of both ships."
+text = "Wood tiles can be jumped through, stone cannot.
+Lmb attacks, there's a basic 3 hit combo atm.
+Rmb ineffectually shoots.
+Hold shift while moving to start dodging.
+That last one might be stupid, it can be set to just pressing locking you in dodging.
+N switches between wood leg and not.
+You can knock the enemy on the top platform about."
 autowrap = true
 
 [node name="ComboDataLabel" type="Label" parent="PlayerController/UIManager"]

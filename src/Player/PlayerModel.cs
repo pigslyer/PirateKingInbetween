@@ -28,6 +28,13 @@ namespace PirateInBetween.Game.Player
 
 		#endregion
 
+		#region AnimationTimings
+
+		[Export] private float _timeUntilSmokingStarts = 10f;
+		[Export] private int _smokingLoopCount = 8;
+
+		#endregion
+
 		private Node2D _flippable;
 		private Position2D _shootFrom;
 		private DamageDealer _damageDealerSlash;
@@ -37,6 +44,8 @@ namespace PirateInBetween.Game.Player
 		private AnimatedSprite _playerSprite;
 		private PlayerController _player;
 		
+
+		private float _smokingAnimationCompleteTimeout;
 
 		public override void _Ready()
 		{
@@ -48,26 +57,12 @@ namespace PirateInBetween.Game.Player
 			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
 			_player = GetNode<PlayerController>(__playerPath);
 
-
-			Directory dir = new Directory();
-			dir.Open("res://assets/characters/player/idle animation/smoking idle/leg/left/smoking");
-			dir.ListDirBegin();
-
-			string file = dir.GetNext();
-
-			while (file != "")
-			{
-				GD.Print(file);
-				file = dir.GetNext();
-			}
-
-			dir.ListDirEnd();
+			_smokingAnimationCompleteTimeout = 
+				_timeUntilSmokingStarts + _playerSprite.Frames.GetAnimationTime("SmokingStartR") + _smokingLoopCount * _playerSprite.Frames.GetAnimationTime("SmokingR") + _playerSprite.Frames.GetAnimationTime("SmokingStopR");
 		}
 
 		public void UpdateModel(PlayerCurrentFrameData data)
 		{
-			_flippable.Scale = new Vector2(data.FacingRight ? 1f : -1f, 1f);
-
 			PlayerAction action = data.CurrentAction;
 
 			if (action is ActionMeleeAttack melee)
@@ -97,7 +92,71 @@ namespace PirateInBetween.Game.Player
 				}
 			}
 
-			string anim = GetAnimation(data);
+			PlayAnimation(data);
+		}
+
+
+		private void PlayAnimation(PlayerCurrentFrameData data)
+		{
+			string DefaultAnim(Animations animation, bool facingRight) => ApplyFacing(animation.GetString(), facingRight);
+			string ApplyFacing(string animation, bool facingRight) => $"{animation}{(facingRight ? "R" : "L")}";
+			string ApplyWooden(string animation, bool isWooden) => isWooden ? $"Wood{animation}" : animation;
+
+			bool facingAnimation;
+			string anim;
+
+			float timeInAnim = ProcessTimeInAnim(data);
+
+			switch (data.Animation)
+			{
+				case Animations.Jump:
+				anim = "JumpNoMoving";
+				facingAnimation = false;
+
+				break;
+
+				case Animations.Idle:
+				timeInAnim = Mathf.PosMod(timeInAnim, _smokingAnimationCompleteTimeout);
+
+				facingAnimation = true;
+
+				if (timeInAnim > _timeUntilSmokingStarts)
+				{
+					timeInAnim -= _timeUntilSmokingStarts;
+					float startTime = _playerSprite.Frames.GetAnimationTime("SmokingStartR"); 
+
+					if (timeInAnim < startTime)
+					{
+						anim = "SmokingStart";
+					}
+					else if (timeInAnim - startTime < _playerSprite.Frames.GetAnimationTime("SmokingR") * _smokingLoopCount)
+					{
+						anim = "Smoking";
+					}
+					else
+					{
+						anim = "SmokingStop";
+					}
+				}
+				else
+				{
+					anim = "Idle";
+				}
+
+				anim = ApplyFacing(anim, data.FacingRight);
+
+				break;
+
+				default:
+				anim = DefaultAnim(data.Animation, data.FacingRight);
+				facingAnimation = true;
+				break;
+			}
+
+			anim = ApplyWooden(anim, Autoloads.Global.PlayerHasWoodenLeg);
+
+			_flippable.Scale = new Vector2(data.FacingRight.Sign(), 1f);
+			_playerSprite.FlipH = !facingAnimation && !data.FacingRight;
 
 			if (_playerSprite.Frames.HasAnimation(anim))
 			{
@@ -105,21 +164,20 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
-		private string GetAnimation(PlayerCurrentFrameData data)
+		private float _timeInIdle = 0f;
+		private Animations _prevAnim = Animations.Idle;
+
+		private float ProcessTimeInAnim(PlayerCurrentFrameData data)
 		{
-			//string AnimationLeft(string anim) => $"{anim}L";
-			string AnimationMoving(string anim) => $"Moving{anim}";
-			
-			string str = data.CurrentAction.Animation.GetString();
+			_timeInIdle += data.Delta;
 
-			switch (data.CurrentAction.Animation)
+			if (data.Animation != _prevAnim)
 			{
-				case Animations.Jump:
-				return data.IsMoving() ? AnimationMoving(str) : str;
-
-				default:
-				return str;
+				_timeInIdle = 0f;
+				_prevAnim = data.Animation;
 			}
+
+			return _timeInIdle;
 		}
 
 		private async Task ShowTempDamageDealer(float duration)

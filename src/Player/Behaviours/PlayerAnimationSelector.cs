@@ -39,7 +39,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			{
 				animation = Animations.Jump;
 			}
-			else if (data.Velocity.x != 0f)
+			else if (IsOnFloor() && data.Velocity.x != 0f)
 			{
 				animation = Animations.Run;
 			}

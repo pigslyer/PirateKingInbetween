@@ -162,6 +162,10 @@ namespace PirateInBetween.Game.Player
 			{
 				_playerSprite.Play(anim);
 			}
+			else
+			{
+				_playerSprite.Play(DefaultAnim(Animations.Idle, data.FacingRight));
+			}
 		}
 
 		private float _timeInIdle = 0f;

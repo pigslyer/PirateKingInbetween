@@ -9,13 +9,15 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public class DamageDealer : Area2D
+	public class DamageDealer : Area2D, IDamageTakerDetector
 	{
 		[Signal] public delegate void OnDamageDealt(DamageTaker obj);
 		[Signal] public delegate void OnHit(Node what);
 
+		[Export] public DamageDealerTargettingArea DealerType { get; private set; }
+
 		private DamageData _currentDamageData = null;
-		private DamageAmount _currentDamageAmount;
+		private DamageAmount? _currentDamageAmount;
 
 		public override void _Ready()
 		{
@@ -38,29 +40,49 @@ namespace PirateInBetween.Game
 
 		public void Enable(DamageData damageData)
 		{
-			SetEnabled(true);
 			_currentDamageData = damageData;
+
+			DamageAllPresent();
 		}
 
 		protected void Enable(DamageAmount amount)
 		{
-			SetEnabled(true);
 			_currentDamageAmount = amount;
 			_currentDamageData = null;
+			
+			DamageAllPresent();
 		}
 
-		public void Disable() => SetEnabled(false);
-
-		private void OnDamageDealtSignal(Area2D area)
+		/// <summary>
+		/// In case something was detected already but the area wasn't properly enabled at the time.
+		/// </summary>
+		private void DamageAllPresent()
 		{
-			if (area is DamageTaker taker && ShouldHit(taker))
+			foreach (Godot.Area2D node in GetOverlappingAreas())
 			{
-				taker.TakeDamage(GetDamageData(area.GlobalPosition), this);
-				EmitSignal(nameof(OnDamageDealt), taker);
+				if (node is DamageTaker taker)
+				{
+					OnDamageDealtSignal(taker);
+				}
 			}
-			else
+		}
+
+		public void Disable()
+		{
+			_currentDamageAmount = null; _currentDamageData = null;
+		}
+
+		private void OnDamageDealtSignal(DamageTaker taker)
+		{
+			if (_currentDamageAmount == null && _currentDamageData == null)
 			{
-				GD.PushWarning($"Collided with area which isn't {nameof(DamageTaker)}: {area.Name}");
+				return;
+			}
+
+			if (ShouldHit(taker))
+			{
+				taker.TakeDamage(GetDamageData(taker.GlobalPosition), this);
+				EmitSignal(nameof(OnDamageDealt), taker);
 			}
 		}
 
@@ -71,11 +93,16 @@ namespace PirateInBetween.Game
 		/// <returns></returns>
 		protected virtual Vector2? GetDamageDirection(Vector2 targetGlobalPosition) => null;
 
-		private DamageData GetDamageData(Vector2 position) => _currentDamageData ?? new DamageData(_currentDamageAmount, GetDamageDirection(position));
+		private DamageData GetDamageData(Vector2 position) => _currentDamageData ?? new DamageData((DamageAmount)_currentDamageAmount, GetDamageDirection(position));
 
 
 		protected virtual bool ShouldHit(DamageTaker area) => true;
 
 		private void OnHitSignal(Node node) => EmitSignal(nameof(OnHit), node);
+
+
+		bool IDamageTakerDetector.CanSeeTaker() => GetOverlappingAreas().Count > 0;
+
+		DamageTakerTargetArea IDamageTakerDetector.GetTakerArea() => ((DamageTaker)(GetOverlappingAreas()[0])).TakerType;
 	}
 }

@@ -11,6 +11,7 @@ namespace PirateInBetween.Game
 {
 	public class DamageTaker : Area2D
 	{
+		[Export] public DamageTakerTargetArea TakerType { get; private set; }
 
 		public event EventDelegates.OnSomethingHappened<DamageTaker, DamageDealer, DamageData> OnDamageTaken;
 

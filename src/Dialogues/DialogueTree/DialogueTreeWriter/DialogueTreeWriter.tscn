@@ -3,7 +3,7 @@
 [ext_resource path="res://src/Dialogues/DialoguePlayer/DialoguePlayer.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/DialogueTreeWriter.cs" type="Script" id=2]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/FileChooser.cs" type="Script" id=3]
-[ext_resource path="res://src/GenericUseful/QuitHandler.cs" type="Script" id=4]
+[ext_resource path="res://src/GenericUseful/NodeSetups/QuitHandler.cs" type="Script" id=4]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/Manager.cs" type="Script" id=5]
 [ext_resource path="res://icon.png" type="Texture" id=6]
 [ext_resource path="res://src/Dialogues/DialogueTree/DialogueTreeWriter/CharacterManager.cs" type="Script" id=7]
@@ -465,7 +465,6 @@ window_title = "Please confirm"
 dialog_text = "Are you sure you want to quit? You may have unsaved files."
 dialog_autowrap = true
 script = ExtResource( 4 )
-_autoDisableQuit = false
 
 [connection signal="tab_changed" from="DialogueTreeWriter" to="DialogueTreeWriter/Character Manager" method="SwitchedTo"]
 [connection signal="text_changed" from="DialogueTreeWriter/Writer/VBoxContainer/Main/TextEdit" to="DialogueTreeWriter/Writer" method="OnTextChanged"]

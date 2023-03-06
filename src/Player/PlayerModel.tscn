@@ -1,4 +1,4 @@
-[gd_scene load_steps=209 format=2]
+[gd_scene load_steps=241 format=2]
 
 [ext_resource path="res://assets/pixel.png" type="Texture" id=1]
 [ext_resource path="res://src/Player/PlayerModel.cs" type="Script" id=2]
@@ -205,9 +205,61 @@
 [ext_resource path="res://assets/characters/player/running animation/running wooden leg/right/jacques running wooden leg right3.png" type="Texture" id=203]
 [ext_resource path="res://assets/characters/player/running animation/running wooden leg/right/jacques running wooden leg right4.png" type="Texture" id=204]
 [ext_resource path="res://assets/characters/player/running animation/running wooden leg/right/jacques running wooden leg right8.png" type="Texture" id=205]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left5.png" type="Texture" id=206]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right7.png" type="Texture" id=207]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/left/jumping left3.png" type="Texture" id=208]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right2.png" type="Texture" id=209]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/left/jumping left2.png" type="Texture" id=210]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/right/jumping right4.png" type="Texture" id=211]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/right/fall right4.png" type="Texture" id=212]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right1.png" type="Texture" id=213]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/right/fall right3.png" type="Texture" id=214]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right5.png" type="Texture" id=215]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left8.png" type="Texture" id=216]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/right/jumping right2.png" type="Texture" id=217]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/left/jumping left1.png" type="Texture" id=218]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left7.png" type="Texture" id=219]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/left/fall left2.png" type="Texture" id=220]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/left/jumping left4.png" type="Texture" id=221]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/right/jumping right3.png" type="Texture" id=222]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right3.png" type="Texture" id=223]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right6.png" type="Texture" id=224]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/left/fall left1.png" type="Texture" id=225]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left3.png" type="Texture" id=226]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left1.png" type="Texture" id=227]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left2.png" type="Texture" id=228]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left4.png" type="Texture" id=229]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right4.png" type="Texture" id=230]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/right/fall right2.png" type="Texture" id=231]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/right/fall right1.png" type="Texture" id=232]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/left/fall left3.png" type="Texture" id=233]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/left/dying left6.png" type="Texture" id=234]
+[ext_resource path="res://assets/characters/player/dying animation/dying normal/right/dying right8.png" type="Texture" id=235]
+[ext_resource path="res://assets/characters/player/jumping animation/jumping forward/right/jumping right1.png" type="Texture" id=236]
+[ext_resource path="res://assets/characters/player/fall animation/fall normal/left/fall left4.png" type="Texture" id=237]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
+"frames": [ ExtResource( 227 ), ExtResource( 228 ), ExtResource( 226 ), ExtResource( 229 ), ExtResource( 206 ), ExtResource( 234 ), ExtResource( 219 ), ExtResource( 216 ) ],
+"loop": true,
+"name": "DyingL",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 213 ), ExtResource( 209 ), ExtResource( 223 ), ExtResource( 230 ), ExtResource( 215 ), ExtResource( 224 ), ExtResource( 207 ), ExtResource( 235 ) ],
+"loop": true,
+"name": "DyingR",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 225 ), ExtResource( 220 ), ExtResource( 233 ), ExtResource( 237 ) ],
+"loop": true,
+"name": "FallL",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 232 ), ExtResource( 231 ), ExtResource( 214 ), ExtResource( 212 ) ],
+"loop": true,
+"name": "FallR",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 25 ), ExtResource( 127 ), ExtResource( 129 ), ExtResource( 128 ), ExtResource( 130 ), ExtResource( 131 ), ExtResource( 126 ), ExtResource( 82 ) ],
 "loop": true,
 "name": "IdleL",
@@ -218,10 +270,20 @@ animations = [ {
 "name": "IdleR",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 218 ), ExtResource( 210 ), ExtResource( 208 ), ExtResource( 221 ) ],
+"loop": true,
+"name": "JumpL",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 144 ), ExtResource( 199 ), ExtResource( 184 ), ExtResource( 168 ), ExtResource( 183 ), ExtResource( 176 ), ExtResource( 169 ), ExtResource( 177 ) ],
 "loop": false,
 "name": "JumpNoMoving",
 "speed": 11.0
+}, {
+"frames": [ ExtResource( 236 ), ExtResource( 217 ), ExtResource( 222 ), ExtResource( 211 ) ],
+"loop": true,
+"name": "JumpR",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 67 ), ExtResource( 69 ), ExtResource( 70 ), ExtResource( 77 ), ExtResource( 78 ), ExtResource( 90 ), ExtResource( 98 ), ExtResource( 99 ) ],
 "loop": true,
@@ -338,7 +400,7 @@ z_as_relative = false
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -4 )
 frames = SubResource( 3 )
-animation = "IdleR"
+animation = "IdleL"
 script = ExtResource( 4 )
 _spritePath = "res://assets/characters/player"
 

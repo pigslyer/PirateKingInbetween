@@ -109,12 +109,6 @@ namespace PirateInBetween.Game.Player
 
 			switch (data.Animation)
 			{
-				case Animations.Jump:
-				anim = "JumpNoMoving";
-				facingAnimation = false;
-
-				break;
-
 				case Animations.Idle:
 				timeInAnim = Mathf.PosMod(timeInAnim, _smokingAnimationCompleteTimeout);
 
@@ -168,20 +162,20 @@ namespace PirateInBetween.Game.Player
 			}
 		}
 
-		private float _timeInIdle = 0f;
+		private float _timeInAnim = 0f;
 		private Animations _prevAnim = Animations.Idle;
 
 		private float ProcessTimeInAnim(PlayerCurrentFrameData data)
 		{
-			_timeInIdle += data.Delta;
+			_timeInAnim += data.Delta;
 
 			if (data.Animation != _prevAnim)
 			{
-				_timeInIdle = 0f;
+				_timeInAnim = 0f;
 				_prevAnim = data.Animation;
 			}
 
-			return _timeInIdle;
+			return _timeInAnim;
 		}
 
 		private async Task ShowTempDamageDealer(float duration)

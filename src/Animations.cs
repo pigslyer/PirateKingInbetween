@@ -15,6 +15,7 @@ namespace PirateInBetween.Game
 		[EnumString("Jump")] Jump,
 		[EnumString("Fall")] Fall,
 		[EnumString("Run")] Run,
+		[EnumString("Dying")] Dying,
 		[EnumString("Pushing")] Pushing,
 		[EnumString("Stunned")] Stunned,
 		[EnumString("StunnedMoving")] StunnedMoving,

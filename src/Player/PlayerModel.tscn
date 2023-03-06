@@ -241,24 +241,24 @@
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
 "frames": [ ExtResource( 227 ), ExtResource( 228 ), ExtResource( 226 ), ExtResource( 229 ), ExtResource( 206 ), ExtResource( 234 ), ExtResource( 219 ), ExtResource( 216 ) ],
-"loop": true,
+"loop": false,
 "name": "DyingL",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 213 ), ExtResource( 209 ), ExtResource( 223 ), ExtResource( 230 ), ExtResource( 215 ), ExtResource( 224 ), ExtResource( 207 ), ExtResource( 235 ) ],
-"loop": true,
+"loop": false,
 "name": "DyingR",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 225 ), ExtResource( 220 ), ExtResource( 233 ), ExtResource( 237 ) ],
-"loop": true,
+"loop": false,
 "name": "FallL",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 232 ), ExtResource( 231 ), ExtResource( 214 ), ExtResource( 212 ) ],
-"loop": true,
+"loop": false,
 "name": "FallR",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 25 ), ExtResource( 127 ), ExtResource( 129 ), ExtResource( 128 ), ExtResource( 130 ), ExtResource( 131 ), ExtResource( 126 ), ExtResource( 82 ) ],
 "loop": true,
@@ -271,9 +271,9 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 218 ), ExtResource( 210 ), ExtResource( 208 ), ExtResource( 221 ) ],
-"loop": true,
+"loop": false,
 "name": "JumpL",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 144 ), ExtResource( 199 ), ExtResource( 184 ), ExtResource( 168 ), ExtResource( 183 ), ExtResource( 176 ), ExtResource( 169 ), ExtResource( 177 ) ],
 "loop": false,
@@ -281,9 +281,9 @@ animations = [ {
 "speed": 11.0
 }, {
 "frames": [ ExtResource( 236 ), ExtResource( 217 ), ExtResource( 222 ), ExtResource( 211 ) ],
-"loop": true,
+"loop": false,
 "name": "JumpR",
-"speed": 5.0
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 67 ), ExtResource( 69 ), ExtResource( 70 ), ExtResource( 77 ), ExtResource( 78 ), ExtResource( 90 ), ExtResource( 98 ), ExtResource( 99 ) ],
 "loop": true,
@@ -391,6 +391,7 @@ __damageTakerBodyPath = NodePath("Flippable/DamageTaker/Body")
 __damageDealerTempPreviewPath = NodePath("Flippable/TempSlash")
 __interactionDisplayPath = NodePath("InteractionTextDisplay")
 __playerSpritePath = NodePath("AnimatedSprite")
+_smokingLoopCount = 1
 
 [node name="InteractionTextDisplay" type="Position2D" parent="."]
 position = Vector2( 0, -40 )
@@ -400,7 +401,9 @@ z_as_relative = false
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -4 )
 frames = SubResource( 3 )
-animation = "IdleL"
+animation = "FallL"
+frame = 3
+playing = true
 script = ExtResource( 4 )
 _spritePath = "res://assets/characters/player"
 

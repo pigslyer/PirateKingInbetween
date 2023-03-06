@@ -85,7 +85,7 @@ namespace PirateInBetween.Game.Player
 			bool stunned = appliedData.StunDuration > 0f;
 			bool knocked = appliedData.Direction.LengthSquared() > 0f;
 
-			Vector2 knockbackVector = appliedData.Direction * appliedData.Damage * 20;
+			Vector2 knockbackVector = appliedData.Direction * 200;
 
 			if (stunned || knocked)
 			{
@@ -104,8 +104,15 @@ namespace PirateInBetween.Game.Player
 
 		}
 
-		private void DeathSequence()
+		private async Task DeathSequence()
 		{
+			const float deathTimer = 1f;
+
+			_behaviourManager.StopActive();
+			_behaviourManager.ActiveBehaviours = PlayerBehaviour.Behaviours.Dead;
+
+			await this.WaitFor(deathTimer);
+
 			_uiManager.ShowDeathMenu();
 		}
 
@@ -118,7 +125,19 @@ namespace PirateInBetween.Game.Player
 			_movedCamera = _movingCamera;
 			_movingCamera = false;
 
+			if (_health <= 0)
+			{
+				_nextFrameData.CurrentAction = Animations.Dying;
+			}
+
 			RunBehaviours(_nextFrameData);
+
+
+			if (_health <= 0 && _nextFrameData.Velocity.x != 0f)
+			{
+				_nextFrameData.FacingRight = _nextFrameData.Velocity.x < 0f;
+			}
+
 			ApplyFrameData(_nextFrameData);
 
 			if (_movedCamera && !_movingCamera)

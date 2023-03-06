@@ -110,6 +110,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 			/// Enabled behaviours need not do anything even if they're enabled, they can just check for inputs.
 			/// </summary>
 			Default = Behaviours.All & ~(Behaviours.Noclip),
+			Dead = Falling | DamageHandler,
 			
 			BasicMovementNoJump = Behaviours.HorizontalMovement | Behaviours.Falling,
 			Controllable = Behaviours.HorizontalMovement | Behaviours.Jumping | Behaviours.Interaction | Behaviours.Carrying | Behaviours.MeleeAttack | Behaviours.RangedAttack,

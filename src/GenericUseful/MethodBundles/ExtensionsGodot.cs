@@ -140,7 +140,7 @@ public static class ExtensionsGodot
 	/// <param name="toGlobal"></param>
 	/// <param name="mask"></param>
 	/// <returns></returns>
-	public static bool CastRay(this RayCast2D ray, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null)
+	public static bool CastRay(this Godot.RayCast2D ray, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null)
 	{
 		if (toGlobal != null)
 		{
@@ -166,7 +166,7 @@ public static class ExtensionsGodot
 	/// The function returns true if the ray now collides with anything.
 	/// <see cref="collidingWith"/> represents the first object the newly updated ray intersects.
 	/// </summary>
-	public static bool TryCollideRay<T>(this RayCast2D ray, out T collidingWith, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null) where T : CollisionObject2D
+	public static bool TryCollideRay<T>(this Godot.RayCast2D ray, out T collidingWith, Vector2? toGlobal = null, Vector2? toLocal = null, PhysicsLayers? mask = null) where T : CollisionObject2D
 	{
 		bool ret = CastRay(ray, toGlobal, toLocal, mask);
 
@@ -340,5 +340,68 @@ public static class ExtensionsGodot
 	public static float GetAnimationTime(this SpriteFrames frames, string animation)
 	{
 		return frames.GetFrameCount(animation) / frames.GetAnimationSpeed(animation);
+	}
+
+#region Travel across node graph
+
+	public static IEnumerator<Node> GetEnumeratorProgeny(this Node root) => new TreeIterator(root);
+
+	private class TreeIterator : IEnumerator<Node>
+	{
+		private readonly Node Root;
+		private int _index = 0;
+		private TreeIterator _curIterator = null;
+
+		public TreeIterator(Node root)
+		{
+			Root = root;
+		}
+
+		public Node Current => _curIterator?.Current ?? Root;
+
+		object IEnumerator.Current => throw new NotImplementedException();
+
+		public void Dispose()
+		{ }
+
+		public bool MoveNext()
+		{
+			if (_curIterator != null && !_curIterator.MoveNext())
+			{
+				_curIterator = null;
+			}
+
+			if (_curIterator == null && _index < Root.GetChildCount())
+			{
+				_curIterator = new TreeIterator(Root.GetChild(_index++));
+			}
+
+			return _curIterator != null;
+		}
+
+		public void Reset()
+		{
+			_index = 0;
+			_curIterator = null;
+		}
+	}
+
+#endregion
+
+	public static IEnumerable<T> GetAllProgenyNodesOfType<T>(this Node parent)
+	{
+		ICollection<T> ret = new LinkedList<T>();
+
+		IEnumerator<Node> nodes = parent.GetEnumeratorProgeny();
+
+		while (nodes.MoveNext())
+		{
+			if (nodes.Current is T target)
+			{
+				ret.Add(target);
+			}
+		}
+
+		return ret;
 	}
 }

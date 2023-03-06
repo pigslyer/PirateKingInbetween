@@ -1,6 +1,11 @@
 using Godot;
-using System;
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 /// <summary>
 /// Convenience class that casts CollisionLayer and CollisionMask to PhysicsLayers and vice versa.
@@ -64,4 +69,17 @@ public abstract class StaticBody2D : Godot.StaticBody2D
 		get => (PhysicsLayers)base.CollisionMask;
 		set => base.CollisionMask = (uint)value;
 	}
+}
+
+/// <summary>
+/// Convinience class that etc.
+/// </summary>
+public abstract class RayCast2D : Godot.RayCast2D
+{
+	public new PhysicsLayers CollisionMask
+	{
+		get => (PhysicsLayers)base.CollisionMask;
+		set => base.CollisionMask = (uint) value;
+	}
+
 }

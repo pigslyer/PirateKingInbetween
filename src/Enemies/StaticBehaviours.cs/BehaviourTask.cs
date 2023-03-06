@@ -13,5 +13,13 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 	{
 		public readonly Action WhatDo;
 		public readonly Func<bool> Condition;
+
+		public BehaviourTask(Action whatToDo, Func<bool> whileFalse)
+		{
+			WhatDo = whatToDo; Condition = whileFalse;
+		}
+
+		public BehaviourTask(Action whatDo) : this(whatDo, () => true)
+		{ }
 	}
 }

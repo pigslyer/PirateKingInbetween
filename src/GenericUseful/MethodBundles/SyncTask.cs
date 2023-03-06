@@ -14,6 +14,7 @@ public class SyncTaskPool
 
 	private LinkedList<SyncTask> _tasks = new LinkedList<SyncTask>();
 
+	public bool IsRunning() => _tasks.Count > 0;
 	public bool IsDone() => _tasks.Count == 0;
 
 	public void Run()

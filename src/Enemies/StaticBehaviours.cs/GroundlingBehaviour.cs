@@ -22,7 +22,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 		[Export] private float _gravity = 800f;
 		[Export] private float _stunnedOnFloorDeaccel = 200f;
 
-		private RayCast2D _floorFacingRayCast = null; 
+		private Godot.RayCast2D _floorFacingRayCast = null; 
 
 		protected override void Run(out bool mayCallExecute)
 		{
@@ -41,7 +41,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 		{
 			base._Ready();
 
-			_floorFacingRayCast = GetNode<RayCast2D>(__floorFacingRayCastPath);
+			_floorFacingRayCast = GetNode<Godot.RayCast2D>(__floorFacingRayCastPath);
 		}
 
 
@@ -246,7 +246,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 
 		protected void NotOnFloor() => _onFloorTimer = float.PositiveInfinity;
 
-		protected bool IsOnFloor() => _onFloorTimer < COYOTE_TIME;
+		public override bool IsOnFloor() => _onFloorTimer < COYOTE_TIME;
 
 		#endregion
 

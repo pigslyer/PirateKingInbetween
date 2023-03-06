@@ -54,7 +54,7 @@ namespace PirateInBetween.Game.Combos.List
 			new DamageInstance(
 				new DamageAmount(1, 3f),
 				(0.3f, 0.5f),
-				ComboExecutorDamageDealers.Front,
+				DamageDealerTargettingArea.Front,
 				() => 60f.ToVectorDeg(10f)
 			)
 		) { }
@@ -78,7 +78,7 @@ namespace PirateInBetween.Game.Combos.List
 			new DamageInstance(
 				1, 
 				(0.1f, 0.3f), 
-				ComboExecutorDamageDealers.Front
+				DamageDealerTargettingArea.Front
 			)
 		) { }
 	}
@@ -101,7 +101,7 @@ namespace PirateInBetween.Game.Combos.List
 			new DamageInstance(
 				3,
 				(0.5f, 0.8f),
-				ComboExecutorDamageDealers.Front
+				DamageDealerTargettingArea.Front
 			)
 		) { }
 	}

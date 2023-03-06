@@ -32,7 +32,7 @@ namespace PirateInBetween.Game.Combos.List
 		{
 			CurrentData.Velocity = Vector2.Zero;
 
-			AddTask().DisableDamageFor(DODGE_TIME, ComboExecutorDamageTaker.Body);
+			AddTask().DisableDamageFor(DODGE_TIME, DamageTakerTargetArea.Body);
 
 			AddTask()
 			.InterpFor(
@@ -56,7 +56,7 @@ namespace PirateInBetween.Game.Combos.List
 				() => !(CurrentData.IsGoingForward() && InputManager.IsActionPressed(InputButton.Dodge)), 
 				() =>
 				{
-					CurrentExecutor.TakeDamage(ComboExecutorDamageTaker.Body); 
+					CurrentExecutor.TakeDamage(DamageTakerTargetArea.Body); 
 					Stop();
 				}
 			);

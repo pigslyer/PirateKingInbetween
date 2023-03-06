@@ -195,41 +195,41 @@ namespace PirateInBetween.Game.Player
 			preview.Hide();
 		}
 
-		public void DamageDealerEnable(ComboExecutorDamageDealers area, DamageData damageData)
+		public void DamageDealerEnable(DamageDealerTargettingArea area, DamageData damageData)
 		{
 			var dealer = GetComboDamageDealer(area);
 			dealer.Enable(damageData);
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Show();
 		}
-		public void DamageDealerDisable(ComboExecutorDamageDealers area)
+		public void DamageDealerDisable(DamageDealerTargettingArea area)
 		{
 			GetComboDamageDealer(area).Disable();
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Hide();
 		}
 
 		// spreading damagetakers across multiple areas'd be frustrating and make no sense.
-		public void DamageTakerEnable(ComboExecutorDamageTaker area) => GetComboDamageTaker(area).Disabled = false;
+		public void DamageTakerEnable(DamageTakerTargetArea area) => GetComboDamageTaker(area).Disabled = false;
 
-		public void DamageTakerDisable(ComboExecutorDamageTaker area) => GetComboDamageTaker(area).Disabled = true;
+		public void DamageTakerDisable(DamageTakerTargetArea area) => GetComboDamageTaker(area).Disabled = true;
 
 
 
-		private DamageDealer GetComboDamageDealer(ComboExecutorDamageDealers area)
+		private DamageDealer GetComboDamageDealer(DamageDealerTargettingArea area)
 		{
 			switch (area)
 			{
 				default:
-				case ComboExecutorDamageDealers.Front:
+				case DamageDealerTargettingArea.Front:
 				return _damageDealerSlash;
 			}
 		}
 
-		private CollisionShape2D GetComboDamageTaker(ComboExecutorDamageTaker area)
+		private CollisionShape2D GetComboDamageTaker(DamageTakerTargetArea area)
 		{
 			switch (area)
 			{
 				default:
-				case ComboExecutorDamageTaker.Body:
+				case DamageTakerTargetArea.Body:
 				return _damageTakerBody;
 			}
 		}

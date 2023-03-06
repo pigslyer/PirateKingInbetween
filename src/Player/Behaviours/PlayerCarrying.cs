@@ -27,7 +27,7 @@ namespace PirateInBetween.Game.Player.Behaviours
         [Export] private NodePath _boxDropPositionPath = null;
         #endregion
         
-        private RayCast2D _ray;
+        private Godot.RayCast2D _ray;
 
         private CarriableBox _carriedBox = null;
         private bool _isCarryingBox => _carriedBox != null;
@@ -47,7 +47,7 @@ namespace PirateInBetween.Game.Player.Behaviours
         {
             base._Ready();
             
-            _ray = GetNode<RayCast2D>(_carryingDetectorPath);
+            _ray = GetNode<Godot.RayCast2D>(_carryingDetectorPath);
             _horizontalMovement = GetSiblingBehaviour<PlayerHorizontalMovement>(BehavioursPos.HorizontalMovement);
             _animationSelector = GetSiblingBehaviour<PlayerAnimationSelector>(BehavioursPos.AnimationSelector);
             _aboveHeadPosition = GetNode<Position2D>(_aboveHeadPositionPath);

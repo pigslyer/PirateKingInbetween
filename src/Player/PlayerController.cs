@@ -203,11 +203,11 @@ namespace PirateInBetween.Game.Player
 			set => MoveAndCollide(value - GlobalPosition);
 		}
 
-		void IComboExecutor.DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => _model.DamageDealerEnable(damageDealer, data);
+		void IComboExecutor.DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _model.DamageDealerEnable(damageDealer, data);
 
-		void IComboExecutor.StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.DamageDealerDisable(damageDealer);
-		void IComboExecutor.TakeDamage(ComboExecutorDamageTaker to) => _model.DamageTakerEnable(to);
-		void IComboExecutor.StopTakingDamage(ComboExecutorDamageTaker to) => _model.DamageTakerDisable(to);
+		void IComboExecutor.StopDealingDamage(DamageDealerTargettingArea damageDealer) => _model.DamageDealerDisable(damageDealer);
+		void IComboExecutor.TakeDamage(DamageTakerTargetArea to) => _model.DamageTakerEnable(to);
+		void IComboExecutor.StopTakingDamage(DamageTakerTargetArea to) => _model.DamageTakerDisable(to);
 
 		bool IComboExecutor.IsOnFloor 
 		{ 

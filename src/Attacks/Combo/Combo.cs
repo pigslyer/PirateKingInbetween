@@ -170,7 +170,7 @@ namespace PirateInBetween.Game.Combos
 				_currentLink = taskBase;
 			}
 
-			public ComboTask DisableDamageFor(FloatInterval time, ComboExecutorDamageTaker area)
+			public ComboTask DisableDamageFor(FloatInterval time, DamageTakerTargetArea area)
 			{
 				return WaitFor(time.Start)
 					.Do(() => _combo.CurrentExecutor.StopTakingDamage(area))
@@ -240,9 +240,9 @@ namespace PirateInBetween.Game.Combos
 			public readonly DamageAmount Damage;
 			public readonly Func<Vector2> KnockbackDirection;
 			public readonly FloatInterval ValidInterval;
-			public readonly ComboExecutorDamageDealers TargetArea;
+			public readonly DamageDealerTargettingArea TargetArea;
 
-			public DamageInstance(DamageAmount damageAmount, FloatInterval validInterval, ComboExecutorDamageDealers targetArea, Func<Vector2> knockbackDirection = null)
+			public DamageInstance(DamageAmount damageAmount, FloatInterval validInterval, DamageDealerTargettingArea targetArea, Func<Vector2> knockbackDirection = null)
 			{
 				Damage = damageAmount; ValidInterval = validInterval; TargetArea = targetArea; KnockbackDirection = knockbackDirection;
 			}

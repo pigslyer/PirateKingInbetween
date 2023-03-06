@@ -37,6 +37,7 @@ namespace PirateInBetween.Game.Enemies
 			_behaviour = GetNode<BasicBehaviour>(__basicBehaviourPath);
 			GetNode<DamageTaker>(__damageTakerPath).OnDamageTaken += OnDamageTakenReaction;
 
+			_model.Initialize(this);
 			_behaviour.Initialize(this);
 			_defaultDamageReaction = OnDamageTakenDefault();
 			_health = _maxHealth;
@@ -46,6 +47,7 @@ namespace PirateInBetween.Game.Enemies
 				Velocity = Vector2.Zero,
 				FacingRight = true
 			};
+
 		}
 
 
@@ -103,15 +105,15 @@ namespace PirateInBetween.Game.Enemies
 		#region IComboExecutor
 		Vector2 IComboExecutor.CameraPosition { get; set; }
 
-		bool IComboExecutor.IsOnFloor => IsOnFloor();
+		bool IComboExecutor.IsOnFloor => _behaviour.IsOnFloor();
 
-		public void DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => _model.DealDamage(damageDealer, data);	
+		public void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _model.DealDamage(damageDealer, data);	
 
-		public void StopDealingDamage(ComboExecutorDamageDealers damageDealer) => _model.StopDealingDamage(damageDealer);
+		public void StopDealingDamage(DamageDealerTargettingArea damageDealer) => _model.StopDealingDamage(damageDealer);
 
-		public void TakeDamage(ComboExecutorDamageTaker to) => _model.TakeDamage(to);
+		public void TakeDamage(DamageTakerTargetArea to) => _model.TakeDamage(to);
 
-		public void StopTakingDamage(ComboExecutorDamageTaker to) => _model.StopTakingDamage(to);
+		public void StopTakingDamage(DamageTakerTargetArea to) => _model.StopTakingDamage(to);
 
 		public void OnDamageTakenSet(Combo.OnHitReaction damageTaken) => _defaultDamageReaction = damageTaken;
 

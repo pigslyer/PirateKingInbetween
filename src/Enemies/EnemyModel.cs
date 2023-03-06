@@ -17,51 +17,36 @@ namespace PirateInBetween.Game.Enemies
 
 		#endregion
 
-		#region Damage paths
 
-		[Export] private NodePath __frontDealerPath = null;
-		[Export] private NodePath __bodyTakerPath = null;
-
-		#endregion
-
-		private DamageDealer[] _damageDealers;
-		private CollisionShape2D[] _damageTakers;
-
-		public override void _Ready()
+		public void Initialize(EnemyController controller)
 		{
-			base._Ready();
-
-			GenerateDamageDealersArray();
-			GenerateDamageTakersArray();
+			GenerateDamageDealersArray(controller); GenerateDamageTakersArray(controller);
 		}
 
 		#region Damage
-		private void GenerateDamageDealersArray()
-		{
-			_damageDealers = new DamageDealer[(int)ComboExecutorDamageDealers.Count];
 
-			// add more as time goes on
-			_damageDealers[(int)ComboExecutorDamageDealers.Front] = GetNodeOrNull<DamageDealer>(__frontDealerPath);
+
+		private EnumToCollectionMap<DamageDealer, DamageDealerTargettingArea> _damageDealers;
+
+		private EnumToCollectionMap<DamageTaker, DamageTakerTargetArea> _damageTakers;
+
+		private void GenerateDamageDealersArray(EnemyController root)
+		{
+			_damageDealers = new EnumToCollectionMap<DamageDealer, DamageDealerTargettingArea>(root.GetAllProgenyNodesOfType<DamageDealer>(), d => d.DealerType);
 		}
 
-		private void GenerateDamageTakersArray()
+		private void GenerateDamageTakersArray(EnemyController root)
 		{
-			_damageTakers = new CollisionShape2D[(int)ComboExecutorDamageTaker.Count];
-
-			// add more shit as time goes on
-			_damageTakers[(int)ComboExecutorDamageTaker.Body] = GetNodeOrNull<CollisionShape2D>(__bodyTakerPath);
+			_damageTakers = new EnumToCollectionMap<DamageTaker, DamageTakerTargetArea>(root.GetAllProgenyNodesOfType<DamageTaker>(), t => t.TakerType);
 		}
 
-		private DamageDealer GetDealer(ComboExecutorDamageDealers dealer) => _damageDealers[(int)dealer] ?? throw new NotImplementedException($"Model does not contain reference to {dealer}.");
-		private CollisionShape2D GetTaker(ComboExecutorDamageTaker taker) => _damageTakers[(int)taker] ?? throw new NotImplementedException($"Model does not contain reference to {taker}.");
 
+		public void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _damageDealers.DoFor(d => d.Enable(data), damageDealer);
 
-		public void DealDamage(ComboExecutorDamageDealers damageDealer, DamageData data) => GetDealer(damageDealer).Enable(data);
+		public void StopDealingDamage(DamageDealerTargettingArea damageDealer) => _damageDealers.DoFor(d => d.Disable(), damageDealer);
 
-		public void StopDealingDamage(ComboExecutorDamageDealers damageDealer) => GetDealer(damageDealer).Disable();
-
-		public void TakeDamage(ComboExecutorDamageTaker damageTaker) => GetTaker(damageTaker).Disabled = false;
-		public void StopTakingDamage(ComboExecutorDamageTaker damageTaker) => GetTaker(damageTaker).Disabled = true;
+		public void TakeDamage(DamageTakerTargetArea damageTaker) => _damageTakers.DoFor(t => t.Enable(), damageTaker);
+		public void StopTakingDamage(DamageTakerTargetArea damageTaker) => _damageTakers.DoFor(t => t.Disable(), damageTaker);
 
 		#endregion
 	

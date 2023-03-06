@@ -30,7 +30,8 @@ namespace PirateInBetween.Game.Enemies
 
 		protected EnemyFrameData CurrentData { get; private set; }
 		
-		private RayCast2D _ray;
+		private EnumToCollectionMap<IDamageTakerDetector, DamageDealerTargettingArea> _dealerTypeToDetectorCollection;
+		private Godot.RayCast2D _ray;
 
 		#region Sync tasks
 
@@ -72,17 +73,25 @@ namespace PirateInBetween.Game.Enemies
 		{
 			base._Ready();
 
-			_ray = GetNode<RayCast2D>(__inFrontCheckPath);
+			_ray = GetNode<Godot.RayCast2D>(__inFrontCheckPath);
 		}
 
 		public void Initialize(EnemyController controller)
 		{
-			Controller = controller;
+			Controller = controller; _dealerTypeToDetectorCollection = controller.GetDealerTypeToDetectorCollection();
 		}
 
 		public void Run(EnemyFrameData data)
 		{
 			CurrentData = data;
+
+			if (_syncTasks.IsRunning())
+			{
+				_syncTasks.Run();
+				
+				return;
+			}
+
 			Run(out bool mayCallExecute);
 
 			if (mayCallExecute)
@@ -108,12 +117,44 @@ namespace PirateInBetween.Game.Enemies
 		#endregion
 
 		#region Basic behaviours
-		protected void RunCombo(Combo which)
+		protected void ExecuteCombo<ComboToRun>() where ComboToRun : Combo, new()
 		{
-			throw new NotImplementedException();
+			Combo combo = new ComboToRun();
+			combo.ExecuteCombo(Controller, CurrentData);
+			AddTask(
+				new BehaviourTask(() => combo.GiveFrameData(CurrentData), () => combo.IsDone())
+			)
+			.Chain(
+				new BehaviourTask(() => combo.Stop())
+			);
 		}
 
 		protected virtual bool CanSeeWall() => _ray.IsColliding();
+
+		public virtual bool IsOnFloor() => false;
+
+		#endregion
+
+		#region Taker detection
+
+		protected bool TrySeeOpponent(DamageDealerTargettingArea from, out DamageTakerTargetArea partSeen)
+		{
+			DamageTakerTargetArea? area = null;
+
+			_dealerTypeToDetectorCollection.DoFor(
+				what: thing =>
+				{
+					if (thing.CanSeeTaker())
+					{
+						area = thing.GetTakerArea();
+					}
+				},
+				type: from
+			);
+			
+			partSeen = area ?? DamageTakerTargetArea.Count;
+			return area != null;
+		}
 
 		#endregion
 

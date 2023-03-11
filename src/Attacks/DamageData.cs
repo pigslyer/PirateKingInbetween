@@ -21,6 +21,8 @@ namespace PirateInBetween.Game
 		public static implicit operator DamageAmount(int amount) => new DamageAmount(amount, 0f);
 
 		public static implicit operator int(DamageAmount data) => data.AmountOfDamage;
+
+		public bool IsNull => AmountOfDamage == 0 && Stun == 0f;
 	}
 
 	public class DamageData
@@ -44,5 +46,7 @@ namespace PirateInBetween.Game
 				),
 				Direction * reaction.KnockbackMult
 			);
+		
+		public bool IsNull => DamageAmount.IsNull && Direction.LengthSquared() == 0;
 	}
 }

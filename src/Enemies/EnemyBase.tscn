@@ -15,10 +15,13 @@ __damageTakerPath = NodePath("DamageTaker")
 
 [node name="EnemyModel" type="Node2D" parent="EnemyController"]
 script = ExtResource( 2 )
+__BubbleParentPath = NodePath("StunBubble")
 
 [node name="WallCheck" type="RayCast2D" parent="EnemyController/EnemyModel"]
 position = Vector2( 16, -21 )
 cast_to = Vector2( 30, 0 )
+
+[node name="StunBubble" type="Position2D" parent="EnemyController/EnemyModel"]
 
 [node name="BasicBehaviour" type="Node" parent="EnemyController"]
 

@@ -55,6 +55,11 @@ namespace PirateInBetween.Game.Enemies
 		{
 			DamageData newData = data.Apply(_defaultDamageReaction());
 
+			if (newData.IsNull)
+			{
+				return;
+			}
+
 			if (newData.Damage > 0)
 			{
 				GD.Print($"tooken {newData.Damage} damage");
@@ -68,7 +73,9 @@ namespace PirateInBetween.Game.Enemies
 			if (stunned)
 			{
 				GD.Print($"stunnen for {newData.StunDuration} time");
-				_behaviour.OnStunned(newData.StunDuration, _nextFrameData);
+				float duration = _behaviour.OnStunned(newData.StunDuration, _nextFrameData);
+
+				_model.PlayStun(duration);
 			}
 
 			if (knockedBack)

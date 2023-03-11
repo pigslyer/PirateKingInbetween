@@ -73,6 +73,19 @@ public static class ExtensionsGodot
 		}
 	}
 
+	public static async Task DoFor(this Node node, Predicate<float> whileTrue, Action whatDo)
+	{
+		float delta = node.GetProcessDeltaTime();
+		
+		while (whileTrue(delta))
+		{
+			whatDo();
+
+			await node.AwaitIdle();
+			delta = node.GetProcessDeltaTime();
+		}
+	}
+
 	public static void Reparent(this Node child, Node newParent)
 	{
 		if (child.GetParent() != null)

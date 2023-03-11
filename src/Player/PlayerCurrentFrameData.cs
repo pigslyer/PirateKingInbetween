@@ -62,18 +62,9 @@ namespace PirateInBetween.Game.Player
 		bool ICombatFrameData.FacingRight => FacingRight;
 		void ICombatFrameData.SwitchDirection() => FacingRight = !FacingRight;
 
-	}
-
-	public enum PlayerAnimation
-	{
-		Idle,
-		Jump,
-		Fall,
-		Run,
-		MeleeAttack,
-		RangedAttack,
-		Pushing,
-		Stunned,
-		StunnedAir,
+		CombatAnimation ICombatFrameData.Anim
+		{
+			set => CurrentAction = new PlayerAction(value);
+		}
 	}
 }

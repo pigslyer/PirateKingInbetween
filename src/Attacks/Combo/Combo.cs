@@ -187,6 +187,14 @@ namespace PirateInBetween.Game.Combos
 				);
 			}
 
+			public ComboTask PlayFor(Animations animation, float time)
+			{
+				return DoFor(
+					time: time,
+					what: (elapsed, _, total) => _combo.CurrentData.Anim = new CombatAnimation(animation, elapsed / total)
+				);
+			}
+
 			public ComboTask InterpFor(Vector2 from, Vector2 to, Action<Vector2> setter, float time, Tween.TransitionType trans = Tween.TransitionType.Cubic, Tween.EaseType ease = Tween.EaseType.Out) => InterpFor<Vector2>(from, to - from, setter, time, trans, ease);
 			public ComboTask InterpFor(float from, float to, Action<float> setter, float time, Tween.TransitionType trans = Tween.TransitionType.Cubic, Tween.EaseType ease = Tween.EaseType.Out) => InterpFor<float>(from, to - from, setter, time, trans, ease);
 

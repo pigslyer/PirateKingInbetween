@@ -31,7 +31,6 @@ namespace PirateInBetween.Game.Player
 		#region AnimationTimings
 
 		[Export] private float _timeUntilSmokingStarts = 10f;
-		[Export] private int _smokingLoopCount = 8;
 
 		#endregion
 
@@ -45,8 +44,6 @@ namespace PirateInBetween.Game.Player
 		private PlayerController _player;
 		
 
-		private float _smokingAnimationCompleteTimeout;
-
 		public override void _Ready()
 		{
 			_flippable = GetNode<Node2D>(__flippablePath);
@@ -57,8 +54,6 @@ namespace PirateInBetween.Game.Player
 			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
 			_player = GetNode<PlayerController>(__playerPath);
 
-			_smokingAnimationCompleteTimeout = 
-				_timeUntilSmokingStarts + _playerSprite.Frames.GetAnimationTime("SmokingStartR") + _smokingLoopCount * _playerSprite.Frames.GetAnimationTime("SmokingR") + _playerSprite.Frames.GetAnimationTime("SmokingStopR");
 		}
 
 		public void UpdateModel(PlayerCurrentFrameData data)
@@ -98,6 +93,7 @@ namespace PirateInBetween.Game.Player
 
 		private void PlayAnimation(PlayerCurrentFrameData data)
 		{
+
 			string DefaultAnim(Animations animation, bool facingRight) => ApplyFacing(animation.GetString(), facingRight);
 			string ApplyFacing(string animation, bool facingRight) => $"{animation}{(facingRight ? "R" : "L")}";
 			string ApplyWooden(string animation, bool isWooden) => isWooden ? $"Wood{animation}" : animation;
@@ -109,36 +105,11 @@ namespace PirateInBetween.Game.Player
 
 			switch (data.Animation)
 			{
-				case Animations.Idle:
-				timeInAnim = Mathf.PosMod(timeInAnim, _smokingAnimationCompleteTimeout);
-
-				facingAnimation = true;
-
-				if (timeInAnim > _timeUntilSmokingStarts)
-				{
-					timeInAnim -= _timeUntilSmokingStarts;
-					float startTime = _playerSprite.Frames.GetAnimationTime("SmokingStartR"); 
-
-					if (timeInAnim < startTime)
-					{
-						anim = "SmokingStart";
-					}
-					else if (timeInAnim - startTime < _playerSprite.Frames.GetAnimationTime("SmokingR") * _smokingLoopCount)
-					{
-						anim = "Smoking";
-					}
-					else
-					{
-						anim = "SmokingStop";
-					}
-				}
-				else
-				{
-					anim = "Idle";
-				}
-
-				anim = ApplyFacing(anim, data.FacingRight);
-
+				case Animations.BasicCombo3:
+				case Animations.BasicCombo2:
+				case Animations.BasicCombo1:
+				anim = data.Animation.GetString();
+				facingAnimation = false;
 				break;
 
 				default:
@@ -154,7 +125,16 @@ namespace PirateInBetween.Game.Player
 
 			if (_playerSprite.Frames.HasAnimation(anim))
 			{
-				_playerSprite.Play(anim);
+				if (data.CurrentAction.PercentageDone is float percDone)
+				{
+					_playerSprite.Playing = false;
+					_playerSprite.Animation = anim;
+					_playerSprite.Frame = Mathf.RoundToInt(percDone * _playerSprite.Frames.GetFrameCount(anim));
+				}
+				else
+				{
+					_playerSprite.Play(anim);
+				}
 			}
 			else
 			{

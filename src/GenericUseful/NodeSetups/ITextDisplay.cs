@@ -12,7 +12,7 @@ namespace PirateInBetween
 	/// <summary>
 	/// A text display that can appear and disappear on command.
 	/// </summary>
-	public interface ITextDisplay
+	public interface ITextDisplay : ICanvasItem
 	{
 		void Appear(Node parent, Vector2 globalPosition, string text);
 		void Disappear();

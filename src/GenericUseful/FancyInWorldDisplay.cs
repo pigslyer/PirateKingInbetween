@@ -42,7 +42,7 @@ namespace PirateInBetween
 			TextureRect rect = GetNode<TextureRect>(__texturePath);
 			_texture = rect.Texture = texture;
 
-			(int width, int height) size = overrideSize ?? (texture.GetWidth(), texture.GetHeight());
+			(int width, int height) size = overrideSize ?? (texture?.GetWidth() ?? 0, texture?.GetHeight() ?? 0);
 
 			rect.MarginLeft = -size.width/2; rect.MarginTop = -size.height/2; 
 			rect.MarginRight = size.width/2; rect.MarginBottom = size.height/2;

@@ -15,5 +15,6 @@ namespace PirateInBetween.Game.Combos
 		float Delta { get; }
 		bool FacingRight { get; }
 		void SwitchDirection();
+		CombatAnimation Anim { set; }
 	}
 }

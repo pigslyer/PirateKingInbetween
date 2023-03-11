@@ -27,6 +27,10 @@ namespace PirateInBetween.Game.Enemies
 		bool ICombatFrameData.FacingRight { get => FacingRight; }
 		void ICombatFrameData.SwitchDirection() => FacingRight = !FacingRight;
 		
+		CombatAnimation ICombatFrameData.Anim
+		{
+			set => GD.PushWarning("Enemy animations have yet to be implemented");
+		}
 
 		#endregion
 	}

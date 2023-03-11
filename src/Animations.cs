@@ -21,6 +21,12 @@ namespace PirateInBetween.Game
 		[EnumString("StunnedMoving")] StunnedMoving,
 		[EnumString("StunnedAir")] StunnedAir,
 		[EnumString("Idle")] WIP,
+		[EnumString("BasicCombo1")] BasicCombo1,
+		[EnumString("BasicCombo2")] BasicCombo2,
+		[EnumString("BasicCombo3")] BasicCombo3,
+		[EnumString("DodgeSlash")] DodgeSlash,
+		[EnumString("JumpSlashFromGround")] Uppercut,
+		[EnumString("JumpSlash")] JumpAttack,
 	}
 
 	public static class AnimationsExtensions

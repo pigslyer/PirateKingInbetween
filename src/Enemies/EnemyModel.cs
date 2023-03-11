@@ -15,6 +15,8 @@ namespace PirateInBetween.Game.Enemies
 	{
 		private static readonly PackedScene BUBBLE_SCENE = ReflectionHelper.LoadScene<FancyInWorldDisplay>();
 
+		[Export] private Texture _stunBubble = null;
+
 		#region Paths
 
 		[Export] private NodePath __BubbleParentPath = null;
@@ -75,16 +77,17 @@ namespace PirateInBetween.Game.Enemies
 				return;
 			}
 
-			IIconDisplay bubble = BUBBLE_SCENE.Instance<IIconDisplay>();
+			var bubble = BUBBLE_SCENE.Instance<FancyInWorldDisplay>();
 
 			_stunDuration = duration;
 
-			bubble.Appear(_bubbleParent, _bubbleParent.GlobalPosition, null);
+			bubble.Appear(_bubbleParent, _bubbleParent.GlobalPosition, _stunBubble);
 			bubble.Show();
 
 			while (_stunDuration > 0f)
 			{
-				bubble.Visible = !bubble.Visible;
+				// need some kind of visibility interpolation
+				//bubble.Visible = !bubble.Visible;
 
 				await this.AwaitIdle();
 

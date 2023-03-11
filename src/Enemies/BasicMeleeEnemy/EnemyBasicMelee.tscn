@@ -39,6 +39,9 @@ shape = SubResource( 1 )
 [node name="WallCheck" parent="EnemyController/EnemyModel" index="3"]
 enabled = true
 
+[node name="StunBubble" parent="EnemyController/EnemyModel" index="4"]
+position = Vector2( 0, -66 )
+
 [node name="BasicBehaviour" parent="EnemyController" index="1"]
 script = ExtResource( 3 )
 EnemyWidth = 20.0

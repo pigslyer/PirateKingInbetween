@@ -158,7 +158,7 @@ namespace PirateInBetween.Game.Player
 
 		private void DebugOutput()
 		{
-			_debugLabel.Text = $"Fps: {Performance.GetMonitor(Performance.Monitor.TimeFps)}\nAnimation: {Enum.GetName(typeof(PlayerAnimation), _nextFrameData.CurrentAction.Animation)}\nFacing right: {_nextFrameData.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
+			_debugLabel.Text = $"Fps: {Performance.GetMonitor(Performance.Monitor.TimeFps)}\nAnimation: {Enum.GetName(typeof(Animations), _nextFrameData.CurrentAction.Animation)}\nFacing right: {_nextFrameData.FacingRight}\nOn floor: {IsOnFloor()}\nBehaviours on floor: {_behaviourManager.IsPlayerOnFloor()}\nActive behaviours: {_behaviourManager.ActiveBehaviours}";
 		}
 
 		private void GenerateNextFrameData()

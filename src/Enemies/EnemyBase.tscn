@@ -20,6 +20,8 @@ script = ExtResource( 2 )
 position = Vector2( 16, -21 )
 cast_to = Vector2( 30, 0 )
 
+[node name="Position2D" type="Position2D" parent="EnemyController/EnemyModel"]
+
 [node name="BasicBehaviour" type="Node" parent="EnemyController"]
 
 [node name="DamageTaker" type="Area2D" parent="EnemyController"]

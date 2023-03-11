@@ -164,10 +164,12 @@ namespace PirateInBetween.Game.Enemies
 
 
 		private float _stunDuration = 0f;
-		public virtual void OnStunned(float stunDuration, EnemyFrameData data)
+		public virtual float OnStunned(float stunDuration, EnemyFrameData data)
 		{
 			_stunDuration = stunDuration;
 			data.Velocity = Vector2.Zero;
+
+			return _stunDuration;
 		}
 
 		protected virtual bool IsStunned() => _stunDuration > 0f;

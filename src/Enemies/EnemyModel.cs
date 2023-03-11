@@ -11,12 +11,24 @@ using PirateInBetween.Game.Combos;
 
 namespace PirateInBetween.Game.Enemies
 {
-	public abstract class EnemyModel : Node2D
+	public class EnemyModel : Node2D
 	{
+		private static readonly PackedScene BUBBLE_SCENE = ReflectionHelper.LoadScene<FancyInWorldDisplay>();
+
 		#region Paths
+
+		[Export] private NodePath __BubbleParentPath = null;
 
 		#endregion
 
+		private Node2D _bubbleParent;
+
+		public override void _Ready()
+		{
+			base._Ready();
+
+			_bubbleParent = GetNode<Node2D>(__BubbleParentPath);
+		}
 
 		public void Initialize(EnemyController controller)
 		{
@@ -50,6 +62,37 @@ namespace PirateInBetween.Game.Enemies
 
 		#endregion
 	
-		public abstract void PlayAnimation(Animations animation);
+		public virtual void PlayAnimation(Animations animation)
+		{ }
+
+		private float _stunDuration;
+
+		public async void PlayStun(float duration)
+		{
+			if (_stunDuration > 0f)
+			{
+				_stunDuration = duration;
+				return;
+			}
+
+			IIconDisplay bubble = BUBBLE_SCENE.Instance<IIconDisplay>();
+
+			_stunDuration = duration;
+
+			bubble.Appear(_bubbleParent, _bubbleParent.GlobalPosition, null);
+			bubble.Show();
+
+			while (_stunDuration > 0f)
+			{
+				bubble.Visible = !bubble.Visible;
+
+				await this.AwaitIdle();
+
+				_stunDuration -= GetProcessDeltaTime();
+			}
+			
+			bubble.Show();
+			bubble.Disappear();
+		}
 	}
 }

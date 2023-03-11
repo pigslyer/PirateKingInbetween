@@ -71,6 +71,11 @@ namespace PirateInBetween.Game.Player
 		{
 			DamageData appliedData = data.Apply(_onDamageTaken());
 
+			if (appliedData.IsNull)
+			{
+				return;
+			}
+
 			if (appliedData.Damage > 0)
 			{
 				_health -= appliedData.Damage;

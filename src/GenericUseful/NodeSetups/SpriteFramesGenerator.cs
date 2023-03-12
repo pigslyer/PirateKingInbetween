@@ -18,11 +18,6 @@ using System.Collections.ObjectModel;
 [Tool]
 public class SpriteFramesGenerator : AnimatedSprite
 {
-	const string CONFIG_FILE_NAME = "config.anim";
-	const string SECTION = "anim";
-	const string NAME = "name";
-	const string SPEED = "speed";
-	const string LOOP = "loop";
 
 	const string IMAGE_EXTENSIONS = "png";
 
@@ -38,7 +33,7 @@ public class SpriteFramesGenerator : AnimatedSprite
 	{
 		if (TryGetFolderData(_spritePath, out FolderData folder))
 		{
-			GD.Print(folder);
+			GD.Print($"Folder: {folder}");
 			UpdateSpriteFrames(folder);
 		}
 	}
@@ -67,19 +62,31 @@ public class SpriteFramesGenerator : AnimatedSprite
 
 		Dictionary<string, string> _pathToAnimName = new Dictionary<string, string>();
 
-		foreach (string anim in Frames.GetAnimationNames())
+		try
 		{
-			if (Frames.GetFrameCount(anim) > 0)
+
+			foreach (string anim in Frames.GetAnimationNames())
 			{
-				_pathToAnimName.Add(Frames.GetFrame(anim, 0).ResourcePath.GetBaseDir(), anim);
+
+				if (Frames.GetFrameCount(anim) > 0)
+				{
+					_pathToAnimName.Add(Frames.GetFrame(anim, 0).ResourcePath.GetBaseDir(), anim);
+				}
+				else
+				{
+					_pathToAnimName.Add(anim, anim);
+				}
 			}
-			else
-			{
-				_pathToAnimName.Add(anim, anim);
-			}
+		} 
+		catch (ArgumentException)
+		{
+			GD.Print("Exception");
+			GD.Print(string.Join(", ", _pathToAnimName.Keys.Select(k => $"{k} : {_pathToAnimName[k]}")));
 		}
 
 		string animName;
+
+		return;
 
 		foreach (FolderData folder in folders)
 		{

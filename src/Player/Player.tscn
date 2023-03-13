@@ -41,9 +41,6 @@ __uiManagerPath = NodePath("UIManager")
 position = Vector2( 0, -28 )
 __playerPath = NodePath("..")
 
-[node name="AnimatedSprite" parent="PlayerController/PlayerModel" index="1"]
-frame = 0
-
 [node name="BoxDetector" type="RayCast2D" parent="PlayerController/PlayerModel/Flippable" index="4"]
 visible = false
 position = Vector2( 11, 4 )

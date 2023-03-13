@@ -62,31 +62,20 @@ public class SpriteFramesGenerator : AnimatedSprite
 
 		Dictionary<string, string> _pathToAnimName = new Dictionary<string, string>();
 
-		try
+		foreach (string anim in Frames.GetAnimationNames())
 		{
-
-			foreach (string anim in Frames.GetAnimationNames())
+			if (Frames.GetFrameCount(anim) > 0)
 			{
-
-				if (Frames.GetFrameCount(anim) > 0)
-				{
-					_pathToAnimName.Add(Frames.GetFrame(anim, 0).ResourcePath.GetBaseDir(), anim);
-				}
-				else
-				{
-					_pathToAnimName.Add(anim, anim);
-				}
+				_pathToAnimName.Add(Frames.GetFrame(anim, 0).ResourcePath.GetBaseDir(), anim);
 			}
-		} 
-		catch (ArgumentException)
-		{
-			GD.Print("Exception");
-			GD.Print(string.Join(", ", _pathToAnimName.Keys.Select(k => $"{k} : {_pathToAnimName[k]}")));
-		}
+			else
+			{
+				_pathToAnimName.Add(anim, anim);
+			}
+		} 	
+
 
 		string animName;
-
-		return;
 
 		foreach (FolderData folder in folders)
 		{

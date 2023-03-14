@@ -25,7 +25,6 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __debugLabelPath = null;
 		[Export] private NodePath __movingParentDetectorPath = null;
 		[Export] private NodePath __cameraPath = null;
-		[Export] private NodePath __damageTakerPath = null;
 		[Export] private NodePath __uiManagerPath = null;
 #endregion
 
@@ -36,7 +35,6 @@ namespace PirateInBetween.Game.Player
 		private Label _debugLabel;
 		private MovingParentDetector _detector;
 		private CameraController _camera;
-		private DamageTaker _damageTaker;
 		private PlayerUIManager _uiManager;
 		private PlayerCurrentFrameData _nextFrameData;
 
@@ -49,13 +47,17 @@ namespace PirateInBetween.Game.Player
 			_debugLabel = GetNode<Label>(__debugLabelPath);
 			_detector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
 			_camera = GetNode<CameraController>(__cameraPath);
-			_damageTaker = GetNode<DamageTaker>(__damageTakerPath);
 			_uiManager = GetNode<PlayerUIManager>(__uiManagerPath);
 
+			foreach (IDamageTaker taker in this.GetAllProgenyNodesOfType<IDamageTaker>())
+			{
+				taker.OnDamageTaken += OnDamageTakenSignalReceived;
+			}
+
 			_onDamageTaken = OnDamageTakenDefault();
-			_damageTaker.OnDamageTaken += OnDamageTakenSignalReceived;
 			
 			_behaviourManager.Initialize(this);
+			_model.Initialize(this);
 
 			_uiManager.UpdateHealth(_health, MAX_HEALTH);
 
@@ -67,7 +69,7 @@ namespace PirateInBetween.Game.Player
 
 		private Combo.OnHitReaction _onDamageTaken;
 
-		private void OnDamageTakenSignalReceived(DamageTaker takerSource, DamageDealer dealerSource, DamageData data)
+		private void OnDamageTakenSignalReceived(IDamageTaker takerSource, DamageDealer dealerSource, DamageData data)
 		{
 			DamageData appliedData = data.Apply(_onDamageTaken());
 

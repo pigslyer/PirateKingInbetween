@@ -39,7 +39,6 @@ __uiManagerPath = NodePath("UIManager")
 
 [node name="PlayerModel" parent="PlayerController" instance=ExtResource( 2 )]
 position = Vector2( 0, -28 )
-__playerPath = NodePath("..")
 
 [node name="BoxDetector" type="RayCast2D" parent="PlayerController/PlayerModel/Flippable" index="4"]
 visible = false

@@ -21,6 +21,8 @@ namespace PirateInBetween.Game.Enemies
 
 		public bool IsMoving() => Velocity.LengthSquared() > 0;
 
+		public bool IsAboutToAttack = false;
+
 		#region ICombatFrameData implementation
 		
 		Vector2 ICombatFrameData.Velocity { get => Velocity; set => Velocity = value; }

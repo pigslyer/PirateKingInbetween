@@ -107,6 +107,8 @@ namespace PirateInBetween.Game.Enemies
 			_nextFrameData.Velocity = MoveAndSlide(_nextFrameData.Velocity, Vector2.Up);
 
 			_model.Scale = new Vector2(data.FacingRight ? 1 : -1, 1);
+			
+			_model.PlayAttack(data.IsAboutToAttack);
 		}
 
 		#region IComboExecutor

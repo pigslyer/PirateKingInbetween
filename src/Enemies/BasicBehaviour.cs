@@ -137,6 +137,22 @@ namespace PirateInBetween.Game.Enemies
 
 		#region Taker detection
 
+		// could use more data to make it 100% accurate but that sounds annoying (and would take too long)
+		private float _timeSeen = 0f;
+
+		protected bool TrySeeOpponent(DamageDealerTargettingArea from, float timeUntilDetected, out DamageTakerTargetArea partSeen)
+		{
+			if (TrySeeOpponent(from, out partSeen))
+			{
+				_timeSeen += CurrentData.Delta;
+
+				return _timeSeen > timeUntilDetected;
+			}
+
+			_timeSeen = 0f;
+			return false;
+		}
+
 		protected bool TrySeeOpponent(DamageDealerTargettingArea from, out DamageTakerTargetArea partSeen)
 		{
 			DamageTakerTargetArea? area = null;

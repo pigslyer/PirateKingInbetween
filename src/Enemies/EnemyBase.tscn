@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/Enemies/EnemyController.cs" type="Script" id=1]
 [ext_resource path="res://src/Enemies/EnemyModel.cs" type="Script" id=2]
 [ext_resource path="res://src/Attacks/DamageTaker.cs" type="Script" id=3]
+[ext_resource path="res://assets/characters/characterStunnedIcon.png" type="Texture" id=4]
 
 [node name="EnemyBase" type="Node2D"]
 
@@ -15,6 +16,7 @@ __damageTakerPath = NodePath("DamageTaker")
 
 [node name="EnemyModel" type="Node2D" parent="EnemyController"]
 script = ExtResource( 2 )
+_stunBubble = ExtResource( 4 )
 __BubbleParentPath = NodePath("StunBubble")
 
 [node name="WallCheck" type="RayCast2D" parent="EnemyController/EnemyModel"]

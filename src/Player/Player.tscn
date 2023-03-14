@@ -34,7 +34,6 @@ __playerBehaviourManagerPath = NodePath("BehaviourManager")
 __debugLabelPath = NodePath("UIManager/DebugLabel")
 __movingParentDetectorPath = NodePath("MovingParentDetector")
 __cameraPath = NodePath("../Camera2D")
-__damageTakerPath = NodePath("PlayerModel/Flippable/DamageTaker")
 __uiManagerPath = NodePath("UIManager")
 
 [node name="PlayerModel" parent="PlayerController" instance=ExtResource( 2 )]

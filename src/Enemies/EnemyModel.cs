@@ -67,19 +67,20 @@ namespace PirateInBetween.Game.Enemies
 		public virtual void PlayAnimation(Animations animation)
 		{ }
 
+		private const float ADDITIONAL_STUN_ANIM_DELAY = 0.5f;
 		private float _stunDuration;
 
 		public async void PlayStun(float duration)
 		{
 			if (_stunDuration > 0f)
 			{
-				_stunDuration = duration;
+				_stunDuration = duration + ADDITIONAL_STUN_ANIM_DELAY;
 				return;
 			}
 
 			var bubble = BUBBLE_SCENE.Instance<FancyInWorldDisplay>();
 
-			_stunDuration = duration;
+			_stunDuration = duration + ADDITIONAL_STUN_ANIM_DELAY;
 
 			bubble.Appear(_bubbleParent, _bubbleParent.GlobalPosition, _stunBubble);
 			bubble.Show();

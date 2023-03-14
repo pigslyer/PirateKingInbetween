@@ -35,8 +35,6 @@ script = ExtResource( 4 )
 _spritePath = "res://assets/characters/player"
 
 [node name="SlashSprites" type="AnimatedSprite" parent="PlayerSprite"]
-modulate = Color( 1, 1, 1, 0.67451 )
-scale = Vector2( 1.5, 1.3 )
 z_index = 100
 frames = ExtResource( 5 )
 animation = "BasicCombo12LSlash"

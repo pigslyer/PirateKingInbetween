@@ -51,7 +51,7 @@ namespace PirateInBetween.Game.Enemies
 		}
 
 
-		private void OnDamageTakenReaction(DamageTaker taker, DamageDealer dealer, DamageData data)
+		private void OnDamageTakenReaction(IDamageTaker taker, DamageDealer dealer, DamageData data)
 		{
 			DamageData newData = data.Apply(_defaultDamageReaction());
 

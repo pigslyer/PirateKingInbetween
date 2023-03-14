@@ -78,7 +78,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 
 		protected bool IsWanderingOrWaiting() => _remainingDuration > 0;
 
-		protected void StopWandering(int standingTime)
+		protected void StopWandering(float standingTime)
 		{
 			_isWaiting = true;
 			_remainingDuration = standingTime;
@@ -86,7 +86,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 
 		protected bool Wander(float maxSpeed, float accel, FloatInterval walkingDuration, FloatInterval standingDuration, bool continuePatrol)
 		{
-			if (continuePatrol && (_remainingDuration <= 0 || (!_isWaiting && (IsAboutToSeeWall() || IsAboutToFallOffEdge()))))
+			if (continuePatrol && (_remainingDuration <= 0f || (!_isWaiting && (IsAboutToSeeWall() || IsAboutToFallOffEdge()))))
 			{
 				_isWaiting = !_isWaiting;
 				_remainingDuration = (_isWaiting ? standingDuration : walkingDuration).GetRandom();

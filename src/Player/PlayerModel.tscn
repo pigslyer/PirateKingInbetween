@@ -8,7 +8,7 @@
 [ext_resource path="res://src/Attacks/DamageTaker.cs" type="Script" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 4, 23 )
+extents = Vector2( 10.5, 23 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 5.5, 27 )
@@ -51,8 +51,8 @@ position = Vector2( 12, -4 )
 
 [node name="TempSlash" type="Sprite" parent="Flippable"]
 visible = false
-position = Vector2( 19.2687, 3.71231 )
-scale = Vector2( 4.71231, 41.3051 )
+position = Vector2( 24.5, 3.5 )
+scale = Vector2( 19, 45 )
 texture = ExtResource( 1 )
 
 [node name="DamageDealerSlash" type="Area2D" parent="Flippable"]
@@ -62,7 +62,7 @@ collision_mask = 34
 script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Flippable/DamageDealerSlash"]
-position = Vector2( 19, 4 )
+position = Vector2( 24.5, 4 )
 shape = SubResource( 1 )
 
 [node name="DamageTaker" type="Area2D" parent="Flippable"]

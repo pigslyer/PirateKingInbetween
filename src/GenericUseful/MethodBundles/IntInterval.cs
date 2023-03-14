@@ -28,7 +28,7 @@ public struct IntInterval : IEquatable<IntInterval>
 		Start = 0; End = end;
 	}
 
-
+	public int GetAtPercent(float perc) => Start + Mathf.RoundToInt((End - Start) * perc);
 	public bool IsInRange(int what) => Start <= what && what <= End;
 
 	public int GetRandom(RandomNumberGenerator generator = null)

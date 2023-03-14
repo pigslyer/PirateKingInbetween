@@ -9,11 +9,11 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public class DamageTaker : Area2D
+	public class DamageTaker : Area2D, IDamageTaker
 	{
 		[Export] public DamageTakerTargetArea TakerType { get; private set; }
 
-		public event EventDelegates.OnSomethingHappened<DamageTaker, DamageDealer, DamageData> OnDamageTaken;
+		public event EventDelegates.OnSomethingHappened<IDamageTaker, DamageDealer, DamageData> OnDamageTaken;
 
 		public void TakeDamage(DamageData data, DamageDealer source) => OnDamageTaken(this, source, data);
 

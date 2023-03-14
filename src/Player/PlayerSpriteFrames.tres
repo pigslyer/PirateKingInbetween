@@ -195,7 +195,7 @@ animations = [ {
 }, {
 "frames": [ ExtResource( 147 ), ExtResource( 148 ), ExtResource( 108 ), ExtResource( 98 ), ExtResource( 99 ), ExtResource( 114 ), ExtResource( 112 ), ExtResource( 100 ), ExtResource( 124 ) ],
 "loop": true,
-"name": "BasicCombo12SlashR",
+"name": "BasicCombo12RSlash",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 131 ), ExtResource( 97 ), ExtResource( 103 ), ExtResource( 102 ), ExtResource( 105 ), ExtResource( 110 ), ExtResource( 106 ), ExtResource( 111 ) ],
@@ -233,11 +233,6 @@ animations = [ {
 "name": "IdleR",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 115 ), ExtResource( 117 ), ExtResource( 134 ), ExtResource( 140 ), ExtResource( 135 ), ExtResource( 145 ), ExtResource( 139 ), ExtResource( 141 ), ExtResource( 136 ) ],
-"loop": true,
-"name": "JumpAttack",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 81 ), ExtResource( 89 ), ExtResource( 85 ), ExtResource( 66 ) ],
 "loop": false,
 "name": "JumpL",
@@ -247,6 +242,11 @@ animations = [ {
 "loop": false,
 "name": "JumpR",
 "speed": 11.0
+}, {
+"frames": [ ExtResource( 115 ), ExtResource( 117 ), ExtResource( 134 ), ExtResource( 140 ), ExtResource( 135 ), ExtResource( 145 ), ExtResource( 139 ), ExtResource( 141 ), ExtResource( 136 ) ],
+"loop": true,
+"name": "JumpSlash",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 17 ), ExtResource( 26 ), ExtResource( 12 ), ExtResource( 29 ), ExtResource( 55 ), ExtResource( 63 ), ExtResource( 46 ), ExtResource( 44 ) ],
 "loop": true,

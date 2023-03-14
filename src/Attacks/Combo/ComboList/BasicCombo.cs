@@ -60,7 +60,7 @@ namespace PirateInBetween.Game.Combos.List
 					amount: 1, 
 					stun: 0.65f
 				),
-				(0.3f, 0.5f),
+				(0.2f, 0.5f),
 				DamageDealerTargettingArea.Front
 			)
 		) { }
@@ -114,7 +114,7 @@ namespace PirateInBetween.Game.Combos.List
 					amount: 3, 
 					stun: 0.7f
 				),
-				(0.5f, 0.8f),
+				(0.15f, 0.8f),
 				DamageDealerTargettingArea.Front,
 				() => 60f.ToVectorDeg(3)
 			)

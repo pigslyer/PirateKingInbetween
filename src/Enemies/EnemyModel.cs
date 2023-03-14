@@ -16,6 +16,7 @@ namespace PirateInBetween.Game.Enemies
 		private static readonly PackedScene BUBBLE_SCENE = ReflectionHelper.LoadScene<FancyInWorldDisplay>();
 
 		[Export] private Texture _stunBubble = null;
+		[Export] private Texture _attackBubble = null;
 
 		#region Paths
 
@@ -72,9 +73,15 @@ namespace PirateInBetween.Game.Enemies
 
 		public async void PlayStun(float duration)
 		{
+			// if we're stunned we cancel attack
+			if (duration > 0f)
+			{
+				PlayAttack(false);
+			}
+
 			if (_stunDuration > 0f)
 			{
-				_stunDuration = duration + ADDITIONAL_STUN_ANIM_DELAY;
+				_stunDuration = (duration == 0f ? 0f : duration + ADDITIONAL_STUN_ANIM_DELAY);
 				return;
 			}
 
@@ -95,6 +102,35 @@ namespace PirateInBetween.Game.Enemies
 				_stunDuration -= GetProcessDeltaTime();
 			}
 			
+			bubble.Show();
+			bubble.Disappear();
+		}
+
+		private bool _attackState = false;
+		public async void PlayAttack(bool state)
+		{
+			if (_attackState == state)
+			{
+				return;
+			}
+
+			_attackState = state;
+
+			if (!_attackState)
+			{
+				return;
+			}
+
+			var bubble = BUBBLE_SCENE.Instance<FancyInWorldDisplay>();
+
+			bubble.Appear(_bubbleParent, _bubbleParent.GlobalPosition, _attackBubble);
+			bubble.Show();
+
+			while (state == _attackState)
+			{
+				await this.AwaitIdle();
+			}
+
 			bubble.Show();
 			bubble.Disappear();
 		}

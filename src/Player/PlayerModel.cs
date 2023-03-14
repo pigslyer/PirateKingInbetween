@@ -24,6 +24,7 @@ namespace PirateInBetween.Game.Player
 		[Export] private NodePath __damageDealerTempPreviewPath = null;
 		[Export] private NodePath __interactionDisplayPath = null;
 		[Export] private NodePath __playerSpritePath = null;
+		[Export] private NodePath __playerSlashSpritesPath = null;
 		[Export] private NodePath __playerPath = null;
 
 		#endregion
@@ -41,6 +42,7 @@ namespace PirateInBetween.Game.Player
 		private ITextDisplay _currentLookAt;
 		private Position2D _interactionDisplayPosition;
 		private AnimatedSprite _playerSprite;
+		private AnimatedSprite _playerSlashSprite;
 		private PlayerController _player;
 		
 
@@ -52,8 +54,10 @@ namespace PirateInBetween.Game.Player
 			_damageTakerBody = GetNode<CollisionShape2D>(__damageTakerBodyPath);
 			_interactionDisplayPosition = GetNode<Position2D>(__interactionDisplayPath);
 			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
+			_playerSlashSprite = GetNode<AnimatedSprite>(__playerSlashSpritesPath);
 			_player = GetNode<PlayerController>(__playerPath);
 
+			_playerSlashSprite.Hide();
 		}
 
 		public void UpdateModel(PlayerCurrentFrameData data)
@@ -97,17 +101,31 @@ namespace PirateInBetween.Game.Player
 			string DefaultAnim(Animations animation, bool facingRight) => ApplyFacing(animation.GetString(), facingRight);
 			string ApplyFacing(string animation, bool facingRight) => $"{animation}{(facingRight ? "R" : "L")}";
 			string ApplyWooden(string animation, bool isWooden) => isWooden ? $"Wood{animation}" : animation;
+			string ApplySlash(string animation) => $"{animation}Slash";
 
 			bool facingAnimation;
 			string anim;
 
 			float timeInAnim = ProcessTimeInAnim(data);
 
+			IntInterval animLength = (0, -1);
+
 			switch (data.Animation)
 			{
-				case Animations.BasicCombo3:
-				case Animations.BasicCombo2:
+				// this exists because the first and second slash of the combo come from the same actual animation
 				case Animations.BasicCombo1:
+				case Animations.BasicCombo2:
+				
+				const string sharedAnimName = "BasicCombo12";
+				const int endOf1 = 5;
+
+				anim = ApplyFacing(sharedAnimName, data.FacingRight);
+				facingAnimation = true;
+				
+				animLength = data.Animation == Animations.BasicCombo1 ? (0, endOf1) : (endOf1, -1);
+
+				break;
+				case Animations.BasicCombo3:
 				anim = data.Animation.GetString();
 				facingAnimation = false;
 				break;
@@ -127,9 +145,14 @@ namespace PirateInBetween.Game.Player
 			{
 				if (data.CurrentAction.PercentageDone is float percDone)
 				{
+					if (animLength.End == -1)
+					{
+						animLength.End = _playerSprite.Frames.GetFrameCount(anim);
+					}
+
 					_playerSprite.Playing = false;
 					_playerSprite.Animation = anim;
-					_playerSprite.Frame = Mathf.RoundToInt(percDone * _playerSprite.Frames.GetFrameCount(anim));
+					_playerSprite.Frame = animLength.GetAtPercent(percDone);
 				}
 				else
 				{
@@ -139,6 +162,18 @@ namespace PirateInBetween.Game.Player
 			else
 			{
 				_playerSprite.Play(DefaultAnim(Animations.Idle, data.FacingRight));
+			}
+
+			string slash = ApplySlash(_playerSprite.Animation);
+			if (_playerSlashSprite.Frames.HasAnimation(slash))
+			{
+				_playerSlashSprite.Show();
+				_playerSlashSprite.Animation = slash;
+				_playerSlashSprite.Frame = _playerSprite.Frame;
+			}
+			else
+			{
+				_playerSlashSprite.Hide();
 			}
 		}
 

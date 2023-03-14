@@ -19,15 +19,12 @@ namespace PirateInBetween.Game.Player
 #region Paths
 		[Export] private NodePath __flippablePath = null;
 		[Export] private NodePath __shootFromPath = null;
-		[Export] private NodePath __damageDealerSlashPath = null;
-		[Export] private NodePath __damageTakerBodyPath = null;
 		[Export] private NodePath __damageDealerTempPreviewPath = null;
 		[Export] private NodePath __interactionDisplayPath = null;
 		[Export] private NodePath __playerSpritePath = null;
 		[Export] private NodePath __playerSlashSpritesPath = null;
-		[Export] private NodePath __playerPath = null;
-
-		#endregion
+		
+#endregion
 
 		#region AnimationTimings
 
@@ -37,8 +34,10 @@ namespace PirateInBetween.Game.Player
 
 		private Node2D _flippable;
 		private Position2D _shootFrom;
-		private DamageDealer _damageDealerSlash;
-		private CollisionShape2D _damageTakerBody;
+
+		private EnumToCollectionMap<DamageDealer, DamageDealerTargettingArea> _damageDealers;
+		private EnumToCollectionMap<IDamageTaker, DamageTakerTargetArea> _damageTakers;
+
 		private ITextDisplay _currentLookAt;
 		private Position2D _interactionDisplayPosition;
 		private AnimatedSprite _playerSprite;
@@ -50,26 +49,32 @@ namespace PirateInBetween.Game.Player
 		{
 			_flippable = GetNode<Node2D>(__flippablePath);
 			_shootFrom = GetNode<Position2D>(__shootFromPath);
-			_damageDealerSlash = GetNode<DamageDealer>(__damageDealerSlashPath);
-			_damageTakerBody = GetNode<CollisionShape2D>(__damageTakerBodyPath);
 			_interactionDisplayPosition = GetNode<Position2D>(__interactionDisplayPath);
 			_playerSprite = GetNode<AnimatedSprite>(__playerSpritePath);
 			_playerSlashSprite = GetNode<AnimatedSprite>(__playerSlashSpritesPath);
-			_player = GetNode<PlayerController>(__playerPath);
-
+			
 			_playerSlashSprite.Hide();
+		}
+
+		public void Initialize(PlayerController player)
+		{
+			_player = player;
+			
+			_damageDealers = new EnumToCollectionMap<DamageDealer, DamageDealerTargettingArea>(
+				from: player.GetAllProgenyNodesOfType<DamageDealer>(),
+				determineMapping: dealer => dealer.DealerType
+			);			
+			_damageTakers = new EnumToCollectionMap<IDamageTaker, DamageTakerTargetArea>(
+				from: player.GetAllProgenyNodesOfType<IDamageTaker>(),
+				determineMapping: taker => taker.TakerType
+			);
 		}
 
 		public void UpdateModel(PlayerCurrentFrameData data)
 		{
 			PlayerAction action = data.CurrentAction;
-
-			if (action is ActionMeleeAttack melee)
-			{
-				_damageDealerSlash.TempEnable(melee.DamageData, melee.SlashDuration);
-				ShowTempDamageDealer(melee.SlashDuration);
-			}
-			else if (action is ActionRangedAttack ranged)
+			
+			if (action is ActionRangedAttack ranged)
 			{
 				ranged.Bullet.Shoot(_shootFrom.GlobalPosition, _player.GetMovingParentDetector().CurrentMovingParent);
 			}
@@ -123,8 +128,8 @@ namespace PirateInBetween.Game.Player
 				facingAnimation = true;
 				
 				animLength = data.Animation == Animations.BasicCombo1 ? (0, endOf1) : (endOf1, -1);
-
 				break;
+
 				case Animations.BasicCombo3:
 				anim = data.Animation.GetString();
 				facingAnimation = false;
@@ -206,42 +211,24 @@ namespace PirateInBetween.Game.Player
 
 		public void DamageDealerEnable(DamageDealerTargettingArea area, DamageData damageData)
 		{
-			var dealer = GetComboDamageDealer(area);
-			dealer.Enable(damageData);
+			_damageDealers.DoFor(
+				what: dealer => dealer.Enable(damageData),
+				type: area
+			);
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Show();
 		}
 		public void DamageDealerDisable(DamageDealerTargettingArea area)
 		{
-			GetComboDamageDealer(area).Disable();
+			_damageDealers.DoFor(
+				what: dealer => dealer.Disable(),
+				type: area
+			);
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Hide();
 		}
 
-		// spreading damagetakers across multiple areas'd be frustrating and make no sense.
-		public void DamageTakerEnable(DamageTakerTargetArea area) => GetComboDamageTaker(area).Disabled = false;
+		public void DamageTakerEnable(DamageTakerTargetArea area) => _damageTakers.DoFor(what: taker => taker.Enable(), type: area);
 
-		public void DamageTakerDisable(DamageTakerTargetArea area) => GetComboDamageTaker(area).Disabled = true;
-
-
-
-		private DamageDealer GetComboDamageDealer(DamageDealerTargettingArea area)
-		{
-			switch (area)
-			{
-				default:
-				case DamageDealerTargettingArea.Front:
-				return _damageDealerSlash;
-			}
-		}
-
-		private CollisionShape2D GetComboDamageTaker(DamageTakerTargetArea area)
-		{
-			switch (area)
-			{
-				default:
-				case DamageTakerTargetArea.Body:
-				return _damageTakerBody;
-			}
-		}
+		public void DamageTakerDisable(DamageTakerTargetArea area) => _damageTakers.DoFor(what: taker => taker.Disable(), type: area);
 	}
 }
 

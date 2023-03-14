@@ -99,6 +99,8 @@ namespace PirateInBetween.Game.Player
 			PlayAnimation(data);
 		}
 
+		private const float ANIM_HANG_TIME = 0.5f;
+		private bool _hangOnAnim = false, _shouldHangOnAnimLast;
 
 		private void PlayAnimation(PlayerCurrentFrameData data)
 		{
@@ -109,9 +111,17 @@ namespace PirateInBetween.Game.Player
 			string ApplySlash(string animation) => $"{animation}Slash";
 
 			bool facingAnimation;
+			bool shouldHangOnAnim = false;
 			string anim;
 
 			float timeInAnim = ProcessTimeInAnim(data);
+
+			if (_hangOnAnim && data.Animation == Animations.Idle && timeInAnim < ANIM_HANG_TIME)
+			{
+				return;
+			}
+
+			_hangOnAnim = false;
 
 			IntInterval animLength = (0, -1);
 
@@ -128,6 +138,7 @@ namespace PirateInBetween.Game.Player
 				facingAnimation = true;
 				
 				animLength = data.Animation == Animations.BasicCombo1 ? (0, endOf1) : (endOf1, -1);
+				shouldHangOnAnim = true;
 				break;
 
 				case Animations.BasicCombo3:
@@ -142,6 +153,15 @@ namespace PirateInBetween.Game.Player
 			}
 
 			anim = ApplyWooden(anim, Autoloads.Global.PlayerHasWoodenLeg);
+
+			if (_shouldHangOnAnimLast && anim != _playerSprite.Animation)
+			{
+				_shouldHangOnAnimLast = false;
+				_hangOnAnim = true;
+				return;
+			}
+
+			_shouldHangOnAnimLast = shouldHangOnAnim;
 
 			_flippable.Scale = new Vector2(data.FacingRight.Sign(), 1f);
 			_playerSprite.FlipH = !facingAnimation && !data.FacingRight;

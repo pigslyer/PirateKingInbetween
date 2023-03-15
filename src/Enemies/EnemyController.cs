@@ -21,10 +21,12 @@ namespace PirateInBetween.Game.Enemies
 		[Export] private NodePath __enemyModelPath = null;
 		[Export] private NodePath __basicBehaviourPath = null;
 		[Export] private NodePath __damageTakerPath = null;
+		[Export] private NodePath __movingParentDetectorPath = null;
 		#endregion
 
 		private EnemyModel _model;
 		private BasicBehaviour _behaviour;
+		private MovingParentDetector _movingParentDetector;
 
 		private Combo.OnHitReaction _defaultDamageReaction;
 
@@ -36,6 +38,7 @@ namespace PirateInBetween.Game.Enemies
 			_model = GetNode<EnemyModel>(__enemyModelPath);
 			_behaviour = GetNode<BasicBehaviour>(__basicBehaviourPath);
 			GetNode<DamageTaker>(__damageTakerPath).OnDamageTaken += OnDamageTakenReaction;
+			_movingParentDetector = GetNode<MovingParentDetector>(__movingParentDetectorPath);
 
 			_model.Initialize(this);
 			_behaviour.Initialize(this);
@@ -111,6 +114,8 @@ namespace PirateInBetween.Game.Enemies
 			_model.PlayAttack(data.IsAboutToAttack);
 		}
 
+		public MovingParentDetector GetMovingParentDetector() => _movingParentDetector;
+
 		#region IComboExecutor
 		Vector2 IComboExecutor.CameraPosition { get; set; }
 
@@ -119,7 +124,7 @@ namespace PirateInBetween.Game.Enemies
 		public void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _model.DealDamage(damageDealer, data);	
 
 		public void StopDealingDamage(DamageDealerTargettingArea damageDealer) => _model.StopDealingDamage(damageDealer);
-
+		public void Shoot(Projectile p) => _model.Shoot(p);
 		public void TakeDamage(DamageTakerTargetArea to) => _model.TakeDamage(to);
 
 		public void StopTakingDamage(DamageTakerTargetArea to) => _model.StopTakingDamage(to);

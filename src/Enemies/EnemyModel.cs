@@ -21,20 +21,25 @@ namespace PirateInBetween.Game.Enemies
 		#region Paths
 
 		[Export] private NodePath __BubbleParentPath = null;
+		[Export] private NodePath __shootFromPath = null;
 
 		#endregion
 
 		private Node2D _bubbleParent;
+		private Node2D _shootFrom;
+		private EnemyController _controller;
 
 		public override void _Ready()
 		{
 			base._Ready();
 
 			_bubbleParent = GetNode<Node2D>(__BubbleParentPath);
+			_shootFrom = GetNode<Node2D>(__shootFromPath);
 		}
 
 		public void Initialize(EnemyController controller)
 		{
+			_controller = controller;
 			GenerateDamageDealersArray(controller); GenerateDamageTakersArray(controller);
 		}
 
@@ -59,6 +64,7 @@ namespace PirateInBetween.Game.Enemies
 		public void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _damageDealers.DoFor(d => d.Enable(data), damageDealer);
 
 		public void StopDealingDamage(DamageDealerTargettingArea damageDealer) => _damageDealers.DoFor(d => d.Disable(), damageDealer);
+		public void Shoot(Projectile p) => p.Shoot(_shootFrom.GlobalPosition, _controller.GetMovingParentDetector().CurrentMovingParent);
 
 		public void TakeDamage(DamageTakerTargetArea damageTaker) => _damageTakers.DoFor(t => t.Enable(), damageTaker);
 		public void StopTakingDamage(DamageTakerTargetArea damageTaker) => _damageTakers.DoFor(t => t.Disable(), damageTaker);

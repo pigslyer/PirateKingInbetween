@@ -246,6 +246,11 @@ namespace PirateInBetween.Game.Player
 			GetNode<Sprite>(__damageDealerTempPreviewPath).Hide();
 		}
 
+		public void Shoot(Projectile p)
+		{
+			p.Shoot(_shootFrom.GlobalPosition, _player.GetMovingParentDetector().CurrentMovingParent);
+		}
+
 		public void DamageTakerEnable(DamageTakerTargetArea area) => _damageTakers.DoFor(what: taker => taker.Enable(), type: area);
 
 		public void DamageTakerDisable(DamageTakerTargetArea area) => _damageTakers.DoFor(what: taker => taker.Disable(), type: area);

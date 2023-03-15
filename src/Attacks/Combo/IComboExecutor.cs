@@ -23,6 +23,8 @@ namespace PirateInBetween.Game.Combos
 		void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data);
 		void StopDealingDamage(DamageDealerTargettingArea damageDealer);
 
+		void Shoot(Projectile what);
+
 		void TakeDamage(DamageTakerTargetArea to);
 		void StopTakingDamage(DamageTakerTargetArea to);
 

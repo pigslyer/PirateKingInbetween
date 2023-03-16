@@ -20,6 +20,7 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 			if (TrySeeOpponent(DamageDealerTargettingArea.InFront, REACTION_TIME, out var _))
 			{
 				ExecuteCombo<BasicCombo1>();
+				ResetTimeSeen();
 
 				return;
 			} 

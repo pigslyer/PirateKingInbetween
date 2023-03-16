@@ -27,7 +27,7 @@ namespace PirateInBetween.Game.Combos.List
 			AddTask().WaitFor(0.3f).Do(() =>
 			{
 				var bullet = _bulletScene.Instance<StraightBullet>();
-				bullet.Initialize(PhysicsLayers.World, 0, 0f.FaceForward(CurrentData) * 200f);
+				bullet.Initialize(PhysicsLayers.World, new DamageAmount(amount: 10, stun: 0.3f), 0f.FaceForward(CurrentData) * 200f);
 				CurrentExecutor.Shoot(bullet);
 			});
 		}

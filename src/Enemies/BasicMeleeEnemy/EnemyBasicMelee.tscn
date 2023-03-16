@@ -42,6 +42,9 @@ enabled = true
 [node name="StunBubble" parent="EnemyController/EnemyModel" index="4"]
 position = Vector2( 0, -66 )
 
+[node name="ShootFrom" parent="EnemyController/EnemyModel" index="5"]
+position = Vector2( 29, -48 )
+
 [node name="BasicBehaviour" parent="EnemyController" index="1"]
 script = ExtResource( 3 )
 EnemyWidth = 20.0

@@ -15,18 +15,23 @@ script = ExtResource( 1 )
 __enemyModelPath = NodePath("EnemyModel")
 __basicBehaviourPath = NodePath("BasicBehaviour")
 __damageTakerPath = NodePath("DamageTaker")
+__movingParentDetectorPath = NodePath("MovingParentDetector")
 
 [node name="EnemyModel" type="Node2D" parent="EnemyController"]
 script = ExtResource( 2 )
 _stunBubble = ExtResource( 4 )
 _attackBubble = ExtResource( 5 )
 __BubbleParentPath = NodePath("StunBubble")
+__shootFromPath = NodePath("ShootFrom")
 
 [node name="WallCheck" type="RayCast2D" parent="EnemyController/EnemyModel"]
 position = Vector2( 16, -21 )
 cast_to = Vector2( 30, 0 )
 
 [node name="StunBubble" type="Position2D" parent="EnemyController/EnemyModel"]
+
+[node name="ShootFrom" type="Position2D" parent="EnemyController/EnemyModel"]
+position = Vector2( 16, -21 )
 
 [node name="BasicBehaviour" type="Node" parent="EnemyController"]
 

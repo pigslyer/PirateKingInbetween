@@ -14,7 +14,8 @@ namespace PirateInBetween.Game
 	/// </summary>
 	public enum DamageDealerTargettingArea
 	{
-		Front,
+		InFront,
+		RangedSight,
 		Count
 	}
 

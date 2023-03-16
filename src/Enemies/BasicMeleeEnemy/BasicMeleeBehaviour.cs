@@ -17,14 +17,14 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 
 		protected override void Execute()
 		{
-			if (TrySeeOpponent(DamageDealerTargettingArea.Front, REACTION_TIME, out var _))
+			if (TrySeeOpponent(DamageDealerTargettingArea.InFront, REACTION_TIME, out var _))
 			{
 				ExecuteCombo<BasicCombo1>();
 
 				return;
 			} 
 			
-			if (TrySeeOpponent(DamageDealerTargettingArea.Front, out var _))
+			if (TrySeeOpponent(DamageDealerTargettingArea.InFront, out var _))
 			{
 				CurrentData.IsAboutToAttack = true;
 				StopWandering(REACTION_TIME * 2);

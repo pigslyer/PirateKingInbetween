@@ -19,7 +19,7 @@ namespace PirateInBetween.Game.Player.Behaviours
 
 		public override void Run(PlayerCurrentFrameData data)
 		{
-			if (InputManager.IsActionJustPressed(InputButton.RangedAttack))
+			if (false && InputManager.IsActionJustPressed(InputButton.RangedAttack))
 			{
 				StraightBullet bullet = _bulletScene.Instance<StraightBullet>();
 				bullet.Initialize(PhysicsLayers.WorldHittable, _damage, new Vector2(_bulletSpeed * (data.FacingRight ? 1 : -1), 0f));

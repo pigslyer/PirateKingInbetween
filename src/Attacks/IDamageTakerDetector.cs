@@ -9,12 +9,13 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public interface IDamageTakerDetector
+	public interface IDamageTakerDetector : INode2D
 	{
 		DamageDealerTargettingArea DealerType { get; }
 
 		bool CanSeeTaker();
 		DamageTakerTargetArea GetTakerArea();
+		IDamageTaker GetTaker();
 
 	}	
 }

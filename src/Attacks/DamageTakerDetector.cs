@@ -15,6 +15,8 @@ namespace PirateInBetween.Game
 
 		public bool CanSeeTaker() => GetOverlappingAreas().Count > 0;
 
+		public IDamageTaker GetTaker() => (DamageTaker)(GetOverlappingAreas()[0]);
+
 		public DamageTakerTargetArea GetTakerArea() => ((DamageTaker)(GetOverlappingAreas()[0])).TakerType;
 	}
 }

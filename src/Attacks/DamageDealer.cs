@@ -103,6 +103,7 @@ namespace PirateInBetween.Game
 
 		bool IDamageTakerDetector.CanSeeTaker() => GetOverlappingAreas().Count > 0;
 
+		IDamageTaker IDamageTakerDetector.GetTaker() => (DamageTaker)(GetOverlappingAreas()[0]);
 		DamageTakerTargetArea IDamageTakerDetector.GetTakerArea() => ((DamageTaker)(GetOverlappingAreas()[0])).TakerType;
 	}
 }

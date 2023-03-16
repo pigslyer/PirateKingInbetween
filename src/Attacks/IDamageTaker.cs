@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace PirateInBetween.Game
 {
-	public interface IDamageTaker
+	public interface IDamageTaker : INode2D
 	{
 		DamageTakerTargetArea TakerType { get; }
 

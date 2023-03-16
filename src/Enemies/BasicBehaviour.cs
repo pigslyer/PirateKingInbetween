@@ -31,7 +31,8 @@ namespace PirateInBetween.Game.Enemies
 		protected EnemyFrameData CurrentData { get; private set; }
 		
 		private EnumToCollectionMap<IDamageTakerDetector, DamageDealerTargettingArea> _dealerTypeToDetectorCollection;
-		private Godot.RayCast2D _ray;
+		private Godot.RayCast2D _inFrontCheckRay;
+		protected RayCast2D GenericRay { get; private set; }
 
 		#region Sync tasks
 
@@ -73,12 +74,15 @@ namespace PirateInBetween.Game.Enemies
 		{
 			base._Ready();
 
-			_ray = GetNode<Godot.RayCast2D>(__inFrontCheckPath);
+			_inFrontCheckRay = GetNode<Godot.RayCast2D>(__inFrontCheckPath);
 		}
 
 		public void Initialize(EnemyController controller)
 		{
 			Controller = controller; _dealerTypeToDetectorCollection = controller.GetDealerTypeToDetectorCollection();
+
+			GenericRay = new RayCast2D();
+			controller.AddChild(GenericRay);
 		}
 
 		public void Run(EnemyFrameData data)
@@ -129,7 +133,7 @@ namespace PirateInBetween.Game.Enemies
 			);
 		}
 
-		protected virtual bool CanSeeWall() => _ray.IsColliding();
+		protected virtual bool CanSeeWall() => _inFrontCheckRay.IsColliding();
 
 		public virtual bool IsOnFloor() => false;
 
@@ -140,7 +144,9 @@ namespace PirateInBetween.Game.Enemies
 		// could use more data to make it 100% accurate but that sounds annoying (and would take too long)
 		private float _timeSeen = 0f;
 
-		protected bool TrySeeOpponent(DamageDealerTargettingArea from, float timeUntilDetected, out DamageTakerTargetArea partSeen)
+		protected void ResetTimeSeen() => _timeSeen = 0f;
+
+		protected bool TrySeeOpponent(DamageDealerTargettingArea from, float timeUntilDetected, out IDamageTaker partSeen)
 		{
 			if (TrySeeOpponent(from, out partSeen))
 			{
@@ -153,22 +159,22 @@ namespace PirateInBetween.Game.Enemies
 			return false;
 		}
 
-		protected bool TrySeeOpponent(DamageDealerTargettingArea from, out DamageTakerTargetArea partSeen)
+		protected bool TrySeeOpponent(DamageDealerTargettingArea from, out IDamageTaker partSeen)
 		{
-			DamageTakerTargetArea? area = null;
+			IDamageTaker area = null;
 
 			_dealerTypeToDetectorCollection.DoFor(
 				what: thing =>
 				{
 					if (thing.CanSeeTaker())
 					{
-						area = thing.GetTakerArea();
+						area = thing.GetTaker();
 					}
 				},
 				type: from
 			);
 			
-			partSeen = area ?? DamageTakerTargetArea.Count;
+			partSeen = area;
 			return area != null;
 		}
 

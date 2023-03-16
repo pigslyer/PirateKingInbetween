@@ -24,6 +24,7 @@ namespace PirateInBetween.Game
 		[EnumString("BasicCombo1")] BasicCombo1,
 		[EnumString("BasicCombo2")] BasicCombo2,
 		[EnumString("BasicCombo3")] BasicCombo3,
+		[EnumString("BasicShoot1")] BasicShoot1,
 		[EnumString("DodgeSlash")] DodgeSlash,
 		[EnumString("JumpSlashFromGround")] Uppercut,
 		[EnumString("JumpSlash")] JumpAttack,

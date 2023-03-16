@@ -20,9 +20,14 @@ namespace PirateInBetween.Game.Combos.List
 	{
 		private static readonly PackedScene _bulletScene = ReflectionHelper.LoadScene<StraightBullet>();
 
+		private const float TOTAL_SHOOT_TIME = 0.5f;
+		private const float TIME_TO_FIRE = 0.3f;
+
 		protected override void BeginCombo()
 		{
-			//AddTask().DoFor(0.5f, (a, b, c) => CurrentData.ResetHorizontal());
+			AddTask().DoFor(TOTAL_SHOOT_TIME, (elapsed,delta,total) => CurrentData.Anim = new CombatAnimation(
+				Animations.BasicShoot1, elapsed / total
+			));
 
 			AddTask().WaitFor(0.3f).Do(() =>
 			{

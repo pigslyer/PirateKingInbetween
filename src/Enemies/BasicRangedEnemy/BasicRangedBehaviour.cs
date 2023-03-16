@@ -7,6 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using PirateInBetween.Game.Combos.List;
+
 namespace PirateInBetween.Game.Enemies.Behaviours
 {
 	public class BasicRangedBehaviour : GroundlingBehaviour
@@ -17,7 +19,9 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 		{
 			if (TrySeeOpponent(DamageDealerTargettingArea.RangedSight, REACTION_TIME, out var _))
 			{
-				
+				ExecuteCombo<BasicShoot>();
+				ResetTimeSeen();
+
 				return;
 			}
 			if (TrySeeOpponent(DamageDealerTargettingArea.RangedSight, out var target))
@@ -28,6 +32,8 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 				}
 				else
 				{
+					CurrentData.IsAboutToAttack = true;
+
 					StopWandering(REACTION_TIME * 2);
 
 					Wander(PatrolMaxSpeed, PatrolMovementAcceleration * 2, (2f, 6f), (6f, 8f), false);

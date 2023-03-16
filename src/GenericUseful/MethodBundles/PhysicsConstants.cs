@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 /// <summary>
 /// Convenience class that casts CollisionLayer and CollisionMask to PhysicsLayers and vice versa.
 /// </summary>
-public abstract class Area2D : Godot.Area2D
+public class Area2D : Godot.Area2D
 {
 	public new PhysicsLayers CollisionLayer 
 	{ 
@@ -38,7 +38,7 @@ public abstract class Area2D : Godot.Area2D
 /// <summary>
 /// Convenience class that casts CollisionLayer and CollisionMask to PhysicsLayers and vice versa.
 /// </summary>
-public abstract class KinematicBody2D : Godot.KinematicBody2D
+public class KinematicBody2D : Godot.KinematicBody2D
 {
 	public new PhysicsLayers CollisionLayer
 	{
@@ -56,7 +56,7 @@ public abstract class KinematicBody2D : Godot.KinematicBody2D
 /// <summary>
 /// Convenience class that casts CollisionLayer and CollisionMask to PhysicsLayers and vice versa.
 /// </summary>
-public abstract class StaticBody2D : Godot.StaticBody2D
+public class StaticBody2D : Godot.StaticBody2D
 {
 	public new PhysicsLayers CollisionLayer
 	{
@@ -74,7 +74,7 @@ public abstract class StaticBody2D : Godot.StaticBody2D
 /// <summary>
 /// Convinience class that etc.
 /// </summary>
-public abstract class RayCast2D : Godot.RayCast2D
+public class RayCast2D : Godot.RayCast2D
 {
 	public new PhysicsLayers CollisionMask
 	{

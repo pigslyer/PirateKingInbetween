@@ -124,7 +124,11 @@ namespace PirateInBetween.Game.Enemies
 		public void DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _model.DealDamage(damageDealer, data);	
 
 		public void StopDealingDamage(DamageDealerTargettingArea damageDealer) => _model.StopDealingDamage(damageDealer);
-		public void Shoot(Projectile p) => _model.Shoot(p);
+		public void Shoot(Projectile p)
+		{
+			p.SetHitLayers(PhysicsLayers.ShootPlayer);
+			_model.Shoot(p);
+		}
 		public void TakeDamage(DamageTakerTargetArea to) => _model.TakeDamage(to);
 
 		public void StopTakingDamage(DamageTakerTargetArea to) => _model.StopTakingDamage(to);

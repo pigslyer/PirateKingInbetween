@@ -22,6 +22,9 @@ namespace PirateInBetween.Game
 			CollisionMask = hitting;
 		}
 
+		public void SetHitLayers(PhysicsLayers hitting) => CollisionMask = hitting;
+		public void SetDamageAmount(DamageAmount amount) => _damageAmount = amount;
+
 		public override void _PhysicsProcess(float delta)
 		{
 			Position += GetMovementDelta(delta);

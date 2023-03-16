@@ -22,4 +22,7 @@ public enum PhysicsLayers : uint
 	EnemyHittable = 32,
 	CarriableBox = 64,
 	Interaction = 128,
+
+	ShootPlayer = World | WorldHittable | PlayerHittable,
+	ShootEnemy = World | WorldHittable | EnemyHittable,
 }

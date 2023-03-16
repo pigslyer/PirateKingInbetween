@@ -232,7 +232,11 @@ namespace PirateInBetween.Game.Player
 		void IComboExecutor.DealDamage(DamageDealerTargettingArea damageDealer, DamageData data) => _model.DamageDealerEnable(damageDealer, data);
 
 		void IComboExecutor.StopDealingDamage(DamageDealerTargettingArea damageDealer) => _model.DamageDealerDisable(damageDealer);
-		void IComboExecutor.Shoot(Projectile what) => _model.Shoot(what);
+		void IComboExecutor.Shoot(Projectile what)
+		{
+			what.SetHitLayers(PhysicsLayers.ShootEnemy);
+			_model.Shoot(what);
+		}
 		void IComboExecutor.TakeDamage(DamageTakerTargetArea to) => _model.DamageTakerEnable(to);
 		void IComboExecutor.StopTakingDamage(DamageTakerTargetArea to) => _model.DamageTakerDisable(to);
 

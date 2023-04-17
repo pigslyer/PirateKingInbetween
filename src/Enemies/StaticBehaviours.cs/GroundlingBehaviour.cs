@@ -69,6 +69,11 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 
 		#region Internal methods
 
+		protected void WalkTowards()
+		{
+			
+		}
+
 		#region Wandering
 
 		private float _remainingDuration = -1;

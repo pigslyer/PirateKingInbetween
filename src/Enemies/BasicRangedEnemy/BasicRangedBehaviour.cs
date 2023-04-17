@@ -14,6 +14,9 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 	public class BasicRangedBehaviour : GroundlingBehaviour
 	{
 		const float REACTION_TIME = 2f;
+		const float MEMORY_TIME = 5f;
+
+		private float _lastSeenPlayer = float.MaxValue;
 
 		protected override void Execute()
 		{
@@ -29,9 +32,12 @@ namespace PirateInBetween.Game.Enemies.Behaviours
 				if (GenericRay.CastRay(toGlobal: target.GlobalPosition, mask: PhysicsLayers.World))
 				{
 					ResetTimeSeen();
+					_lastSeenPlayer += CurrentData.Delta;
+					
 				}
 				else
 				{
+					_lastSeenPlayer = 0f;
 					CurrentData.IsAboutToAttack = true;
 
 					StopWandering(REACTION_TIME * 2);

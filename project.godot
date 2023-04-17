@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="Pirate King Inbetween"
-config/features=PackedStringArray("4.0", "Forward Plus")
+config/name="PirateKingInbetween"
+config/features=PackedStringArray("4.0", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
-project/assembly_name="Pirate King Inbetween"
+project/assembly_name="PirateKingInbetween"

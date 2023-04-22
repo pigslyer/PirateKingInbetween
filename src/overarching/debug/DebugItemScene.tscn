@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cursnl6rvsj4p"]
+
+[ext_resource type="Script" path="res://src/overarching/debug/DebugItemScene.cs" id="1_6qcth"]
+
+[node name="DebugItemScene" type="HBoxContainer" node_paths=PackedStringArray("_title")]
+script = ExtResource("1_6qcth")
+_title = NodePath("Title")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3

@@ -1,8 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://dmbydyj77y4kk"]
+[gd_scene load_steps=6 format=3 uid="uid://dmbydyj77y4kk"]
 
 [ext_resource type="Script" path="res://src/player/PlayerController.cs" id="1_quobq"]
 [ext_resource type="Script" path="res://src/player/PlayerBehaviourProperties.cs" id="2_cc5m1"]
 [ext_resource type="Texture2D" uid="uid://nl1442seo02k" path="res://icon.svg" id="3_3hc1x"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_otdlc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_3hc1x")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ixiuh"]
 size = Vector2(128, 128)
@@ -13,7 +24,7 @@ size = Vector2(128, 128)
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
 
-[node name="BehaviourProperties" type="Node" parent="PlayerController"]
+[node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite")]
 script = ExtResource("2_cc5m1")
 AccelerationRate = 1200.0
 DeaccelerationRate = 2400.0
@@ -22,10 +33,12 @@ Gravity = 500.0
 GravityPushDownAdditional = 600.0
 JumpVelocity = -300.0
 JumpPushupAdditional = -300.0
+AnimatedSprite = NodePath("../PlayerAnimation")
 
-[node name="Sprite2D" type="Sprite2D" parent="PlayerController"]
-position = Vector2(0, -65)
-texture = ExtResource("3_3hc1x")
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
+sprite_frames = SubResource("SpriteFrames_otdlc")
+animation = &"Idle"
+offset = Vector2(0, -64)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]
 position = Vector2(0, -65)

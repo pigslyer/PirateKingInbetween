@@ -24,13 +24,17 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 		public override void ActiveBehaviour()
 		{ }
 
-		private float MovementIdleEpsilon => BehaviourProperties.MovementIdleEpsilon;
-
+		private float _movementIdleEpsilon => BehaviourProperties.MovementIdleEpsilon;
+		private AnimatedSprite2D _sprite => BehaviourProperties.AnimatedSprite;
+		
 		public override void PassiveBehaviour()
 		{
-			FrameData.CurrentAnimation = FrameData.Velocity.X > MovementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
+			FrameData.CurrentAnimation = FrameData.Velocity.X > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
 
-			
+			if (_sprite.SpriteFrames.HasAnimation(FrameData.CurrentAnimation.ToString()))
+			{
+				_sprite.Play(FrameData.CurrentAnimation.ToString());
+			}
 		}
 	}
 }

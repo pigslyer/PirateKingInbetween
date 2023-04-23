@@ -23,6 +23,8 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 
 		private Node _root = null!;
 
+		private List<IDebugPanel> _debugPanelCreators = new();
+
 		public override void _Ready()
 		{
 			base._Ready();
@@ -35,14 +37,14 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 				GetTree().Paused = false;
 			};
 
-			// add all debug ui
-			AddToDebugUI(Log.GetLogDisplay);
-			AddToDebugUI(Log.GetLogSettings);
-
+			_debugPanelCreators.Add(new Editors.LogDisplay());
+			_debugPanelCreators.Add(new Editors.LogSettings());
 
 			_root = _defaultSceneRoot.Instantiate();
 			AddChild(_root);
 		}
+
+		
 
 		private void AddToDebugUI(GetDebugUI func)
 		{

@@ -27,8 +27,20 @@ namespace Pigslyer.PirateKingInbetween.Util.Autoloads
 			}
 		}
 
-		[Signal] public delegate void OnMessageLoggedEventHandler(LogMessage logMessage);
-		[Signal] public delegate void OnMessageLogFiltersChangedEventHandler(Types newFilter);
+		[Signal] public delegate void _onMessageLoggedEventHandler(LogMessage logMessage);
+		[Signal] public delegate void _onMessageLogFiltersChangedEventHandler(Types newFilter);
+
+		public static event _onMessageLogFiltersChangedEventHandler OnMessageLogFiltersChanged
+		{
+			add => Instance._onMessageLogFiltersChanged += value;
+			remove => Instance._onMessageLogFiltersChanged -= value;
+		}
+
+		public static event _onMessageLoggedEventHandler OnMessageLogged
+		{
+			add => Instance._onMessageLogged += value;
+			remove => Instance._onMessageLogged -= value;
+		}
 
 		public enum WarningLevels
 		{
@@ -44,12 +56,21 @@ namespace Pigslyer.PirateKingInbetween.Util.Autoloads
 			Input = 4,
 		};
 
-		private Types EnabledTypes = (Types)~0;
+		private Types _enabledTypes = (Types)~0;
+		public static Types EnabledTypes
+		{
+			get => Instance._enabledTypes;
+			set
+			{	
+				Instance._enabledTypes = value;
+				Instance.EmitSignal(SignalName._onMessageLogFiltersChanged, (uint)Instance._enabledTypes);
+			}
+		}
 
 		public static void Print(Types source, string str)
 		{
 			GD.Print(str);
-			Instance.EmitSignal(SignalName.OnMessageLogged, new LogMessage(
+			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,
 				warningLevel: WarningLevels.Print
@@ -59,7 +80,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Autoloads
 		public static void PushWarning(Types source, string str)
 		{
 			GD.PushWarning(str);
-			Instance.EmitSignal(SignalName.OnMessageLogged, new LogMessage(
+			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,
 				warningLevel: WarningLevels.Warning
@@ -69,154 +90,11 @@ namespace Pigslyer.PirateKingInbetween.Util.Autoloads
 		public static void PushError(Types source, string str)
 		{
 			GD.PushError(WarningLevels.Error);
-			Instance.EmitSignal(SignalName.OnMessageLogged, new LogMessage(
+			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,
 				warningLevel: WarningLevels.Error
 			));
-		}
-
-		public static DebugContainer.DebugConfiguration GetLogDisplay()
-		{
-			Color GetColor(LogMessage msg) => msg.WarningLevel switch
-			{
-				WarningLevels.Error => Colors.Red,
-				WarningLevels.Warning => Colors.Yellow,
-				_ => Colors.White
-			};
-
-			const int LOG_HEIGHT = 200;
-
-			List<DebugContainer.DebugUIElement> uiElements = new();
-
-			ScrollContainer scroll = new()
-			{
-				CustomMinimumSize = new Vector2(0, LOG_HEIGHT),
-			};
-
-			RichTextLabel label = new()
-			{
-				BbcodeEnabled = true,
-				SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-				SizeFlagsVertical = Control.SizeFlags.ExpandFill,
-			};
-
-			void AddMessage(LogMessage msg)
-			{
-				label.PushColor(GetColor(msg));
-				label.AddText($"[{msg.LogType.ToString()}]: {msg.Message}");
-				label.Pop();
-			}
-
-			uiElements.Add(new(null, scroll));
-			scroll.AddChild(label);
-
-			List<LogMessage> messages = new();
-
-			Instance.OnMessageLogged += msg =>
-			{
-				messages.Add(msg);
-
-				if ((Instance.EnabledTypes & msg.LogType) != 0)
-				{
-					AddMessage(msg);
-				}
-			};
-
-			Instance.OnMessageLogFiltersChanged += filters =>
-			{
-				label.Clear();
-				
-				foreach (LogMessage msg in messages)
-				{
-					if ((filters & msg.LogType) != 0)
-					{
-						AddMessage(msg);
-					}
-				}
-			};
-
-			return new(
-				menuTitle: "Log",
-				UiElements: uiElements
-			);
-		}
-
-		public static DebugContainer.DebugConfiguration GetLogSettings()
-		{
-			List<DebugContainer.DebugUIElement> uiElements = new();
-
-			VBoxContainer flags = new();
-			uiElements.Add(new(
-				Title: "Flags",
-				Control: flags 
-			));
-
-			foreach (var value in Enum.GetValues<Types>())
-			{
-				// lambda has to capture these variable instances
-				Types curValue = value;
-				CheckBox button = new()
-				{
-					Text = value.ToString(),
-				};
-
-				button.Toggled += state =>
-				{
-					if (state)
-					{
-						Instance.EnabledTypes |= curValue;
-					}
-					else
-					{
-						Instance.EnabledTypes &= ~curValue;
-					}
-					Instance.EmitSignal(SignalName.OnMessageLogFiltersChanged, (uint) Instance.EnabledTypes);
-				};
-
-				Instance.OnMessageLogFiltersChanged += filter =>
-				{
-					button.SetPressedNoSignal((filter & curValue) != 0);
-				};
-
-				flags.AddChild(button);
-			}
-
-			CheckBox allButton = new()
-			{
-				Text = "All",
-			};
-
-			allButton.Toggled += state =>
-			{
-				Instance.EnabledTypes = (Types)(state ? ~0 : 0);
-				Instance.EmitSignal(SignalName.OnMessageLogFiltersChanged, (uint)Instance.EnabledTypes);
-			};
-
-			Instance.OnMessageLogFiltersChanged += filter =>
-			{
-				bool allToggled = true;
-
-				foreach (var value in Enum.GetValues<Types>())
-				{
-					if ((Instance.EnabledTypes & value) == 0)
-					{
-						allToggled = false;
-						break;
-					}
-				}
-
-				allButton.SetPressedNoSignal(allToggled);
-			};
-
-			flags.AddChild(allButton);
-
-			Instance.EmitSignal(SignalName.OnMessageLogFiltersChanged, (uint)Instance.EnabledTypes);
-
-			return new(
-				menuTitle: "Log settings",
-				UiElements: uiElements
-			);
 		}
 	}
 }

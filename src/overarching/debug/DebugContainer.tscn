@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://d3pt207xol68p"]
+
+[ext_resource type="Script" path="res://src/overarching/debug/DebugContainer.cs" id="1_0rhqh"]
+[ext_resource type="PackedScene" uid="uid://bma3x18g4jja" path="res://src/levels/TestLevel.tscn" id="2_voskd"]
+[ext_resource type="PackedScene" uid="uid://cursnl6rvsj4p" path="res://src/overarching/debug/DebugItemScene.tscn" id="3_5dt2o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gl7x6"]
+bg_color = Color(0.265625, 0.265625, 0.265625, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_upxjx"]
+bg_color = Color(0.188235, 0.188235, 0.188235, 1)
+
+[node name="DebugContainer" type="Node" node_paths=PackedStringArray("_debugPopup", "_debugUIRoot")]
+process_mode = 1
+script = ExtResource("1_0rhqh")
+_defaultSceneRoot = ExtResource("2_voskd")
+_debugPopup = NodePath("Settings")
+_debugUIRoot = NodePath("Settings/PanelContainer/MarginContainer/TabContainer")
+_debugItemScene = ExtResource("3_5dt2o")
+
+[node name="Settings" type="Window" parent="."]
+process_mode = 2
+title = "Debug Menu"
+position = Vector2i(500, 200)
+size = Vector2i(1056, 600)
+visible = false
+wrap_controls = true
+
+[node name="PanelContainer" type="PanelContainer" parent="Settings"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gl7x6")
+
+[node name="MarginContainer" type="MarginContainer" parent="Settings/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="TabContainer" type="TabContainer" parent="Settings/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_upxjx")

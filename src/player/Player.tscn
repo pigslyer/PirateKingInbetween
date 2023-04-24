@@ -76,10 +76,10 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 1.0,
+"duration": 0.85,
 "texture": ExtResource("15_qlmlm")
 }, {
-"duration": 1.0,
+"duration": 0.95,
 "texture": ExtResource("16_kxfqa")
 }, {
 "duration": 1.0,
@@ -133,20 +133,18 @@ BehaviourProperties = NodePath("BehaviourProperties")
 
 [node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite")]
 script = ExtResource("2_cc5m1")
-AccelerationRate = 1200.0
-DeaccelerationRate = 2400.0
-MaximumVelocity = 300.0
-Gravity = 500.0
+AccelerationRate = 800.0
+DeaccelerationRate = 800.0
+MaximumVelocity = 230.0
+Gravity = 450.0
 GravityPushDownAdditional = 600.0
-JumpVelocity = -300.0
-JumpPushupAdditional = -300.0
+JumpVelocity = -230.0
+JumpPushupAdditional = -230.0
 AnimatedSprite = NodePath("../PlayerAnimation")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
 sprite_frames = SubResource("SpriteFrames_otdlc")
-animation = &"Fall"
-frame = 3
-frame_progress = 1.0
+animation = &"Jump"
 offset = Vector2(0, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]

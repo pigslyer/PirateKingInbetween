@@ -11,7 +11,7 @@ using System.Text;
 
 using Pigslyer.PirateKingInbetween.Overarching.Debug;
 
-namespace Pigslyer.PirateKingInbetween.Util.Autoloads
+namespace Pigslyer.PirateKingInbetween.Util.Singletons
 {
 	public partial class Log : Singleton<Log>
 	{

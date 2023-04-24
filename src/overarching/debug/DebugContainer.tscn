@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://d3pt207xol68p"]
+[gd_scene load_steps=5 format=3 uid="uid://d3pt207xol68p"]
 
 [ext_resource type="Script" path="res://src/overarching/debug/DebugContainer.cs" id="1_0rhqh"]
 [ext_resource type="PackedScene" uid="uid://bma3x18g4jja" path="res://src/levels/TestLevel.tscn" id="2_voskd"]
-[ext_resource type="PackedScene" uid="uid://cursnl6rvsj4p" path="res://src/overarching/debug/DebugItemScene.tscn" id="3_5dt2o"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gl7x6"]
 bg_color = Color(0.265625, 0.265625, 0.265625, 1)
@@ -16,7 +15,6 @@ script = ExtResource("1_0rhqh")
 _defaultSceneRoot = ExtResource("2_voskd")
 _debugPopup = NodePath("Settings")
 _debugUIRoot = NodePath("Settings/PanelContainer/MarginContainer/TabContainer")
-_debugItemScene = ExtResource("3_5dt2o")
 
 [node name="Settings" type="Window" parent="."]
 process_mode = 2

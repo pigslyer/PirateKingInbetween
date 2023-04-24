@@ -23,7 +23,7 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 
 		private Node _root = null!;
 
-		private List<IDebugPanel> _debugPanelCreators = new();
+		private IList<IDebugPanel> _debugPanelCreators = null!;
 
 		public override void _Ready()
 		{
@@ -37,18 +37,35 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 				GetTree().Paused = false;
 			};
 
-			_debugPanelCreators.Add(new Editors.LogDisplay());
-			_debugPanelCreators.Add(new Editors.LogSettings());
+			_debugPanelCreators = CreateEditors();
+
+			SpawnEditors();
 
 			_root = _defaultSceneRoot.Instantiate();
 			AddChild(_root);
 		}
 
-		
-
-		private void AddToDebugUI(GetDebugUI func)
+		private static IList<IDebugPanel> CreateEditors()
 		{
-			DebugConfiguration conf = func();
+			List<IDebugPanel> ret = new();
+
+			ret.Add(new Editors.LogDisplay());
+			ret.Add(new Editors.LogSettings());
+
+			return ret;
+		}
+
+		private void SpawnEditors()
+		{
+			foreach (IDebugPanel panel in _debugPanelCreators)
+			{
+				AddToDebugUI(panel);
+			}
+		}
+
+		private void AddToDebugUI(IDebugPanel panel)
+		{
+			DebugConfiguration conf = panel.GetPanelData();
 
 			VBoxContainer uiRoot = new()
 			{

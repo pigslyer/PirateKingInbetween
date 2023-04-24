@@ -18,6 +18,7 @@ namespace Pigslyer.PirateKingInbetween.Player
 		[Export] public float DeaccelerationRate { get; private set; } = 1200.0f;
 		[Export] public float MaximumVelocity { get; private set; } = 200.0f;
 
+		[ExportGroup("Jumping")]
 		[Export] public float Gravity { get; private set; } = 40.0f;
 		[Export] public float GravityPushDownAdditional { get; private set; } = 10.0f;
 

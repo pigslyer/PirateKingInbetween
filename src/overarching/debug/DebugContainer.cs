@@ -37,12 +37,12 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 				GetTree().Paused = false;
 			};
 
+			_root = _defaultSceneRoot.Instantiate();
+			AddChild(_root);
+
 			_debugPanelCreators = CreateEditors();
 
 			SpawnEditors();
-
-			_root = _defaultSceneRoot.Instantiate();
-			AddChild(_root);
 		}
 
 		private static IList<IDebugPanel> CreateEditors()

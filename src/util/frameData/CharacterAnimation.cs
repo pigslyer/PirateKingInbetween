@@ -14,6 +14,7 @@ namespace Pigslyer.PirateKingInbetween.Util.FrameData
 		None,
 		Idle,
 		Walk,
-
+		Jump,
+		Fall,
 	}
 }

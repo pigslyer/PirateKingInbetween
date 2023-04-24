@@ -37,6 +37,11 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 			{
 				VelocityY += _gravityPushDown * Delta;
 			}
+
+			if (!_jumpingBehaviour.IsAnyActive() && !FrameData.IsOnFloor)
+			{
+				FrameData.CurrentAnimation = CharacterAnimation.Fall;
+			}
 		}
 
 		public override void ActiveBehaviour()

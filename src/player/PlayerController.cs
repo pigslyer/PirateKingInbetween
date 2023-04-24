@@ -30,6 +30,7 @@ namespace Pigslyer.PirateKingInbetween.Player
 		{
 			base._PhysicsProcess(delta);
 
+			_lastAnimation = CharacterAnimation.None;
 			_behaviourManager.RunBehaviours();
 
 			MoveAndSlide();

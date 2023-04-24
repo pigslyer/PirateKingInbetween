@@ -29,11 +29,16 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 		
 		public override void PassiveBehaviour()
 		{
-			FrameData.CurrentAnimation = FrameData.Velocity.X > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
+			FrameData.CurrentAnimation = Mathf.Abs(FrameData.Velocity.X) > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
 
-			if (_sprite.SpriteFrames.HasAnimation(FrameData.CurrentAnimation.ToString()))
+			if (_sprite.SpriteFrames.HasAnimation(FrameData.CurrentAnimation.ToString()) && _sprite.Animation != FrameData.CurrentAnimation.ToString())
 			{
 				_sprite.Play(FrameData.CurrentAnimation.ToString());
+			}
+
+			if (VelocityX != 0.0f)
+			{
+				_sprite.FlipH = VelocityX < 0.0f;
 			}
 		}
 	}

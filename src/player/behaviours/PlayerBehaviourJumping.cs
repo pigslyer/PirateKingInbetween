@@ -28,6 +28,8 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 			{
 				ResetActive();
 			}
+
+			FrameData.CurrentAnimation = CharacterAnimation.Jump;
 		}
 
 		public override void PassiveBehaviour()

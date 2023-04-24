@@ -1,22 +1,129 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmbydyj77y4kk"]
+[gd_scene load_steps=29 format=3 uid="uid://dmbydyj77y4kk"]
 
 [ext_resource type="Script" path="res://src/player/PlayerController.cs" id="1_quobq"]
 [ext_resource type="Script" path="res://src/player/PlayerBehaviourProperties.cs" id="2_cc5m1"]
-[ext_resource type="Texture2D" uid="uid://nl1442seo02k" path="res://icon.svg" id="3_3hc1x"]
+[ext_resource type="Texture2D" uid="uid://bxhyhrljpqt4k" path="res://assets/characters/player/fall animation/J_falling_right1.png" id="3_l8aum"]
+[ext_resource type="Texture2D" uid="uid://dy4mrahfwelt" path="res://assets/characters/player/fall animation/J_falling_right2.png" id="4_33lns"]
+[ext_resource type="Texture2D" uid="uid://b0x450e7ttnus" path="res://assets/characters/player/fall animation/J_falling_right3.png" id="5_aldf1"]
+[ext_resource type="Texture2D" uid="uid://lvluda870qul" path="res://assets/characters/player/fall animation/J_falling_right4.png" id="6_6vrlg"]
+[ext_resource type="Texture2D" uid="uid://o3mslsaul3un" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right1.png" id="7_mfgva"]
+[ext_resource type="Texture2D" uid="uid://lqxtjtyneqla" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right2.png" id="8_q86fk"]
+[ext_resource type="Texture2D" uid="uid://bgejfuf3mel74" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right3.png" id="9_3v637"]
+[ext_resource type="Texture2D" uid="uid://bv430ughev6gv" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right4.png" id="10_v8fxm"]
+[ext_resource type="Texture2D" uid="uid://2s8jtv4fn3ou" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right5.png" id="11_qf8sm"]
+[ext_resource type="Texture2D" uid="uid://c57p8nb2jh2fx" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right6.png" id="12_1wicr"]
+[ext_resource type="Texture2D" uid="uid://cgdrl4hwmwh70" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right7.png" id="13_ivxgx"]
+[ext_resource type="Texture2D" uid="uid://beee5ld7lp2de" path="res://assets/characters/player/idle animation/normal idle/right/jacques idle right8.png" id="14_wc8fj"]
+[ext_resource type="Texture2D" uid="uid://csn8w0copvx1c" path="res://assets/characters/player/jumping animation/J_jumping_right1.png" id="15_qlmlm"]
+[ext_resource type="Texture2D" uid="uid://dae41v1o8lmrv" path="res://assets/characters/player/jumping animation/J_jumping_right2.png" id="16_kxfqa"]
+[ext_resource type="Texture2D" uid="uid://dm7duxc618hl5" path="res://assets/characters/player/jumping animation/J_jumping_right3.png" id="17_coe5f"]
+[ext_resource type="Texture2D" uid="uid://bgrmdn5ghl4mc" path="res://assets/characters/player/jumping animation/J_jumping_right4.png" id="18_s6fnm"]
+[ext_resource type="Texture2D" uid="uid://lrw73l6hyg0u" path="res://assets/characters/player/running animation/running normal/right/jacques running improved1.png" id="19_bfthh"]
+[ext_resource type="Texture2D" uid="uid://cugt8ehqiwg1a" path="res://assets/characters/player/running animation/running normal/right/jacques running improved2.png" id="20_1pncp"]
+[ext_resource type="Texture2D" uid="uid://cypnoywdbn5lx" path="res://assets/characters/player/running animation/running normal/right/jacques running improved3.png" id="21_iyofp"]
+[ext_resource type="Texture2D" uid="uid://cokajdj2embkk" path="res://assets/characters/player/running animation/running normal/right/jacques running improved4.png" id="22_rmb8k"]
+[ext_resource type="Texture2D" uid="uid://biedrltt8druj" path="res://assets/characters/player/running animation/running normal/right/jacques running improved5.png" id="23_vdy4u"]
+[ext_resource type="Texture2D" uid="uid://ch1ex0aq27j" path="res://assets/characters/player/running animation/running normal/right/jacques running improved6.png" id="24_mqjin"]
+[ext_resource type="Texture2D" uid="uid://sjavlv5df8f3" path="res://assets/characters/player/running animation/running normal/right/jacques running improved7.png" id="25_vljsq"]
+[ext_resource type="Texture2D" uid="uid://bnxn0w006y4l8" path="res://assets/characters/player/running animation/running normal/right/jacques running improved8.png" id="26_5neao"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_otdlc"]
 animations = [{
 "frames": [{
+"duration": 2.0,
+"texture": ExtResource("3_l8aum")
+}, {
 "duration": 1.0,
-"texture": ExtResource("3_3hc1x")
+"texture": ExtResource("4_33lns")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_aldf1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_6vrlg")
+}],
+"loop": false,
+"name": &"Fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_mfgva")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_q86fk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_3v637")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_v8fxm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_qf8sm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_1wicr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_ivxgx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_wc8fj")
 }],
 "loop": true,
 "name": &"Idle",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_qlmlm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_kxfqa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_coe5f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_s6fnm")
+}],
+"loop": false,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_bfthh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_1pncp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_iyofp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_rmb8k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_vdy4u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_mqjin")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_vljsq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_5neao")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 7.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ixiuh"]
-size = Vector2(128, 128)
+size = Vector2(25, 50)
 
 [node name="Player" type="Node2D"]
 
@@ -37,9 +144,16 @@ AnimatedSprite = NodePath("../PlayerAnimation")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
 sprite_frames = SubResource("SpriteFrames_otdlc")
-animation = &"Idle"
-offset = Vector2(0, -64)
+animation = &"Fall"
+frame = 3
+frame_progress = 1.0
+offset = Vector2(0, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]
-position = Vector2(0, -65)
+position = Vector2(0, -25)
 shape = SubResource("RectangleShape2D_ixiuh")
+
+[node name="Camera2D" type="Camera2D" parent="PlayerController"]
+offset = Vector2(0, -50)
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true

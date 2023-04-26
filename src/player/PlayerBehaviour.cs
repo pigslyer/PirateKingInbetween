@@ -48,6 +48,7 @@ namespace Pigslyer.PirateKingInbetween.Player
 			get => Velocity.Y;
 			set => Velocity = new(Velocity.X, value);
 		}
+		protected bool IsActive => _currentActiveBehaviour.Active == this;
 		protected float TimeActive = 0.0f;
 
 		protected readonly PlayerBehaviourProperties BehaviourProperties;

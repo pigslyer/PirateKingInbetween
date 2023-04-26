@@ -55,22 +55,10 @@ namespace Pigslyer.PirateKingInbetween.Player
 			return BehaviourManager.Generate(
 				new IBehaviour[]
 				{
-					new PlayerBehaviourHorizontalMovement(this),
-					new PlayerBehaviourFalling(this),
-					new PlayerBehaviourJumping(this),
+					new PlayerBehaviourMovement(this),
 					new PlayerBehaviourModel(this),
 				}
 			);
-		}
-
-		public override void _Input(InputEvent @event)
-		{
-			base._Input(@event);
-
-			if (@event.IsAction("ui_accept"))
-			{
-				Position = new(Position.X, 0);
-			}
 		}
 	}
 }

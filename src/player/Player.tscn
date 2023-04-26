@@ -123,7 +123,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ixiuh"]
-size = Vector2(25, 50)
+size = Vector2(27, 54)
 
 [node name="Player" type="Node2D"]
 
@@ -148,7 +148,7 @@ animation = &"Jump"
 offset = Vector2(0, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]
-position = Vector2(0, -25)
+position = Vector2(1.5, -27)
 shape = SubResource("RectangleShape2D_ixiuh")
 
 [node name="Camera2D" type="Camera2D" parent="PlayerController"]

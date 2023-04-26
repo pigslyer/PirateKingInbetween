@@ -69,7 +69,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Singletons
 
 		public static void Print(Types source, string str)
 		{
-			GD.Print(str);
+			//GD.Print(str);
 			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,
@@ -79,7 +79,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Singletons
 
 		public static void PushWarning(Types source, string str)
 		{
-			GD.PushWarning(str);
+			//GD.PushWarning(str);
 			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,
@@ -89,7 +89,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Singletons
 
 		public static void PushError(Types source, string str)
 		{
-			GD.PushError(WarningLevels.Error);
+			//GD.PushError(WarningLevels.Error);
 			Instance.EmitSignal(SignalName._onMessageLogged, new LogMessage(
 				message: str,
 				logType: source,

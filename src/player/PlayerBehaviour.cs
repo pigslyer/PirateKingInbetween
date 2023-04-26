@@ -179,17 +179,26 @@ namespace Pigslyer.PirateKingInbetween.Player
 
 			public static PlayerBehaviours Generate(IEnumerable<IBehaviour> behaviours, IEnumerable<Type> includingTypes, bool getAllBut)
 			{
-				PlayerBehaviour[] ret = new PlayerBehaviour[includingTypes.Count()];
+				PlayerBehaviour[] ret = new PlayerBehaviour[(getAllBut ? behaviours.Count() - includingTypes.Count() : includingTypes.Count())];
 				int i = 0;
 
-				foreach (Type type in includingTypes)
+				if (getAllBut)
 				{
-					foreach (IBehaviour behaviour in behaviours)
+					foreach (IBehaviour beh in behaviours)
 					{
-						if (type.IsInstanceOfType(behaviour) != getAllBut)
+						if (includingTypes.All(t => !t.IsInstanceOfType(beh)))
 						{
-							ret[i++] = (PlayerBehaviour)behaviour;
-							break;
+							ret[i++] = (PlayerBehaviour) beh;
+						}
+					}
+				}
+				else
+				{
+					foreach (IBehaviour beh in behaviours)
+					{
+						if (includingTypes.Any(t => t.IsInstanceOfType(beh)))
+						{
+							ret[i++] = (PlayerBehaviour) beh;
 						}
 					}
 				}

@@ -11,6 +11,9 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 {
 	public interface IDamageDealer
 	{
+		public void Enable(DamageData data);
+		public void Disable();
 		
+		public PhysicsLayers2D TargetLayers { get; }
 	}
 }

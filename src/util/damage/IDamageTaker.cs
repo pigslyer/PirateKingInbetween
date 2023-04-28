@@ -11,8 +11,12 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 {
 	public interface IDamageTaker
 	{
-		public delegate void OnDamageTakenEventHandler(IDamageDealer source, DamageData data);
+		public event Action<IDamageDealer, DamageData> OnDamageTaken;
 
-		public event OnDamageTakenEventHandler OnDamageTaken;
+		public void Enable();
+		public void Disable();
+
+		public bool CanDealerHit(IDamageDealer dealer);
+		public void Hit(IDamageDealer dealer, DamageData data);
 	}
 }

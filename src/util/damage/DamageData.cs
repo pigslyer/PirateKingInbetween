@@ -9,8 +9,5 @@ using System.Collections.ObjectModel;
 
 namespace Pigslyer.PirateKingInbetween.Util.Damage
 {
-	public record DamageData(float DamageAmount, float StunTime, Vector2 Knockback)
-	{
-			
-	}
+	public record DamageData(float DamageAmount, float StunTime, float Knockback);
 }

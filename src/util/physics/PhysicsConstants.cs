@@ -9,12 +9,14 @@ using System.Collections.ObjectModel;
 
 namespace Pigslyer.PirateKingInbetween.Util.Physics
 {
-	public enum PhysicsLayers2D : uint
+	[Flags] public enum PhysicsLayers2D : uint
 	{
-		World = 0,
-		Prop = 1,
+		None = 0,
+		World = 1,
 		Player = 2,
 		Enemy = 4,
 		Interactive = 8,
+		// all IDamageDealer and IDamageData implementations must occupy this layer, however they can use the other layers internally to tell apart targets
+		Damage = 16,
 	}
 }

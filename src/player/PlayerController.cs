@@ -16,6 +16,15 @@ namespace Pigslyer.PirateKingInbetween.Player
 	{
 		[Export] public PlayerBehaviourProperties BehaviourProperties = null!;
 
+		[ExportGroup("Camera settings")]
+		[Export] private Camera2DController _cameraController = null!;
+		[Export] private float _cameraOffset = 0.0f;
+
+		[Export] private float _cameraBobStrength = 0.0f;
+		[Export] private float _cameraBobSpeed = 0.0f;
+		private Node2D _cameraFollowingNode = new();
+
+
 		[Signal] public delegate void OnDamageTakenEventHandler();
 
 		private BehaviourManager _behaviourManager = null!;
@@ -24,6 +33,10 @@ namespace Pigslyer.PirateKingInbetween.Player
 		public override void _Ready()
 		{
 			_behaviourManager = GenerateDefaultBehaviours();
+
+			AddChild(_cameraFollowingNode);
+			_cameraController.SetFollowNode(_cameraFollowingNode);
+
 		}
 
 		public override void _PhysicsProcess(double delta)
@@ -34,6 +47,16 @@ namespace Pigslyer.PirateKingInbetween.Player
 			_behaviourManager.RunBehaviours();
 
 			MoveAndSlide();
+
+			ProcessCamera();
+		}
+
+		private void ProcessCamera()
+		{
+			float mult = Mathf.Sign(Velocity.X);
+
+			_cameraFollowingNode.Position = Velocity.Normalized() * _cameraOffset;
+			_cameraController.SetBob(mult * _cameraBobStrength, mult * _cameraBobSpeed);
 		}
 
 		float IFrameData.Delta => (float)GetPhysicsProcessDeltaTime();	

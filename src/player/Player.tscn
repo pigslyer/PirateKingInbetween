@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://dmbydyj77y4kk"]
+[gd_scene load_steps=30 format=3 uid="uid://dmbydyj77y4kk"]
 
 [ext_resource type="Script" path="res://src/player/PlayerController.cs" id="1_quobq"]
 [ext_resource type="Script" path="res://src/player/PlayerBehaviourProperties.cs" id="2_cc5m1"]
@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://ch1ex0aq27j" path="res://assets/characters/player/running animation/running normal/right/jacques running improved6.png" id="24_mqjin"]
 [ext_resource type="Texture2D" uid="uid://sjavlv5df8f3" path="res://assets/characters/player/running animation/running normal/right/jacques running improved7.png" id="25_vljsq"]
 [ext_resource type="Texture2D" uid="uid://bnxn0w006y4l8" path="res://assets/characters/player/running animation/running normal/right/jacques running improved8.png" id="26_5neao"]
+[ext_resource type="Script" path="res://src/util/generic/Camera2DController.cs" id="27_jawpl"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_otdlc"]
 animations = [{
@@ -127,9 +128,13 @@ size = Vector2(27, 54)
 
 [node name="Player" type="Node2D"]
 
-[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties")]
+[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties", "_cameraController")]
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
+_cameraController = NodePath("../PlayerCamera")
+_cameraOffset = 75.0
+_cameraBobStrength = 1.5
+_cameraBobSpeed = 0.625
 
 [node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite")]
 script = ExtResource("2_cc5m1")
@@ -138,7 +143,7 @@ DeaccelerationRate = 800.0
 MaximumVelocity = 230.0
 Gravity = 450.0
 GravityPushDownAdditional = 600.0
-JumpVelocity = -230.0
+JumpVelocity = -250.0
 JumpPushupAdditional = -230.0
 AnimatedSprite = NodePath("../PlayerAnimation")
 
@@ -153,7 +158,9 @@ offset = Vector2(0, -32)
 position = Vector2(1.5, -27)
 shape = SubResource("RectangleShape2D_ixiuh")
 
-[node name="Camera2D" type="Camera2D" parent="PlayerController"]
+[node name="PlayerCamera" type="Camera2D" parent="."]
 offset = Vector2(0, -50)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
+position_smoothing_speed = 4.0
+script = ExtResource("27_jawpl")

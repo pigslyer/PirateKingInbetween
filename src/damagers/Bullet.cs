@@ -13,7 +13,7 @@ using Pigslyer.PirateKingInbetween.Util.Damage;
 namespace Pigslyer.PirateKingInbetween.Damagers
 {
 	[Path("res://src/damagers/Bullet.tscn")]
-	public partial class Bullet : CharacterBody2D
+	public partial class Bullet : CharacterBody2DOverride
 	{
 		private static readonly PackedScene _bulletScene = PathAttribute.LoadResource<Bullet>();
 		
@@ -27,6 +27,9 @@ namespace Pigslyer.PirateKingInbetween.Damagers
 			ret._isInitialized = true;
 			ret._damageData = data;
 			ret._velocity = velocity;
+
+			ret.CollisionLayer = PhysicsLayers2D.None;
+			ret.CollisionMask = PhysicsLayers2D.World | data.TargetLayers;
 
 			parent.AddChild(ret);
 			ret.GlobalPosition = startingPosition;
@@ -49,7 +52,7 @@ namespace Pigslyer.PirateKingInbetween.Damagers
 			{
 				var coll = GetSlideCollision(0);
 
-				if (coll.GetCollider() is IDamageTaker taker)
+				if (coll.GetCollider() is IDamageTaker taker && taker.CanBeHit(_damageData))
 				{
 					taker.Hit(_damageData);
 				}

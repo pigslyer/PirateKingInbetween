@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpafft83xw0hd"]
+
+[ext_resource type="Texture2D" uid="uid://1inhfbspamd6" path="res://assets/pixel.png" id="1_hq38a"]
+[ext_resource type="Script" path="res://src/damagers/Bullet.cs" id="1_o6rd7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yppb8"]
+radius = 2.5
+height = 15.0
+
+[node name="Bullet" type="CharacterBody2D"]
+script = ExtResource("1_o6rd7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2.38419e-07, -1.19209e-07)
+scale = Vector2(16, 6.4)
+texture = ExtResource("1_hq38a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.57079
+shape = SubResource("CapsuleShape2D_yppb8")

@@ -17,5 +17,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Input
 		Down,
 		Interact,
 		ToggleDebugUI,
+		KeyboardInterrupt,
+		Shoot,
 	}
 }

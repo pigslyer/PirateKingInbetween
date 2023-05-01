@@ -87,10 +87,14 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 		{
 			base._Input(@event);
 
-			if (@event.IsActionPressed(InputActions.ToggleDebugUI.GetAction()))
+			if (@event.IsActionPressed(InputActions.ToggleDebugUI))
 			{
 				_debugPopup.Visible = true;
 				GetTree().Paused = true;
+			}
+			else if (@event.IsActionPressed(InputActions.KeyboardInterrupt))
+			{
+				GetTree().Quit();
 			}
 		}
 	}

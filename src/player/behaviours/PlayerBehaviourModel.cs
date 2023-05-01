@@ -11,15 +11,7 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 {
 	public class PlayerBehaviourModel : PlayerBehaviour
 	{
-		public PlayerBehaviourModel(PlayerController playerController) : base(playerController)
-		{
-			
-		}
-
-		public override void InitializeBehaviour()
-		{
-
-		}
+		public bool IsFacingRight { get; private set; } = true;
 
 		public override void ActiveBehaviour()
 		{ }
@@ -29,17 +21,19 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 		
 		public override void PassiveBehaviour()
 		{
-			FrameData.CurrentAnimation = Mathf.Abs(FrameData.Velocity.X) > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
+			Controller.CurrentAnimation = Mathf.Abs(Controller.Velocity.X) > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
 
-			if (_sprite.SpriteFrames.HasAnimation(FrameData.CurrentAnimation.ToString()) && _sprite.Animation != FrameData.CurrentAnimation.ToString())
+			if (_sprite.SpriteFrames.HasAnimation(Controller.CurrentAnimation.ToString()) && _sprite.Animation != Controller.CurrentAnimation.ToString())
 			{
-				_sprite.Play(FrameData.CurrentAnimation.ToString());
+				_sprite.Play(Controller.CurrentAnimation.ToString());
 			}
 
 			if (VelocityX != 0.0f)
 			{
-				_sprite.FlipH = VelocityX < 0.0f;
+				IsFacingRight = VelocityX >= 0.0f;
+				_sprite.FlipH = !IsFacingRight;
 			}
+
 		}
 	}
 }

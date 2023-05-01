@@ -29,7 +29,15 @@ namespace Pigslyer.PirateKingInbetween.Player
 		[ExportGroup("Model")]	
 		[Export] public AnimatedSprite2D AnimatedSprite { get; private set; } = null!;
 		
-		[Export(hintString: "If |velocity| < this, Idle is used, otherwise movement.")] 
-		public float MovementIdleEpsilon = 0.2f;
+		[Export] public float MovementIdleEpsilon = 0.2f;
+
+
+		[ExportGroup("Camera settings")]
+		[Export] public Camera2DController CameraController { get; private set; } = null!;
+		[Export] public float CameraOffset { get; private set; } = 40.0f;
+
+		[Export] public float CameraBobStrength { get; private set; } = 1.5f;
+		[Export] public float CameraBobSpeed { get; private set; } = 0.625f;
+		
 	}
 }

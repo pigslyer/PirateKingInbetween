@@ -13,6 +13,15 @@ namespace Pigslyer.PirateKingInbetween.Player
 {
 	public abstract class PlayerBehaviour : IBehaviour
 	{
+		public static T Generate<T>(PlayerController controller) where T : PlayerBehaviour, new()
+		{
+			T ret = new();
+			ret.BehaviourProperties = controller.BehaviourProperties;
+			ret.Controller = controller;
+
+			return ret;
+		}
+
 		protected interface IPlayerBehaviours
 		{
 			void SetEnabled(bool state);
@@ -31,12 +40,12 @@ namespace Pigslyer.PirateKingInbetween.Player
 
 		private PlayerActiveBehaviourContainer _currentActiveBehaviour = null!;
 		
-		protected readonly IFrameData FrameData;
-		protected float Delta => FrameData.Delta;
+		protected PlayerController Controller { get; private set; } = null!;
+		protected float Delta => Controller.Delta;
 		protected Vector2 Velocity
 		{
-			get => FrameData.Velocity;
-			set => FrameData.Velocity = value;
+			get => Controller.Velocity;
+			set => Controller.Velocity = value;
 		}
 		protected float VelocityX
 		{
@@ -51,15 +60,9 @@ namespace Pigslyer.PirateKingInbetween.Player
 		protected bool IsActive => _currentActiveBehaviour.Active == this;
 		protected float TimeActive = 0.0f;
 
-		protected readonly PlayerBehaviourProperties BehaviourProperties;
+		protected PlayerBehaviourProperties BehaviourProperties { get; private set;} = null!;
 
-		public PlayerBehaviour(PlayerController playerController)
-		{
-			BehaviourProperties = playerController.BehaviourProperties;
-			FrameData = playerController as IFrameData;
-		}
-
-		public void RunBehaviour()
+		void IBehaviour.RunBehaviour()
 		{
 			if (_isInitialized)
 			{
@@ -76,6 +79,11 @@ namespace Pigslyer.PirateKingInbetween.Player
 			}
 			else
 			{
+				if (Controller == null)
+				{
+					throw new InvalidOperationException($"{GetType()} must be generated via {nameof(PlayerBehaviour.Generate)}");
+				}
+
 				_isInitialized = true;
 
 				_currentActiveBehaviour = (BehaviourManager.Behaviours[0] == this) ? new() : ((PlayerBehaviour)(BehaviourManager.Behaviours[0]))._currentActiveBehaviour;
@@ -84,7 +92,7 @@ namespace Pigslyer.PirateKingInbetween.Player
 			}
 		}
 
-		public abstract void InitializeBehaviour();
+		public virtual void InitializeBehaviour() { }
 		public abstract void PassiveBehaviour();
 		public abstract void ActiveBehaviour();
 
@@ -115,6 +123,16 @@ namespace Pigslyer.PirateKingInbetween.Player
 				);
 				_currentActiveBehaviour.Active = this;
 			}
+		}
+
+		protected bool IsAnyActive()
+		{
+			return _currentActiveBehaviour.Active != null;
+		}
+
+		protected bool IsThisActive()
+		{
+			return _currentActiveBehaviour.Active == this;
 		}
 
 		public void ResetActive()
@@ -151,6 +169,24 @@ namespace Pigslyer.PirateKingInbetween.Player
 		protected bool IsBehaviourActive<T>() where T : PlayerBehaviour
 		{
 			return typeof(T).IsInstanceOfType(_currentActiveBehaviour.Active);
+		}
+
+		protected T GetSpecificBehaviour<T>()
+		{
+			if (!_isInitialized)
+			{
+				throw new InvalidOperationException($"Cannot call {nameof(GetSpecificBehaviour)} before {nameof(InitializeBehaviour)} has been called!");
+			}
+
+			foreach (var beh in BehaviourManager.Behaviours)
+			{
+				if (typeof(T).IsInstanceOfType(beh))
+				{
+					return (T)beh;
+				}
+			}
+
+			throw new Exception($"Could not find behaviour of type {typeof(T)}.");
 		}
 
 		protected IPlayerBehaviours GetBehaviours(Type[] includingTypes, bool getAllBut = false)

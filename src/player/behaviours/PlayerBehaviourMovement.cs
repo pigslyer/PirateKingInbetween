@@ -11,8 +11,6 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 {
 	public class PlayerBehaviourMovement : PlayerBehaviour
 	{
-		public PlayerBehaviourMovement(PlayerController playerController) : base(playerController)
-		{ }
 
 		private IPlayerBehaviours _notMovemenet = null!;
 
@@ -33,7 +31,7 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 				ResetActive();
 			}
 
-			FrameData.CurrentAnimation = CharacterAnimation.Jump;
+			Controller.CurrentAnimation = CharacterAnimation.Jump;
 		}
 
 
@@ -64,7 +62,7 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 					VelocityX += _accel * Delta * diff;
 				}
 				// we're accelerating in the same direction
-				else if (Mathf.Abs(FrameData.Velocity.X) < _maxSpeed)
+				else if (Mathf.Abs(Controller.Velocity.X) < _maxSpeed)
 				{
 					// this notably doesn't clamp velocity
 					VelocityX += Mathf.Min(_accel * Delta, _maxSpeed - Mathf.Abs(VelocityX)) * diff;
@@ -80,15 +78,15 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 					VelocityY += _gravityPushDown * Delta;
 				}
 
-				if (!IsActive && !FrameData.IsOnFloor)
+				if (!IsActive && !Controller.IsOnFloor)
 				{
-					FrameData.CurrentAnimation = CharacterAnimation.Fall;
+					Controller.CurrentAnimation = CharacterAnimation.Fall;
 				}
 
 				// -----------------------------------------------------------
 				// jumpin
 				
-				if (FrameData.IsOnFloor && InputManager.IsActionJustPressed(InputActions.Jump))
+				if (Controller.IsOnFloor && InputManager.IsActionJustPressed(InputActions.Jump))
 				{
 					SetActive();
 					VelocityY = BehaviourProperties.JumpVelocity;

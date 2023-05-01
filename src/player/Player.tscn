@@ -128,24 +128,22 @@ size = Vector2(27, 54)
 
 [node name="Player" type="Node2D"]
 
-[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties", "_cameraController")]
+[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties")]
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
-_cameraController = NodePath("../PlayerCamera")
-_cameraOffset = 75.0
-_cameraBobStrength = 1.5
-_cameraBobSpeed = 0.625
 
-[node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite")]
+[node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite", "CameraController")]
 script = ExtResource("2_cc5m1")
 AccelerationRate = 800.0
-DeaccelerationRate = 800.0
+DeaccelerationRate = 500.0
 MaximumVelocity = 230.0
 Gravity = 450.0
 GravityPushDownAdditional = 600.0
 JumpVelocity = -250.0
 JumpPushupAdditional = -230.0
 AnimatedSprite = NodePath("../PlayerAnimation")
+CameraController = NodePath("../../PlayerCamera")
+CameraOffset = 50.0
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
 sprite_frames = SubResource("SpriteFrames_otdlc")
@@ -162,5 +160,4 @@ shape = SubResource("RectangleShape2D_ixiuh")
 offset = Vector2(0, -50)
 zoom = Vector2(2, 2)
 position_smoothing_enabled = true
-position_smoothing_speed = 4.0
 script = ExtResource("27_jawpl")

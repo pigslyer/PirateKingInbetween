@@ -20,5 +20,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Generic
 		public static bool IsAction(this InputEvent ev, InputActions action, bool exactMatch = false)
 			=> ev.IsAction(action.GetAction(), exactMatch);
 
+		public static Vector2 Vec0Y(this float y) => new(0, y);
+		public static Vector2 VecX0(this float x) => new(x, 0);
 	}
 }

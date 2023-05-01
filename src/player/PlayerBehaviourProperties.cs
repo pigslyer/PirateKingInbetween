@@ -41,7 +41,9 @@ namespace Pigslyer.PirateKingInbetween.Player
 
 		[ExportGroup("Shooting data")]
 		[Export] public Marker2D ShootFromPosition { get; private set; } = null!; 
+		[Export] public float ShootTotalWaitTime { get; private set; } = 1.5f;
+		[Export] public float ShootAfterTime { get; private set; } = 0.6f;
+		[Export] public float ShootBulletVelocity { get; private set; } = 200.0f;
 
-		
 	}
 }

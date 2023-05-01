@@ -11,14 +11,6 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 {
 	public class PlayerBehaviourShoot : PlayerBehaviour
 	{
-		private const float WAIT_TIME = 1.5f;
-		private const float SHOOT_AFTER = 0.7f;
-
-		private const float BULLET_VELOCITY = 100;
-
-		private float _waitedTime;
-		private bool _hasShot;
-
 		private PlayerBehaviourModel _model = null!;
 
 		public override void InitializeBehaviour()
@@ -26,25 +18,32 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 			_model = GetSpecificBehaviour<PlayerBehaviourModel>();
 		}
 
+		private float _waitTime => BehaviourProperties.ShootTotalWaitTime;
+		private float _shootAfter => BehaviourProperties.ShootAfterTime;
+		private float _bulletVelocity => BehaviourProperties.ShootBulletVelocity;
+
+		private float _waitedTime;
+		private bool _hasShot;
+
 		public override void ActiveBehaviour()
 		{
 			_waitedTime += Delta;
 
-			if (!_hasShot && _waitedTime > SHOOT_AFTER)
+			if (!_hasShot && _waitedTime > _shootAfter)
 			{
 				Damagers.Bullet.GenerateBullet(
 					Controller.GetParent(), 
 					BehaviourProperties.ShootFromPosition.GlobalPosition, 
 					new(PhysicsLayers2D.World), 
 					new Damagers.Bullet.BulletDataConstant(
-						(_model.IsFacingRight ? BULLET_VELOCITY : -BULLET_VELOCITY).VecX0()
+						(_model.IsFacingRight ? _bulletVelocity : -_bulletVelocity).VecX0()
 					)
 				);
 
 				_hasShot = true;
 			}
 
-			if (_waitedTime > WAIT_TIME)
+			if (_waitedTime > _waitTime)
 			{
 				_waitedTime = 0.0f;
 				ResetActive();

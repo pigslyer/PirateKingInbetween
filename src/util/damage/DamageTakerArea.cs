@@ -35,5 +35,10 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 		{
 			_onDamageTaken?.Invoke(data);
 		}
+
+		public bool CanBeHit(DamageData data)
+		{
+			return (_occupiesLayer & data.TargetLayers) != PhysicsLayers2D.None;
+		}
 	}
 }

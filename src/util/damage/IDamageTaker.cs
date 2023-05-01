@@ -17,5 +17,6 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 		public void Disable();
 
 		public void Hit(DamageData data);
+		public bool CanBeHit(DamageData data);
 	}
 }

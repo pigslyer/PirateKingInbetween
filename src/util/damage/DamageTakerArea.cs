@@ -14,8 +14,8 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 		[Export] private PhysicsLayers2D _occupiesLayer = PhysicsLayers2D.None;
 		private bool _isEnabled = false;
 
-		private event Action<IDamageDealer, DamageData>? _onDamageTaken;
-		public event Action<IDamageDealer, DamageData> OnDamageTaken
+		private event Action<DamageData>? _onDamageTaken;
+		public event Action<DamageData> OnDamageTaken
 		{
 			add => _onDamageTaken += value;
 			remove => _onDamageTaken -= value;
@@ -31,14 +31,9 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 			_isEnabled = false;
 		}
 
-		public bool CanDealerHit(IDamageDealer dealer)
+		public void Hit(DamageData data)
 		{
-			return _isEnabled && (dealer.TargetLayers & _occupiesLayer) != PhysicsLayers2D.None;
-		}
-
-		public void Hit(IDamageDealer dealer, DamageData data)
-		{
-			_onDamageTaken?.Invoke(dealer, data);
+			_onDamageTaken?.Invoke(data);
 		}
 	}
 }

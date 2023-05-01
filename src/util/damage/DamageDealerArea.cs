@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace Pigslyer.PirateKingInbetween.Util.Damage
 {
-	public partial class DamageDealerArea : Area2DOverride, IDamageDealer
+	public partial class DamageDealerArea : Area2DOverride
 	{
 		[Export] private PhysicsLayers2D _targetLayers = PhysicsLayers2D.None;
 		public PhysicsLayers2D TargetLayers => _targetLayers;
@@ -33,9 +33,9 @@ namespace Pigslyer.PirateKingInbetween.Util.Damage
 
 			if (_currentData != null) foreach (Area2D area in GetOverlappingAreas())
 			{
-				if (area is IDamageTaker taker && taker.CanDealerHit(this))
+				if (area is IDamageTaker taker)
 				{
-					taker.Hit(this, _currentData);
+					taker.Hit(_currentData);
 				}
 			}
 		}

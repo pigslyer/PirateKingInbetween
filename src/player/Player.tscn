@@ -129,10 +129,11 @@ size = Vector2(27, 54)
 [node name="Player" type="Node2D"]
 
 [node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties")]
+collision_layer = 2
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
 
-[node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite", "CameraController")]
+[node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite", "CameraController", "ShootFromPosition")]
 script = ExtResource("2_cc5m1")
 AccelerationRate = 800.0
 DeaccelerationRate = 500.0
@@ -144,6 +145,7 @@ JumpPushupAdditional = -230.0
 AnimatedSprite = NodePath("../PlayerAnimation")
 CameraController = NodePath("../../PlayerCamera")
 CameraOffset = 50.0
+ShootFromPosition = NodePath("../ShootingPosition")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
 sprite_frames = SubResource("SpriteFrames_otdlc")
@@ -155,6 +157,9 @@ offset = Vector2(0, -32)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]
 position = Vector2(1.5, -27)
 shape = SubResource("RectangleShape2D_ixiuh")
+
+[node name="ShootingPosition" type="Marker2D" parent="PlayerController"]
+position = Vector2(15, -36)
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 offset = Vector2(0, -50)

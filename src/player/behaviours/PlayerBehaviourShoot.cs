@@ -32,7 +32,16 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 
 			if (!_hasShot && _waitedTime > SHOOT_AFTER)
 			{
-				//Damagers.Bullet.GenerateBullet(Controller, Controller.GlobalPosition, new(0,0,0), new Vector2(_model.IsFacingRight ? BULLET_VELOCITY : -BULLET_VELOCITY, 0));
+				Damagers.Bullet.GenerateBullet(
+					Controller.GetParent(), 
+					BehaviourProperties.ShootFromPosition.GlobalPosition, 
+					new(PhysicsLayers2D.World), 
+					new Damagers.Bullet.BulletDataConstant(
+						(_model.IsFacingRight ? BULLET_VELOCITY : -BULLET_VELOCITY).VecX0()
+					)
+				);
+
+				_hasShot = true;
 			}
 
 			if (_waitedTime > WAIT_TIME)

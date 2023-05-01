@@ -38,6 +38,10 @@ namespace Pigslyer.PirateKingInbetween.Player
 
 		[Export] public float CameraBobStrength { get; private set; } = 1.5f;
 		[Export] public float CameraBobSpeed { get; private set; } = 0.625f;
+
+		[ExportGroup("Shooting data")]
+		[Export] public Marker2D ShootFromPosition { get; private set; } = null!; 
+
 		
 	}
 }

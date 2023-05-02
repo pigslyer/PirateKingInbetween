@@ -16,7 +16,6 @@ namespace Pigslyer.PirateKingInbetween.Util.Physics
 		Player = 2,
 		Enemy = 4,
 		Interactive = 8,
-		// all IDamageDealer and IDamageData implementations must occupy this layer, however they can use the other layers internally to tell apart targets
-		Damage = 16,
+		PressurePlate = 16,
 	}
 }

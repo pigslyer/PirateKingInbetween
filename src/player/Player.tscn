@@ -130,6 +130,7 @@ size = Vector2(27, 54)
 
 [node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties")]
 collision_layer = 2
+collision_mask = 17
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
 

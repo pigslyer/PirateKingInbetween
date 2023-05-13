@@ -1,0 +1,136 @@
+[gd_scene load_steps=2 format=3 uid="uid://bobdkeoaj6nxe"]
+
+[ext_resource type="Script" path="res://src/util/editor/SpriteFramesGenerator.cs" id="1_umdm2"]
+
+[node name="SpriteFramesGenerator" type="Control" node_paths=PackedStringArray("_optionParent", "_options", "_sprite")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_umdm2")
+_optionParent = NodePath("Panel/TabContainer")
+_options = NodePath("Panel/Panel/OptionButton")
+_sprite = NodePath("Panel/Panel/ReferenceRect/AnimatedSprite2D")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.44
+anchor_bottom = 0.9
+offset_left = 0.487999
+offset_top = 0.215996
+offset_right = 0.119965
+offset_bottom = -0.0400391
+
+[node name="OptionButton" type="OptionButton" parent="Panel/Panel"]
+layout_mode = 2
+offset_left = 27.0
+offset_top = 33.2
+offset_right = 418.0
+offset_bottom = 53.2
+
+[node name="ReferenceRect" type="ReferenceRect" parent="Panel/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 80.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Panel/Panel/ReferenceRect"]
+centered = false
+
+[node name="TabContainer" type="TabContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.471
+anchor_top = 0.05
+anchor_right = 0.964
+anchor_bottom = 0.9
+offset_left = 0.407959
+offset_top = -0.0480042
+offset_right = 0.471924
+offset_bottom = 0.135986
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Main" type="MarginContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VboxContainer" type="VBoxContainer" parent="Panel/TabContainer/Main"]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="Panel/TabContainer/Main/VboxContainer"]
+layout_mode = 2
+text = "Save to file"
+
+[node name="OpenFolder" type="Button" parent="Panel/TabContainer/Main/VboxContainer"]
+layout_mode = 2
+text = "Open folder
+"
+
+[node name="Open" type="Button" parent="Panel/TabContainer/Main/VboxContainer"]
+layout_mode = 2
+text = "Open sprite frames"
+
+[node name="OpenSupplement" type="Button" parent="Panel/TabContainer/Main/VboxContainer"]
+layout_mode = 2
+text = "Supplement frames"
+
+[node name="SaveFrames" type="FileDialog" parent="."]
+size = Vector2i(392, 162)
+root_subfolder = "res://src/"
+
+[node name="OpenFramesFolder" type="FileDialog" parent="."]
+title = "Open a Directory"
+size = Vector2i(392, 162)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+root_subfolder = "res://assets/characters"
+
+[node name="OpenFramesResource" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(312, 162)
+ok_button_text = "Open"
+file_mode = 0
+root_subfolder = "res://src"
+filters = PackedStringArray("*.tres")
+
+[node name="OpenFramesSupplement" type="FileDialog" parent="."]
+title = "Open a Directory"
+size = Vector2i(392, 162)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+root_subfolder = "res://assets/characters"
+
+[connection signal="item_selected" from="Panel/Panel/OptionButton" to="." method="OnAnimationSelected"]
+[connection signal="frame_changed" from="Panel/Panel/ReferenceRect/AnimatedSprite2D" to="." method="OnFrameChanged"]
+[connection signal="tab_changed" from="Panel/TabContainer" to="." method="OnTabChanged"]
+[connection signal="pressed" from="Panel/TabContainer/Main/VboxContainer/Save" to="SaveFrames" method="popup"]
+[connection signal="pressed" from="Panel/TabContainer/Main/VboxContainer/OpenFolder" to="OpenFramesFolder" method="popup"]
+[connection signal="pressed" from="Panel/TabContainer/Main/VboxContainer/Open" to="OpenFramesResource" method="popup"]
+[connection signal="pressed" from="Panel/TabContainer/Main/VboxContainer/OpenSupplement" to="OpenFramesSupplement" method="popup"]
+[connection signal="file_selected" from="SaveFrames" to="." method="SaveOptions"]
+[connection signal="dir_selected" from="OpenFramesFolder" to="." method="LoadOptions" binds= [false]]
+[connection signal="file_selected" from="OpenFramesResource" to="." method="LoadOptions" binds= [true]]
+[connection signal="dir_selected" from="OpenFramesSupplement" to="." method="SupplementFrames"]

@@ -159,7 +159,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 				}
 				else
 				{
-					curSettings.UpdateFrom(animPath);
+					curSettings.UpdateFrom(animPath, path);
 
 					curSettings.Generate(_optionParent);
 				}
@@ -218,9 +218,9 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 			private readonly SpriteFrames _frames;
 
 			public readonly string AnimationName;
-			public bool Loop { get; private set; }
-			public double FPS { get; private set; }
-			public float[] PerFrameSpeed;
+			private  bool _loop;
+			private double _FPS;
+			private float[] _perFrameSpeed;
 
 			public static AnimationSettings GenerateFromDir(SpriteFrames from, string animRootDir, string rootDir)
 			{
@@ -228,12 +228,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 					var name = GetAnimName(rootDir, anim);
 					from.AddAnimation(name);
 
-					var dir = DirAccess.Open(anim);
-					dir.IncludeHidden = dir.IncludeNavigational = false;
-
-					dir.GetFiles().Where(f => !f.EndsWith(".import")).Select(f => $"{anim}/{f}").ForEach(img => {
-						from.AddFrame(name, ResourceLoader.Load<Texture2D>(img));
-					});
+					AddAnimation(from, anim, name);
 				});
 
 				return new(
@@ -260,14 +255,40 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 			private AnimationSettings(SpriteFrames frames, string animName, bool loop, double fps, float[] perFrameSpeed)
 			{ 
-				_frames = frames; AnimationName = animName; Loop = loop; FPS = fps; PerFrameSpeed = perFrameSpeed;
+				_frames = frames; AnimationName = animName; _loop = loop; _FPS = fps; _perFrameSpeed = perFrameSpeed;
 			}
 
-			public void UpdateFrom(string dir)
+			public void UpdateFrom(string animPath, string rootDir)
 			{
+				foreach (var subAnim in GetSubAnimPath(animPath))
+				{
+					var animName = GetAnimName(rootDir, subAnim);
 
+					_frames.RemoveAnimation(animName);
+					_frames.AddAnimation(animName);
+
+					AddAnimation(_frames, subAnim, animName);
+
+					int count = _frames.GetFrameCount(animName);
+					if (count != _perFrameSpeed.Length)
+					{
+						float[] temp = new float[count];
+						Array.Copy(_perFrameSpeed, temp, Math.Min(_perFrameSpeed.Length, count));
+						_perFrameSpeed = temp;
+					}
+				}
 			}
 
+			private static void AddAnimation(SpriteFrames from, string animFolder, string animName)
+			{
+				var dir = DirAccess.Open(animFolder);
+				dir.IncludeHidden = dir.IncludeNavigational = false;
+
+				dir.GetFiles().Where(f => !f.EndsWith(".import")).Select(f => $"{animFolder}/{f}").ForEach(img =>
+				{
+					from.AddFrame(animName, ResourceLoader.Load<Texture2D>(img));
+				});
+			}
 
 			private Node? _generatedRoot = null;
 
@@ -289,22 +310,27 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 				if (_generatedRoot != null)
 				{
-					
+					_generatedRoot.Name = Guid.NewGuid().ToString();
+					_generatedRoot.AddSibling(vbox);
+					_generatedRoot.QueueFree();
+				}
+				else
+				{
+					root.AddChild(vbox);
 				}
 
-
-				root.AddChild(vbox);				
+				_generatedRoot = vbox;
 
 				var loopbox = new CheckBox()
 				{
 					Text = "Loop",
 				};
 
-				loopbox.SetPressedNoSignal(Loop);
+				loopbox.SetPressedNoSignal(_loop);
 
 				loopbox.Toggled += state => 
 				{
-					Loop = state;
+					_loop = state;
 					animNames.ForEach(name => _frames.SetAnimationLoop(name, state));
 				};
 
@@ -312,13 +338,13 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 				var fpsedit = new LineEdit()
 				{
-					Text = FPS.ToString()
+					Text = _FPS.ToString()
 				};
 
 				fpsedit.TextSubmitted += text => {
 					if (double.TryParse(text, out var val))
 					{
-						FPS = val;
+						_FPS = val;
 						animNames.ForEach(name => _frames.SetAnimationSpeed(name, val));
 					}
 					else
@@ -336,7 +362,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 				vbox.AddChild(perframelabel);
 
-				for (int i = 0; i < PerFrameSpeed.Length; i++)
+				for (int i = 0; i < _perFrameSpeed.Length; i++)
 				{
 					var hbox = new HBoxContainer();
 
@@ -349,7 +375,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 					var frameset = new LineEdit()
 					{
-						Text = PerFrameSpeed[i].ToString(),
+						Text = _perFrameSpeed[i].ToString(),
 						SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
 					};
 
@@ -357,7 +383,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 					frameset.TextSubmitted += text => {
 						if (float.TryParse(text, out var val))
 						{
-							PerFrameSpeed[idx] = val;
+							_perFrameSpeed[idx] = val;
 							animNames.ForEach(name => _frames.SetFrame(name, idx, _frames.GetFrameTexture(name, idx), val));
 						}
 						else

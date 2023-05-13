@@ -1,0 +1,617 @@
+[gd_resource type="SpriteFrames" load_steps=129 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left1.png" id="1_hj8l8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left2.png" id="2_v4jlh"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left3.png" id="3_1s325"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left4.png" id="4_l4w8y"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left5.png" id="5_hox1y"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left6.png" id="6_bdete"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left7.png" id="7_xg1ph"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/left/J_normal_dying_left8.png" id="8_qha7j"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right1.png" id="9_lxl1b"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right2.png" id="10_lxce3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right3.png" id="11_kkwll"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right4.png" id="12_lmq1m"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right5.png" id="13_fcs51"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right6.png" id="14_vmf6o"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right7.png" id="15_t42am"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/normalDying/right/J_normal_dying_right8.png" id="16_fvue2"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left1.png" id="17_uq3gy"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left2.png" id="18_p404i"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left3.png" id="19_gixpk"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left4.png" id="20_s05gd"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left5.png" id="21_bbess"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left6.png" id="22_fyn4w"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left7.png" id="23_6pil8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/left/J_WL_dying_left8.png" id="24_xe30b"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right1.png" id="25_njfrr"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right2.png" id="26_0eers"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right3.png" id="27_icae1"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right4.png" id="28_c7ftf"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right5.png" id="29_jr880"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right6.png" id="30_b1lnw"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right7.png" id="31_dhrib"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/dyingAnimation/woodenLegDying/right/J_WL_dying_right8.png" id="32_50ola"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/left/J_normal_falling_left1.png" id="33_piyfu"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/left/J_normal_falling_left2.png" id="34_3ar7r"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/left/J_normal_falling_left3.png" id="35_shw75"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/left/J_normal_falling_left4.png" id="36_bqml3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/right/J_falling_right1.png" id="37_8afna"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/right/J_falling_right2.png" id="38_bmtbl"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/right/J_falling_right3.png" id="39_c2g43"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/normalFalling/right/J_falling_right4.png" id="40_f78x6"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/left/J_WL_falling_left1.png" id="41_umr4n"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/left/J_WL_falling_left2.png" id="42_bhixt"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/left/J_WL_falling_left3.png" id="43_3xduh"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/left/J_WL_falling_left4.png" id="44_kgr2t"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/right/J_WL_falling_right1.png" id="45_2iwuo"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/right/J_WL_falling_right2.png" id="46_xmipi"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/right/J_WL_falling_right3.png" id="47_vn8jd"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/fallAnimation/woodenLegFalling/right/J_WL_falling_right4.png" id="48_bm4hx"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left1.png" id="49_cua5w"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left2.png" id="50_ybdjt"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left3.png" id="51_bfat3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left4.png" id="52_d64j0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left5.png" id="53_mbc76"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left6.png" id="54_3sg00"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left7.png" id="55_u5v01"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/left/J_normal_idle_left8.png" id="56_jxxr1"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right1.png" id="57_6da03"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right2.png" id="58_nltuj"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right3.png" id="59_pd6a0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right4.png" id="60_yiamd"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right5.png" id="61_ctemm"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right6.png" id="62_rkf4l"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right7.png" id="63_mvce3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/normalIdle/right/J_normal_idle_right8.png" id="64_4spo8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left1.png" id="65_nq367"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left2.png" id="66_hj5q8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left3.png" id="67_e3yk6"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left4.png" id="68_1yioj"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left5.png" id="69_dccfs"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left6.png" id="70_pdr2d"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left7.png" id="71_j46mr"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/left/J_WL_idle_left8.png" id="72_8jpmq"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right1.png" id="73_jvak1"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right2.png" id="74_oxqxx"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right3.png" id="75_oc1dq"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right4.png" id="76_0b2jy"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right5.png" id="77_yeugp"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right6.png" id="78_x7dc3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right7.png" id="79_2mlb0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/idleAnimation/woodenLegIdle/right/J_WL_idle_right8.png" id="80_w36ml"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/left/J_normal_jumping_left1.png" id="81_38kta"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/left/J_normal_jumping_left2.png" id="82_rhmvp"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/left/J_normal_jumping_left3.png" id="83_myemf"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/left/J_normal_jumping_left4.png" id="84_6kp0o"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/right/J_normal_jumping_right1.png" id="85_kgsmm"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/right/J_normal_jumping_right2.png" id="86_akvy3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/right/J_normal_jumping_right3.png" id="87_brbtw"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/normalJumping/right/J_normal_jumping_right4.png" id="88_xdb5r"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/left/J_WL_jumping_left1.png" id="89_hrpv3"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/left/J_WL_jumping_left2.png" id="90_5shof"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/left/J_WL_jumping_left3.png" id="91_yg8o4"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/left/J_WL_jumping_left4.png" id="92_5ordq"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/right/J_WL_jumping_right1.png" id="93_o5csk"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/right/J_WL_jumping_right2.png" id="94_wepvs"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/right/J_WL_jumping_right3.png" id="95_algi8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/jumpingAnimation/woodenLegJumping/right/J_WL_jumping_right4.png" id="96_va8gp"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left1.png" id="97_kc50v"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left2.png" id="98_cochx"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left3.png" id="99_6wuw8"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left4.png" id="100_2mtsx"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left5.png" id="101_mk57h"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left6.png" id="102_ge71o"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left7.png" id="103_ll47o"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/left/J_normal_running_left8.png" id="104_fqjyu"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right1.png" id="105_nkn6u"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right2.png" id="106_1l67a"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right3.png" id="107_isan1"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right4.png" id="108_vg6al"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right5.png" id="109_lemq0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right6.png" id="110_8rlxn"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right7.png" id="111_d7vba"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/normalRunning/right/J_normal_running_right8.png" id="112_ifqu0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left1.png" id="113_auu4q"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left2.png" id="114_vdmsx"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left3.png" id="115_32qyi"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left4.png" id="116_c5p5f"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left5.png" id="117_1fci0"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left6.png" id="118_tpoys"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left7.png" id="119_e12fp"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/left/J_WL_running_left8.png" id="120_nsflu"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right1.png" id="121_7um2v"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right2.png" id="122_eyumb"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right3.png" id="123_65dar"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right4.png" id="124_pe501"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right5.png" id="125_dfcb6"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right6.png" id="126_bufny"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right7.png" id="127_innue"]
+[ext_resource type="Texture2D" path="res://assets/characters/player/runningAnimation/woodenLegRunning/right/J_WL_running_right8.png" id="128_ox8wc"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hj8l8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_v4jlh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_1s325")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_l4w8y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_hox1y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_bdete")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_xg1ph")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_qha7j")
+}],
+"loop": true,
+"name": &"dyingAnimation_normalDying_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_lxl1b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_lxce3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_kkwll")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_lmq1m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_fcs51")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_vmf6o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_t42am")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_fvue2")
+}],
+"loop": true,
+"name": &"dyingAnimation_normalDying_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_uq3gy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_p404i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_gixpk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_s05gd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_bbess")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_fyn4w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_6pil8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_xe30b")
+}],
+"loop": true,
+"name": &"dyingAnimation_woodenLegDying_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_njfrr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_0eers")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_icae1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_c7ftf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_jr880")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_b1lnw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_dhrib")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_50ola")
+}],
+"loop": true,
+"name": &"dyingAnimation_woodenLegDying_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("33_piyfu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_3ar7r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_shw75")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_bqml3")
+}],
+"loop": true,
+"name": &"fallAnimation_normalFalling_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("37_8afna")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_bmtbl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_c2g43")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_f78x6")
+}],
+"loop": true,
+"name": &"fallAnimation_normalFalling_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("41_umr4n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_bhixt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_3xduh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_kgr2t")
+}],
+"loop": true,
+"name": &"fallAnimation_woodenLegFalling_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("45_2iwuo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_xmipi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_vn8jd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_bm4hx")
+}],
+"loop": true,
+"name": &"fallAnimation_woodenLegFalling_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("49_cua5w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_ybdjt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_bfat3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_d64j0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_mbc76")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_3sg00")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_u5v01")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_jxxr1")
+}],
+"loop": true,
+"name": &"idleAnimation_normalIdle_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("57_6da03")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_nltuj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_pd6a0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_yiamd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_ctemm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_rkf4l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_mvce3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_4spo8")
+}],
+"loop": true,
+"name": &"idleAnimation_normalIdle_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("65_nq367")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_hj5q8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_e3yk6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_1yioj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_dccfs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_pdr2d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_j46mr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_8jpmq")
+}],
+"loop": true,
+"name": &"idleAnimation_woodenLegIdle_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("73_jvak1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("74_oxqxx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("75_oc1dq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("76_0b2jy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("77_yeugp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("78_x7dc3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("79_2mlb0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("80_w36ml")
+}],
+"loop": true,
+"name": &"idleAnimation_woodenLegIdle_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("81_38kta")
+}, {
+"duration": 1.0,
+"texture": ExtResource("82_rhmvp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("83_myemf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("84_6kp0o")
+}],
+"loop": true,
+"name": &"jumpingAnimation_normalJumping_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("85_kgsmm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("86_akvy3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("87_brbtw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("88_xdb5r")
+}],
+"loop": true,
+"name": &"jumpingAnimation_normalJumping_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("89_hrpv3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("90_5shof")
+}, {
+"duration": 1.0,
+"texture": ExtResource("91_yg8o4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("92_5ordq")
+}],
+"loop": true,
+"name": &"jumpingAnimation_woodenLegJumping_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("93_o5csk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("94_wepvs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("95_algi8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("96_va8gp")
+}],
+"loop": true,
+"name": &"jumpingAnimation_woodenLegJumping_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("97_kc50v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("98_cochx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("99_6wuw8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("100_2mtsx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("101_mk57h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("102_ge71o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("103_ll47o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("104_fqjyu")
+}],
+"loop": true,
+"name": &"runningAnimation_normalRunning_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("105_nkn6u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("106_1l67a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("107_isan1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("108_vg6al")
+}, {
+"duration": 1.0,
+"texture": ExtResource("109_lemq0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("110_8rlxn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("111_d7vba")
+}, {
+"duration": 1.0,
+"texture": ExtResource("112_ifqu0")
+}],
+"loop": true,
+"name": &"runningAnimation_normalRunning_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("113_auu4q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("114_vdmsx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("115_32qyi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("116_c5p5f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("117_1fci0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("118_tpoys")
+}, {
+"duration": 1.0,
+"texture": ExtResource("119_e12fp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("120_nsflu")
+}],
+"loop": true,
+"name": &"runningAnimation_woodenLegRunning_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("121_7um2v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("122_eyumb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("123_65dar")
+}, {
+"duration": 1.0,
+"texture": ExtResource("124_pe501")
+}, {
+"duration": 1.0,
+"texture": ExtResource("125_dfcb6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("126_bufny")
+}, {
+"duration": 1.0,
+"texture": ExtResource("127_innue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("128_ox8wc")
+}],
+"loop": true,
+"name": &"runningAnimation_woodenLegRunning_right",
+"speed": 5.0
+}]

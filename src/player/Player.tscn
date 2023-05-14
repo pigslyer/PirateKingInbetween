@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" path="res://src/player/PlayerController.cs" id="1_quobq"]
 [ext_resource type="Script" path="res://src/player/PlayerBehaviourProperties.cs" id="2_cc5m1"]
+[ext_resource type="SpriteFrames" uid="uid://b5e3ei3hppoha" path="res://src/player/PlayerAnimation.tres" id="3_v8ywd"]
 [ext_resource type="Script" path="res://src/util/generic/Camera2DController.cs" id="27_jawpl"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_1rrxq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ixiuh"]
 size = Vector2(27, 54)
@@ -31,7 +30,8 @@ CameraController = NodePath("../../PlayerCamera")
 ShootFromPosition = NodePath("../ShootingPosition")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="PlayerController"]
-sprite_frames = SubResource("SpriteFrames_1rrxq")
+sprite_frames = ExtResource("3_v8ywd")
+animation = &"runningAnimation_woodenLeg_right"
 offset = Vector2(0, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerController"]

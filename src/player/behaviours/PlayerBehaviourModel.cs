@@ -17,22 +17,42 @@ namespace Pigslyer.PirateKingInbetween.Player.Behaviours
 		{ }
 
 		private float _movementIdleEpsilon => BehaviourProperties.MovementIdleEpsilon;
+		private bool _usingWoodLeg => BehaviourProperties.UsingWoodLeg;
 		private AnimatedSprite2D _sprite => BehaviourProperties.AnimatedSprite;
 		
 		public override void PassiveBehaviour()
 		{
-			Controller.CurrentAnimation = Mathf.Abs(Controller.Velocity.X) > _movementIdleEpsilon ? CharacterAnimation.Walk : CharacterAnimation.Idle;
-
-			if (_sprite.SpriteFrames.HasAnimation(Controller.CurrentAnimation.ToString()) && _sprite.Animation != Controller.CurrentAnimation.ToString())
+			string GetBasicAnimation(CharacterAnimation fromAnim)
 			{
-				_sprite.Play(Controller.CurrentAnimation.ToString());
+				return fromAnim switch
+				{
+					CharacterAnimation.Idle => "idleAnimation",
+					CharacterAnimation.Run => "runningAnimation",
+					CharacterAnimation.Jump => "jumpingAnimation",
+					CharacterAnimation.Fall => "fallAnimation",
+					_ => "idleAnimation"
+				};
 			}
+
+			string GetAnimation(CharacterAnimation fromAnim)
+			{
+				return $"{GetBasicAnimation(fromAnim)}_{(_usingWoodLeg ? "woodenLeg" : "normal")}_{(IsFacingRight ? "right" : "left")}";
+			}
+
+			Controller.CurrentAnimation = Mathf.Abs(Controller.Velocity.X) > _movementIdleEpsilon ? CharacterAnimation.Run : CharacterAnimation.Idle;
 
 			if (VelocityX != 0.0f)
 			{
 				IsFacingRight = VelocityX >= 0.0f;
-				_sprite.FlipH = !IsFacingRight;
 			}
+
+			string curAnim = GetAnimation(Controller.CurrentAnimation);
+			if (_sprite.SpriteFrames.HasAnimation(curAnim) && _sprite.Animation != curAnim)
+			{
+				_sprite.Play(curAnim);
+			}
+
+			
 
 		}
 	}

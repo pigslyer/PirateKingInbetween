@@ -30,6 +30,7 @@ namespace Pigslyer.PirateKingInbetween.Player
 		[Export] public AnimatedSprite2D AnimatedSprite { get; private set; } = null!;
 		
 		[Export] public float MovementIdleEpsilon = 0.2f;
+		[Export] public bool UsingWoodLeg = false;
 
 
 		[ExportGroup("Camera settings")]

@@ -20,12 +20,13 @@ namespace Pigslyer.PirateKingInbetween.Props
 		public static void SpawnCoins(Vector2 globalPosition, Node2D flyTowards, int count)
 		{
 			PackedScene scene = PathAttribute.LoadResource<Coin>();
+			float baseAngle = (globalPosition - (flyTowards is IHasCenterOfMass mass ? mass.CenterOfMass : flyTowards.GlobalPosition)).Angle();
 
 			for (int i = 0; i < count; i++)
 			{
 				Coin inst = scene.Instantiate<Coin>();
 
-				float angle = (1 + GD.Randf()) * Mathf.Pi;
+				float angle = baseAngle + (-0.5f + GD.Randf()) * Mathf.Pi;
 				
 				inst.Position = globalPosition;
 				inst.ZIndex = 1000;
@@ -38,6 +39,7 @@ namespace Pigslyer.PirateKingInbetween.Props
 		private void SetData(Node2D following, float angle)
 		{
 			_following = following;
+			_centerOfMass = following as IHasCenterOfMass;
 
 			_velocity = new Vector2(LINEAR_VELOCITY_SPEED, 0).Rotated(angle);
 		}
@@ -51,6 +53,7 @@ namespace Pigslyer.PirateKingInbetween.Props
 		
 		private States _curState = States.Starting;
 		private Node2D _following = null!;
+		private IHasCenterOfMass? _centerOfMass;
 		private Vector2 _velocity;
 
 		public override void _Process(double delta)
@@ -77,7 +80,8 @@ namespace Pigslyer.PirateKingInbetween.Props
 					break;
 			}
 		}
-
+		
+		private Vector2 _targetPosition => _centerOfMass?.CenterOfMass ?? _following.GlobalPosition;
 
 		// ----------------------------------------------------
 		// STARTUP STATE CONSTANTS
@@ -89,15 +93,25 @@ namespace Pigslyer.PirateKingInbetween.Props
 		private const float LINEAR_VELOCITY_SPEED = 10.0f;
 		private const float LINEAR_ACCELERATION = 120.0f;
 		private const float MAX_VELOCITY = 10.0f;
-		private const float DISAPPEARING_DISTANCE = 15.0f;
+		private const float ENDING_DISTANCE = 23.0f;
+		private float ENDING_DISTANCE_SQR => ENDING_DISTANCE * ENDING_DISTANCE;
+		private const float MAX_FLYING_TIME = 1.0f;
+
+		// ----------------------------------------------------
+		// FLYING STATE CONSTANTS
+		private const float DISAPPEARING_DISTANCE = 10.0f;
 		private float DISAPPEARING_DISTANCE_SQR => DISAPPEARING_DISTANCE * DISAPPEARING_DISTANCE;
 
-		
+
+
 		// ---------------------------------------------------
 		// STARTUP VARIABLES
 		private float _startupTime = 0.0f;
 
 
+		// ---------------------------------------------------
+		// FLYING VARIABLES
+		private float _flyingTime = 0.0f;
 
 
 		private void StartingProcess(float delta)
@@ -121,24 +135,40 @@ namespace Pigslyer.PirateKingInbetween.Props
 
 		private void FlyingProcess(float delta)
 		{
+			_flyingTime += delta;
 
-			Vector2 diff = _following.GlobalPosition - GlobalPosition;
+			Vector2 diff = _targetPosition - GlobalPosition;
 
-			if (diff.LengthSquared() < DISAPPEARING_DISTANCE_SQR)
+			if (diff.LengthSquared() < ENDING_DISTANCE_SQR || _flyingTime >= MAX_FLYING_TIME)
 			{
 				_curState = States.Ending;
+				return;
 			}
 
 			_velocity += diff.Normalized() * LINEAR_ACCELERATION * (float)delta;
 			_velocity = _velocity.LimitLength(MAX_VELOCITY);
 
 			Position += _velocity;
-			LookAt(_following.GlobalPosition);
+			LookAt(_targetPosition);
 		}
 
 		private void EndingProcess(float delta)
 		{
-			QueueFree();
+			Vector2 diff = _targetPosition - GlobalPosition;
+
+			if (diff.LengthSquared() < DISAPPEARING_DISTANCE_SQR)
+			{
+				QueueFree();
+			}
+
+			_velocity += diff.Normalized() * LINEAR_ACCELERATION * 5 * (float) delta;
+			_velocity = _velocity.LimitLength(MAX_VELOCITY);
+
+			Position += _velocity;
+			LookAt(_targetPosition);
+
+			float newScale = Math.Min(1.0f, diff.LengthSquared() / DISAPPEARING_DISTANCE_SQR * 0.5f) * FINAL_SCALE;
+			Scale = new(newScale, newScale);
 		}
 	}
 }

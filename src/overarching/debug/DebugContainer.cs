@@ -23,7 +23,7 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 
 		private Node _root = null!;
 
-		private IList<IDebugPanel> _debugPanelCreators = null!;
+		private List<IDebugPanel> _debugPanelCreators = null!;
 
 		public override void _Ready()
 		{
@@ -45,7 +45,7 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 			SpawnEditors();
 		}
 
-		private static IList<IDebugPanel> CreateEditors()
+		private static List<IDebugPanel> CreateEditors()
 		{
 			List<IDebugPanel> ret = new();
 
@@ -95,6 +95,11 @@ namespace Pigslyer.PirateKingInbetween.Overarching.Debug
 			else if (@event.IsActionPressed(InputActions.KeyboardInterrupt))
 			{
 				GetTree().Quit();
+			}
+
+			if (@event.IsActionPressed(InputActions.Interact))
+			{
+				Props.Coin.SpawnCoins(GlobalGetter.Player.GetGlobalMousePosition(), GlobalGetter.Player, 10);
 			}
 		}
 	}

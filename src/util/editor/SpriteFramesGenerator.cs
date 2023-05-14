@@ -368,7 +368,7 @@ namespace Pigslyer.PirateKingInbetween.Util.Editor
 
 					var count = new Label()
 					{
-						Text = i.ToString()
+						Text = $"{i}:	"
 					};
 
 					hbox.AddChild(count);

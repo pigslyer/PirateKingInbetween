@@ -52,6 +52,7 @@ offset_right = -16.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+border_width = 2.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Panel/Panel/ReferenceRect"]
 centered = false
@@ -98,27 +99,31 @@ layout_mode = 2
 text = "Supplement frames"
 
 [node name="SaveFrames" type="FileDialog" parent="."]
-size = Vector2i(392, 162)
+initial_position = 1
+size = Vector2i(800, 600)
 root_subfolder = "res://src/"
 
 [node name="OpenFramesFolder" type="FileDialog" parent="."]
+initial_position = 2
 title = "Open a Directory"
-size = Vector2i(392, 162)
+size = Vector2i(800, 600)
 ok_button_text = "Select Current Folder"
 file_mode = 2
 root_subfolder = "res://assets/characters"
 
 [node name="OpenFramesResource" type="FileDialog" parent="."]
+initial_position = 2
 title = "Open a File"
-size = Vector2i(312, 162)
+size = Vector2i(800, 600)
 ok_button_text = "Open"
 file_mode = 0
 root_subfolder = "res://src"
 filters = PackedStringArray("*.tres")
 
 [node name="OpenFramesSupplement" type="FileDialog" parent="."]
+initial_position = 2
 title = "Open a Directory"
-size = Vector2i(392, 162)
+size = Vector2i(800, 600)
 ok_button_text = "Select Current Folder"
 file_mode = 2
 root_subfolder = "res://assets/characters"

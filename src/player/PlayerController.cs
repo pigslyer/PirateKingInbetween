@@ -24,6 +24,8 @@ namespace Pigslyer.PirateKingInbetween.Player
 		public override void _Ready()
 		{
 			_behaviourManager = GenerateDefaultBehaviours();
+
+			GlobalGetter.Player = this;
 		}
 
 

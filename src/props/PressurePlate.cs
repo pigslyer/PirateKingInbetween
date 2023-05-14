@@ -30,7 +30,7 @@ namespace Pigslyer.PirateKingInbetween.Props
 		}
 
 		private const float PRESSURED_PLATE_DROP = 3;
-		private const float PRESSURED_PLATE_DROP_TIME = 0.4f;
+		private const float PRESSURED_PLATE_DROP_TIME = 0.2f;
 		
 		private void SetPressed(bool state)
 		{

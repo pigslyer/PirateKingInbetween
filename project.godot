@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Log="*res://src/util/singletons/Log.cs"
 DebugDraw="*res://src/util/singletons/DebugDraw.cs"
+Projectile="*res://src/util/singletons/Projectile.cs"
 
 [display]
 

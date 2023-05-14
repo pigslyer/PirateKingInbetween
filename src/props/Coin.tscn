@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://vh340qveqs06"]
+
+[ext_resource type="Texture2D" uid="uid://1inhfbspamd6" path="res://assets/pixel.png" id="1_nq73b"]
+[ext_resource type="Script" path="res://src/props/Coin.cs" id="2_hfw3n"]
+
+[node name="Coin" type="Sprite2D"]
+modulate = Color(1, 0.745098, 0, 1)
+scale = Vector2(2, 2)
+texture = ExtResource("1_nq73b")
+script = ExtResource("2_hfw3n")

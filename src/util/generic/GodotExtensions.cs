@@ -22,5 +22,9 @@ namespace Pigslyer.PirateKingInbetween.Util.Generic
 
 		public static Vector2 Vec0Y(this float y) => new(0, y);
 		public static Vector2 VecX0(this float x) => new(x, 0);
+
+		public static float Deg2Rad(this float deg) => Mathf.DegToRad(deg);
+		public static float Rad2Deg(this float rad) => Mathf.RadToDeg(rad);
+
 	}
 }

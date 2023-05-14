@@ -12,9 +12,10 @@ using Pigslyer.PirateKingInbetween.Player.Behaviours;
 
 namespace Pigslyer.PirateKingInbetween.Player
 {
-	public partial class PlayerController : CharacterBody2DOverride, IFrameData
+	public partial class PlayerController : CharacterBody2DOverride, IFrameData, IHasCenterOfMass
 	{
 		[Export] public PlayerBehaviourProperties BehaviourProperties = null!;
+		[Export] private Marker2D _centerOfMass = null!;
 
 		[Signal] public delegate void OnDamageTakenEventHandler();
 
@@ -53,6 +54,8 @@ namespace Pigslyer.PirateKingInbetween.Player
 				}
 			}
 		}
+
+		public Vector2 CenterOfMass => _centerOfMass.GlobalPosition;
 
 		private BehaviourManager GenerateDefaultBehaviours()
 		{

@@ -10,11 +10,12 @@ size = Vector2(27, 54)
 
 [node name="Player" type="Node2D"]
 
-[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties")]
+[node name="PlayerController" type="CharacterBody2D" parent="." node_paths=PackedStringArray("BehaviourProperties", "_centerOfMass")]
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_quobq")
 BehaviourProperties = NodePath("BehaviourProperties")
+_centerOfMass = NodePath("CenterOfMass")
 
 [node name="BehaviourProperties" type="Node" parent="PlayerController" node_paths=PackedStringArray("AnimatedSprite", "CameraController", "ShootFromPosition")]
 script = ExtResource("2_cc5m1")
@@ -40,6 +41,9 @@ shape = SubResource("RectangleShape2D_ixiuh")
 
 [node name="ShootingPosition" type="Marker2D" parent="PlayerController"]
 position = Vector2(15, -36)
+
+[node name="CenterOfMass" type="Marker2D" parent="PlayerController"]
+position = Vector2(0, -33)
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 offset = Vector2(0, -50)
